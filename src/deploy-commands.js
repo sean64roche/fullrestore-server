@@ -1,8 +1,8 @@
 import { REST, Routes } from 'discord.js';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { setGlobals } from '/globals.js';
-import ALL_COMMANDS from '/commands/allcommands.js';
+import { setGlobals } from './globals.js';
+import ALL_COMMANDS from './commands/allcommands.js';
 
 const commands = [];
 
