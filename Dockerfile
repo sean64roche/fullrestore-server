@@ -9,14 +9,14 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
-COPY package.json /app/
-COPY package-lock.json /app/
-COPY src /app/
-
 WORKDIR /app/src
+
+COPY package.json ./
+COPY package-lock.json ./
+COPY src ./
 
 RUN npm install
 
-RUN node deploy-commands.js
+RUN ["node", "deploy-commands.js"]
 
 CMD ["node", "index.js"]
