@@ -2,8 +2,6 @@ ARG NODE_VERSION=23
 
 FROM node:${NODE_VERSION}-alpine
 
-ENV NODE_ENV production
-
 WORKDIR /
 
 RUN --mount=type=bind,source=package.json,target=package.json \
@@ -15,8 +13,10 @@ COPY package.json /app/
 COPY package-lock.json /app/
 COPY src /app/
 
-WORKDIR /app
+WORKDIR /app/src
 
-RUN npm -i
+RUN npm install
+
+RUN node deploy-commands.js
 
 CMD ["node", "index.js"]
