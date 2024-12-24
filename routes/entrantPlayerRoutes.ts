@@ -74,4 +74,20 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+      const deleted = await EntrantPlayer.destroy({
+        where: { id: req.params.id }
+      });
+  
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ error: 'Entrant record not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
 export default router;

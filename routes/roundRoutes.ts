@@ -29,11 +29,10 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const round = await Round.findByPk(req.params.id);
-        if (round) {
-            res.json(round);
-        } else {
-            res.status(404).json({ error: 'Round not found' });
+        if (!round) {
+            return res.status(404).json({ error: 'Round not found' });
         }
+        return res.json(round);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -70,5 +69,21 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
+
+router.delete('/:id', async (req, res) => {
+    try {
+      const deleted = await Round.destroy({
+        where: { id: req.params.id }
+      });
+  
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ error: 'Round record not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
 export default router;

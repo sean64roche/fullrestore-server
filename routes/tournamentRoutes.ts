@@ -49,18 +49,11 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const tournament = await Tournament.findByPk(req.params.id, {
-            include: [
-                {
-                    model: Round,
-                    order: [['round', 'ASC']]
-                }
-            ]
-        });
+        const tournament = await Tournament.findByPk(req.params.id);
         if (!tournament) {
-            res.status(404).json({ error: 'Tournament not found' });
+            return res.status(404).json({ error: 'Tournament not found' });
         }
-        res.json(tournament);
+        return res.json(tournament);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -97,9 +90,9 @@ router.get('/:id/rounds', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { current_round, individual_winner, team_winner } = req.body;
+        const { current_round, prize_pool, individual_winner, team_winner } = req.body;
         const [updated] = await Tournament.update(
-             { current_round, individual_winner, team_winner },
+             { current_round, prize_pool, individual_winner, team_winner },
              { where: {id: req.params.id }}
         );
         if (updated) {
@@ -112,5 +105,21 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
+
+router.delete('/:id', async (req, res) => {
+    try {
+      const deleted = await Tournament.destroy({
+        where: { id: req.params.id }
+      });
+  
+      if (deleted) {
+        res.status(204).send();
+      } else {
+        res.status(404).json({ error: 'Tournament not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
 export default router;

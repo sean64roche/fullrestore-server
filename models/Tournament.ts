@@ -1,5 +1,7 @@
 import { DataTypes, Model, ValidationError } from 'sequelize';
 import sequelize from '../config/database';
+import EntrantPlayer from './EntrantPlayer';
+import Round from './Round';
 
 class Tournament extends Model {
     public id!: string;
@@ -53,7 +55,7 @@ Tournament.init({
         defaultValue: 0
     },
     prize_pool: {
-        type: DataTypes.DECIMAL(2, 10)
+        type: DataTypes.DECIMAL
     },
     individual_winner: {
         type: DataTypes.UUID,
@@ -91,13 +93,21 @@ Tournament.init({
             }
         },
         isCorrectWinnerType() {
-            if (!correctWinnerType()) {
+            if (correctWinnerType()) {
                 throw new ValidationError('Incorrect winner type for this tournament', []);
             }
         }
     }
 });
 
+Tournament.hasMany(Round, {
+    foreignKey: 'tournament_id',
+    onDelete: 'CASCADE'
+  });
+  
+  Tournament.hasMany(EntrantPlayer, {
+    foreignKey: 'tournament_id',
+    onDelete: 'CASCADE'
+  });
+
 export default Tournament;
-
-
