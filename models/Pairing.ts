@@ -1,20 +1,20 @@
 import { DataTypes, Error, Model, Sequelize, ValidationError } from 'sequelize';
 import sequelize from '../config/database';
+import Replay from './Replay';
 
 class Pairing extends Model {
-    public id!: string;
-    public round_id!: string;
-    public entrant1_id!: string;
-    public entrant2_id!: string;
-    public time_scheduled?: string;
-    public time_completed?: string;
-    public winner_id?: string;
+    declare id: string;
+    declare round_id: string;
+    declare entrant1_id: string;
+    declare entrant2_id: string;
+    declare time_scheduled?: string;
+    declare time_completed?: string;
+    declare winner_id?: string;
 
 }
 
 function isValidWinner() {
     if (this.winner_id !== null) {
-        // Check if winner is either entrant1 or entrant2
         return this.winner_id === this.entrant1_id || this.winner_id === this.entrant2_id;
     } else
     return true;
@@ -37,7 +37,7 @@ Pairing.init({
     entrant1_id: {
         type: DataTypes.UUID,
         references: {
-            model: 'player',
+            model: 'entrant_player',
             key: 'id'
         },
         allowNull: false,
@@ -45,42 +45,44 @@ Pairing.init({
     entrant2_id: {
         type: DataTypes.UUID,
         references: {
-            model: 'player',
+            model: 'entrant_player',
             key: 'id'
         },
         allowNull: false,
-        validate: {
-        }
     },
     time_scheduled: {
-        type: DataTypes.TIME
+        type: DataTypes.DATE
     },
     time_completed: {
-        type: DataTypes.TIME
+        type: DataTypes.DATE
     },
     winner_id: {
         type: DataTypes.UUID,
         references: {
-            model: 'player',
+            model: 'entrant_player',
             key: 'id'
         },
-    }
+    },
 }, {
     sequelize,
     modelName: 'Pairing',
     tableName: 'pairing',
     validate: {
         uniqueUsers() {
-            if (!(this.entrant1_id === this.entrant2_id)) {
-                throw new ValidationError('Both entrants have the same username.', []);
+            if ((this.entrant1_id === this.entrant2_id)) {
+                if (this.entrant1_id === undefined || this.entrant2_id === undefined) return;
+                else throw new ValidationError('Both entrants have the same username.', []);
             }
         },
         validWinner() {
-            if (isValidWinner()) {
+            if (!isValidWinner()) {
                 throw new ValidationError('Winner must be one of the entrants or null', []);
             }
         }
-    }
+    },
 });
+
+Pairing.hasMany(Replay, {foreignKey: 'pairing_id'});
+Replay.belongsTo(Pairing, {foreignKey: 'pairing_id'});
 
 export default Pairing;

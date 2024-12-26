@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class Format extends Model {
-    public format!: string;
+    declare format: string;
 }
 
 Format.init({

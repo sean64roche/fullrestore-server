@@ -2,13 +2,13 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class EntrantTeam extends Model {
-    public id!: string;
-    public team_id!: string;
-    public tournament_id!: string;
-    public active: boolean;
-    public wins: number;
-    public losses: number;
-    public max_round: number;
+    declare id: string;
+    declare team_id: string;
+    declare tournament_id: string;
+    declare active: boolean;
+    declare wins: number;
+    declare losses: number;
+    declare max_round: number;
 }
 
 EntrantTeam.init({

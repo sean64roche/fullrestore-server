@@ -2,11 +2,11 @@ import { DataTypes, INTEGER, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class Round extends Model {
-    public id!: string;
-    public tournament_id!: string;
-    public round!: number;
-    public name?: string;
-    public deadline!: string;
+    declare id: string;
+    declare tournament_id: string;
+    declare round: number;
+    declare name?: string;
+    declare deadline: string;
 }
 
 Round.init({

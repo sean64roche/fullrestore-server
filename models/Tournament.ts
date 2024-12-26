@@ -4,15 +4,15 @@ import EntrantPlayer from './EntrantPlayer';
 import Round from './Round';
 
 class Tournament extends Model {
-    public id!: string;
-    public name!: string;
-    public season!: string;
-    public format!: string;
-    public current_round?: number;
-    public prize_pool?: number;
-    public individual_winner?: string;
-    public team_tour!: boolean;
-    public team_winner?: string;
+    declare id: string;
+    declare name: string;
+    declare season: string;
+    declare format: string;
+    declare current_round?: number;
+    declare prize_pool?: number;
+    declare individual_winner?: string;
+    declare team_tour: boolean;
+    declare team_winner?: string;
 }
 
 function winnersAreOverloaded() {

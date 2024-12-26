@@ -35,9 +35,9 @@ router.get('/:id', async (req, res) => {
   try {
     const player = await Player.findByPk(req.params.id);
     if (player) {
-      res.json(player);
+      return res.json(player);
     } else {
-      res.status(404).json({ error: 'Player not found' });
+      return res.status(404).json({ error: 'Player not found' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -69,9 +69,9 @@ router.put('/:id', async (req, res) => {
 
     if (updated) {
       const updatedPlayer = await Player.findByPk(req.params.id);
-      res.json(updatedPlayer);
+      return res.json(updatedPlayer);
     } else {
-      res.status(404).json({ error: 'Player not found' });
+      return res.status(404).json({ error: 'Player not found' });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -86,9 +86,9 @@ router.delete('/:id', async (req, res) => {
     });
 
     if (deleted) {
-      res.status(204).send();
+      return res.status(204).send();
     } else {
-      res.status(404).json({ error: 'Player not found' });
+      return res.status(404).json({ error: 'Player not found' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

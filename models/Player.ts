@@ -2,9 +2,9 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class Player extends Model {
-  public id!: string;
-  public ps_user!: string;
-  public discord_user?: string;
+  declare id: string;
+  declare ps_user: string;
+  declare discord_user?: string;
 }
 
 Player.init({

@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
     try {
         const { round_id, entrant1_id, entrant2_id, time_scheduled, time_completed, winner_id } = req.body;
         const newPairing = await Pairing.create({
-            id: uuidv4,
+            id: uuidv4(),
             round_id,
             entrant1_id,
             entrant2_id,
@@ -17,9 +17,10 @@ router.post('/', async (req, res) => {
             time_completed,
             winner_id
         });
+        return res.status(201).json(newPairing);
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({
+            return res.status(400).json({
                 error: 'Round already exists on this tournament'
             });
         }
@@ -33,14 +34,15 @@ router.get('/:id', async (req, res) => {
             include: [
                 {
                     model: Replay,
-                    order: [['game_number', 'ASC']]
+                    attributes: ['match_number', 'url', 'id'],
+                    order: [['match_number', 'ASC']]
                 }
             ]
         });
         if (pairing) {
-            res.json(pairing);
+            return res.json(pairing);
         } else {
-            res.status(404).json({ error: 'Pairing not found' });
+            return res.status(404).json({ error: 'Pairing not found' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -49,16 +51,16 @@ router.get('/:id', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { round_id, entrant1_id, entrant2_id, time_scheduled, time_completed } = req.body;
+        const { round_id, entrant1_id, entrant2_id, time_scheduled, time_completed, winner_id } = req.body;
         const [updated] = await Pairing.update(
-            { round_id, entrant1_id, entrant2_id, time_scheduled, time_completed },
+            { round_id, entrant1_id, entrant2_id, time_scheduled, time_completed, winner_id },
             { where: { id: req.params.id } }
         );
         if (updated) {
             const updatedPairing = await Pairing.findByPk(req.params.id);
-            res.json(updatedPairing);
+            return res.json(updatedPairing);
         } else {
-            res.status(404).json({ error: 'Pairing not found' });
+            return res.status(404).json({ error: 'Pairing not found' });
           }
         } catch (error) {
           res.status(400).json({ error: error.message });
@@ -72,9 +74,9 @@ router.delete('/:id', async (req, res) => {
       });
   
       if (deleted) {
-        res.status(204).send();
+        return res.status(204).send();
       } else {
-        res.status(404).json({ error: 'Pairing not found' });
+        return res.status(404).json({ error: 'Pairing not found' });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });

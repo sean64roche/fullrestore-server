@@ -41,7 +41,7 @@ router.get('/', async (req, res) => {
         if (format) queryOptions.where.format = format;
         if (season) queryOptions.where.season = season;
         const tournaments = await Tournament.findAll(queryOptions);
-        res.json(tournaments);
+        return res.json(tournaments);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -97,9 +97,9 @@ router.put('/:id', async (req, res) => {
         );
         if (updated) {
             const tournament = await Tournament.findByPk(req.params.id);
-            res.json(tournament);
+            return res.json(tournament);
         } else {
-            res.status(404).json({ error: 'Tournament not found' });
+            return res.status(404).json({ error: 'Tournament not found' });
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -113,9 +113,9 @@ router.delete('/:id', async (req, res) => {
       });
   
       if (deleted) {
-        res.status(204).send();
+        return res.status(204).send();
       } else {
-        res.status(404).json({ error: 'Tournament not found' });
+        return res.status(404).json({ error: 'Tournament not found' });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });

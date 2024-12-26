@@ -15,14 +15,14 @@ router.post('/', async (req, res) => {
             name,
             deadline
         });
-        res.status(201).json(newRound);
+        return res.status(201).json(newRound);
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({
+            return res.status(400).json({
                 error: 'Round already exists on this tournament'
             });
         }
-        res.status(400).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 });
 
@@ -61,9 +61,9 @@ router.put('/:id', async (req, res) => {
         );
         if (updated) {
             const round = await Round.findByPk(req.params.id);
-            res.json(round);
+            return res.json(round);
         } else {
-            res.status(404).json({ error: 'Round not found'});
+            return res.status(404).json({ error: 'Round not found'});
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -77,9 +77,9 @@ router.delete('/:id', async (req, res) => {
       });
   
       if (deleted) {
-        res.status(204).send();
+        return res.status(204).send();
       } else {
-        res.status(404).json({ error: 'Round record not found' });
+        return res.status(404).json({ error: 'Round record not found' });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });

@@ -2,15 +2,15 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class EntrantPlayer extends Model {
-    public id!: string;
-    public player_id!: string;
-    public tournament_id!: string;
-    public entrant_team_id? :string;
-    public active!: boolean;
-    public wins!: number;
-    public losses!: number;
-    public max_round!: number;
-    public seed?: number;
+    declare id: string;
+    declare player_id: string;
+    declare tournament_id: string;
+    declare entrant_team_id? :string;
+    declare active: boolean;
+    declare wins: number;
+    declare losses: number;
+    declare max_round: number;
+    declare seed?: number;
 }
 
 EntrantPlayer.init({
@@ -59,7 +59,8 @@ EntrantPlayer.init({
         defaultValue: 0
     },
     seed: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        unique: true
     }
 }, {
     sequelize,

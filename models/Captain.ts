@@ -2,9 +2,9 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class Captain extends Model {
-    public id!: string;
-    public player_id!: string;
-    public entrant_team_id!: string;
+    declare id: string;
+    declare player_id: string;
+    declare entrant_team_id: string;
 }
 
 Captain.init({

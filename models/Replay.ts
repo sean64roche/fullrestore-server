@@ -2,10 +2,10 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class Replay extends Model {
-    public id!: string;
-    public pairing_id!: string;
-    public url!: string;
-    public match_number!: number;
+    declare id: string;
+    declare pairing_id: string;
+    declare url: string;
+    declare match_number: number;
 }
 
 Replay.init({
@@ -48,6 +48,6 @@ Replay.init({
             fields: ['pairing_id', 'match_number']
         }
     ]
-})
+});
 
 export default Replay;

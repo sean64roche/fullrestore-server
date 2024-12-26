@@ -28,9 +28,9 @@ router.get('/:format', async (req, res) => {
     try {
         const format = await Format.findByPk(req.params.format);
         if (format) {
-            res.json(format);
+            return res.json(format);
         } else {
-            res.status(404).json({ error: 'Format not found' });
+            return res.status(404).json({ error: 'Format not found' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -43,9 +43,9 @@ router.delete('/:format', async (req, res) => {
             where: {format: req.params.format }
         });
         if (deleted) {
-            res.status(204).send();
+            return res.status(204).send();
         } else {
-            res.status(404).json({ error: 'Format not found' });
+            return res.status(404).json({ error: 'Format not found' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });

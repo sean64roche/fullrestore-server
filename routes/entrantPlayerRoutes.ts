@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { player_id, tournament_id, entrant_team_id, active, wins, losses, max_round, seed } = req.query;
+        const { player_id, tournament_id, entrant_team_id, active, wins, losses, max_round, seed } = req.body;
         const entrant = await EntrantPlayer.create({
             id: uuidv4(),
             player_id,
@@ -18,10 +18,10 @@ router.post('/', async (req, res) => {
             max_round,
             seed
         });
-        res.status(201).json(entrant);
+        return res.status(201).json(entrant);
     } catch (error) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            res.status(400).json({
+            return res.status(400).json({
                 error: 'Entrant record already exists for this tournament'
             });
         }
@@ -29,28 +29,28 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/active', async (req, res) => {
     try {
-        const entrant = await EntrantPlayer.findByPk(req.params.id);
-        if (entrant) {
-            res.json(entrant);
-        } else {
-            res.status(404).json({ error: 'Player entrant record not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.get('/:id/active_competitors', async (req, res) => {
-    try {
-        const activeEntrant = await EntrantPlayer.findAll({
+        const activeEntrants = await EntrantPlayer.findAll({
             where: {
                 active: true
             },
             order: [['tournament_id', 'ASC']]
         });
-        res.json(activeEntrant);
+        res.json(activeEntrants);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const entrant = await EntrantPlayer.findByPk(req.params.id);
+        if (entrant) {
+            return res.json(entrant);
+        } else {
+            return res.status(404).json({ error: 'Player entrant record not found' });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -65,9 +65,9 @@ router.put('/:id', async (req, res) => {
         );
         if (updated) {
             const entrant = await EntrantPlayer.findByPk(req.params.id);
-            res.json(entrant);
+            return res.json(entrant);
         } else {
-            res.status(404).json({ error: 'Player entrant record not found'});
+            return res.status(404).json({ error: 'Player entrant record not found'});
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -81,9 +81,9 @@ router.delete('/:id', async (req, res) => {
       });
   
       if (deleted) {
-        res.status(204).send();
+        return res.status(204).send();
       } else {
-        res.status(404).json({ error: 'Entrant record not found' });
+        return res.status(404).json({ error: 'Entrant record not found' });
       }
     } catch (error) {
       res.status(500).json({ error: error.message });
