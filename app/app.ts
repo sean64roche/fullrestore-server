@@ -7,6 +7,9 @@ import roundRoutes from '../routes/roundRoutes';
 import pairingRoutes from '../routes/pairingRoutes';
 import entrantPlayerRoutes from '../routes/entrantPlayerRoutes';
 import replayRoutes from '../routes/replayRoutes';
+import { authenticateToken } from '../auth.js';
+import jwt from 'jsonwebtoken';
+import { config } from 'dotenv';
 
 // Import other route files as needed
 
@@ -16,6 +19,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(authenticateToken);
 
 // Routes
 app.use('/api/players', playerRoutes)
