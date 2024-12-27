@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
-import EntrantPlayer from './EntrantPlayer';
 
 class Player extends Model {
   declare id: string;
@@ -37,8 +36,5 @@ Player.init({
   tableName: 'player',
   timestamps: false
 });
-
-Player.hasMany(EntrantPlayer, { foreignKey: 'player_id' });
-EntrantPlayer.belongsTo(Player, { foreignKey: 'player_id' });
 
 export default Player;

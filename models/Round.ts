@@ -1,6 +1,5 @@
 import { DataTypes, INTEGER, Model } from 'sequelize';
 import sequelize from '../config/database';
-import Pairing from './Pairing';
 
 class Round extends Model {
     declare id: string;
@@ -45,9 +44,6 @@ Round.init({
             fields: ['tournament_id', 'round']
         }
     ]
-});
-
-Round.hasMany(Pairing, { foreignKey: 'round_id', onDelete: 'CASCADE' });
-Pairing.belongsTo(Round, { foreignKey: 'round_id' });
+})
 
 export default Round;

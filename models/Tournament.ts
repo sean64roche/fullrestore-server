@@ -103,21 +103,11 @@ Tournament.init({
 Tournament.hasMany(Round, {
     foreignKey: 'tournament_id',
     onDelete: 'CASCADE'
-});
-
-Tournament.hasMany(EntrantPlayer, {
-    foreignKey: 'tournament_id',
-    onDelete: 'CASCADE' 
-});
+  });
   
-Round.belongsTo(Tournament, {
+  Tournament.hasMany(EntrantPlayer, {
     foreignKey: 'tournament_id',
     onDelete: 'CASCADE'
-});
-
-EntrantPlayer.belongsTo(Tournament, {
-    foreignKey: 'tournament_id',
-    onDelete: 'CASCADE'
-});
+  });
 
 export default Tournament;
