@@ -1,5 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
+import Player from './Player';
+import Pairing from './Pairing';
+import Tournament from './Tournament';
 
 class EntrantPlayer extends Model {
     declare id: string;
@@ -73,5 +76,12 @@ EntrantPlayer.init({
         },
     ]
 });
+
+EntrantPlayer.hasMany(EntrantPlayer, {foreignKey: 'entrant1_id' });
+EntrantPlayer.hasMany(EntrantPlayer, {foreignKey: 'entrant2_id' });
+EntrantPlayer.hasMany(EntrantPlayer, {foreignKey: 'winner_id' });
+Pairing.belongsTo(EntrantPlayer, { foreignKey: 'entrant1_id' });
+Pairing.belongsTo(EntrantPlayer, { foreignKey: 'entrant2_id' });
+Pairing.belongsTo(EntrantPlayer, { foreignKey: 'winner_id' });
 
 export default EntrantPlayer;
