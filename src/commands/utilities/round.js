@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, User, InteractionResponse, ThreadManager, time } from 'discord.js';
 import { channels, revivalGuild } from '../../globals.js';
+import makeApiRequest from '../../auth.js';
 
 export const ROUND_COMMAND =  {
     data: new SlashCommandBuilder()
@@ -76,6 +77,7 @@ async function pairPlayers(interaction) {
     const pool = interaction.options.getChannel('pool');
     const poolRole = interaction.options.getRole('role');
     const moderator = interaction.options.getUser('moderator');
+    const currentRound = interaction.options.getString('round');
     const deadline = interaction.options.getString('deadline');
     const leftPlayersId = interaction.options.getString('left').split(' ').reverse();
     const rightPlayersId = interaction.options.getString('right').split(' ').reverse();
@@ -85,6 +87,14 @@ async function pairPlayers(interaction) {
     if (!!interaction.options.getString('header')) {
         pool.send(interaction.options.getString('header'));
     }
+
+    const roundData = {
+        tournament_id: process.env.TOURNAMENT_ID,
+        round: currentRound,
+        deadline: deadline
+    }
+
+    const round = await makeApiRequest('/api/rounds', 'POST', roundData);
     for (var i = 0; i < leftPlayersId.length; i++) {
         var leftPlayer;
         var rightPlayer;
