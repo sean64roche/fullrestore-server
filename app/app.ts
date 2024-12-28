@@ -7,9 +7,7 @@ import roundRoutes from '../routes/roundRoutes';
 import pairingRoutes from '../routes/pairingRoutes';
 import entrantPlayerRoutes from '../routes/entrantPlayerRoutes';
 import replayRoutes from '../routes/replayRoutes';
-import { authenticateToken } from '../auth.js';
-import jwt from 'jsonwebtoken';
-import { config } from 'dotenv';
+import { authenticateToken } from '../config/auth.js';
 
 // Import other route files as needed
 
