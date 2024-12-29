@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import RoundService, { RoundAttributes } from '../services/roundService';
+import { RoundAttributes } from '../services/roundService';
 import roundService from '../services/roundService';
 
 
@@ -17,7 +17,7 @@ export async function createRound(req: Request, res: Response) {
 
 export async function getRoundById(req: Request, res: Response) {
     try {
-        const round = await RoundService.getRoundById(req.params.id);
+        const round = await roundService.getRoundById(req.params.id);
         if (!round) {
             return res.status(404).json({ error: 'Round not found' });
         }
@@ -29,8 +29,17 @@ export async function getRoundById(req: Request, res: Response) {
 
 export async function getPairings(req: Request, res: Response) {
     try {
-        const pairings = await RoundService.getPairingsByRoundId(req.params.id);
+        const pairings = await roundService.getPairingsByRoundId(req.params.id);
         return res.json(pairings);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+export async function getByes(req: Request, res: Response) {
+    try {
+        const byes = await roundService.getByesByRoundId(req.params.id);
+        return res.json(byes);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }
@@ -40,7 +49,7 @@ export async function updateRound(req: Request, res: Response) {
     try {
         const { id } = req.params;
         const { name, deadline } = req.body;
-        const updatedRound = await RoundService.updateRound(
+        const updatedRound = await roundService.updateRound(
             id,
             {
                 name,
@@ -60,7 +69,7 @@ export async function updateRound(req: Request, res: Response) {
 export async function deleteRound(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const deleted = await RoundService.deleteRound(id);
+        const deleted = await roundService.deleteRound(id);
         if (deleted) {
             return res.status(204).send();
         }

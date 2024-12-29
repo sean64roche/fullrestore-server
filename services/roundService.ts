@@ -1,6 +1,7 @@
 import Round from '../models/Round';
 import Pairing from '../models/Pairing';
 import { v4 as uuidv4 } from 'uuid';
+import RoundBye from '../models/RoundBye';
 
 export interface RoundAttributes {
     tournament_id: string;
@@ -29,6 +30,12 @@ class RoundService {
         return Pairing.findAll({
             where: { round_id: roundId },
             order: [['time_completed', 'DESC']],
+        });
+    }
+
+    public async getByesByRoundId(roundId: string) {
+        return RoundBye.findAll({
+            where: { round_id: roundId },
         });
     }
 

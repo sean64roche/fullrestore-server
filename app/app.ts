@@ -4,6 +4,7 @@ import playerRoutes from '../routes/playerRoutes';
 import tournamentRoutes from '../routes/tournamentRoutes';
 import formatRoutes from '../routes/formatRoutes';
 import roundRoutes from '../routes/roundRoutes';
+import roundByeRoutes from '../routes/roundByeRoutes';
 import pairingRoutes from '../routes/pairingRoutes';
 import entrantPlayerRoutes from '../routes/entrantPlayerRoutes';
 import replayRoutes from '../routes/replayRoutes';
@@ -25,6 +26,7 @@ app.use('/api/players', playerRoutes)
   .use('/api/formats', formatRoutes)
   .use('/api/entrantPlayers', entrantPlayerRoutes)
   .use('/api/rounds', roundRoutes)
+  .use('/api/roundByes', roundByeRoutes)
   .use('/api/pairings', pairingRoutes)
   .use('/api/replays', replayRoutes);
 

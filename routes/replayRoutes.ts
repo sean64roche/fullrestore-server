@@ -1,5 +1,3 @@
-// src/routes/replayRoutes.ts
-
 import express from 'express';
 import {
   createReplay,
