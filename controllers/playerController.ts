@@ -1,5 +1,3 @@
-// src/controllers/playerController.ts
-
 import { Request, Response } from 'express';
 import playerService from '../services/playerService';
 

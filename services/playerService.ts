@@ -1,5 +1,3 @@
-// src/services/playerService.ts
-
 import { v4 as uuidv4 } from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
@@ -13,8 +11,7 @@ class PlayerService {
     public async createPlayer(attrs: PlayerAttributes) {
         const newPlayer = await Player.create({
             id: uuidv4(),
-            ps_user: attrs.ps_user,
-            discord_user: attrs.discord_user,
+            ...attrs
         });
         return newPlayer;
     }

@@ -1,6 +1,7 @@
 import express from 'express';
 import sequelize from '../config/database';
 import playerRoutes from '../routes/playerRoutes';
+import playerAliasRoutes from '../routes/playerAliasRoutes';
 import tournamentRoutes from '../routes/tournamentRoutes';
 import formatRoutes from '../routes/formatRoutes';
 import roundRoutes from '../routes/roundRoutes';
@@ -22,6 +23,7 @@ app.use(authenticateToken);
 
 // Routes
 app.use('/api/players', playerRoutes)
+  .use('/api/playerAliases', playerAliasRoutes)
   .use('/api/tournaments', tournamentRoutes)
   .use('/api/formats', formatRoutes)
   .use('/api/entrantPlayers', entrantPlayerRoutes)
