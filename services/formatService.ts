@@ -6,10 +6,9 @@ class FormatService {
 
     public async createFormat(attrs: FormatAttributes) {
         try {
-            const newFormat = await Format.create({
+            return await Format.create({
                 ...attrs
             });
-            return newFormat;
         } catch (error: any) {
             throw error;
         }
@@ -20,15 +19,13 @@ class FormatService {
     }
 
     public async getFormat(format: string) {
-        const result = await Format.findByPk(format);
-        return result;
+        return await Format.findByPk(format);
     }
 
     public async deleteFormat(format: string) {
-        const deleted = await Format.destroy({
-            where: { format },
+        return await Format.destroy({
+            where: {format},
         });
-        return deleted;
     }
 }
 

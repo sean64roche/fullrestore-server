@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import Pairing from '../models/Pairing';
 import Replay from '../models/Replay';
 
@@ -14,18 +14,17 @@ interface PairingAttributes {
 class PairingService {
         public async createPairing(attrs: PairingAttributes) {
             try {
-            const newPairing = await Pairing.create({
+                return await Pairing.create({
                 id: uuidv4(),
                 ...attrs
             });
-            return newPairing;
         } catch (error: any) {
             throw error;
         }
     }
 
     public async getPairingById(pairingId: string) {
-        const pairing = await Pairing.findByPk(pairingId, {
+        return await Pairing.findByPk(pairingId, {
             include: [
                 {
                     model: Replay,
@@ -34,7 +33,6 @@ class PairingService {
                 },
             ],
         });
-        return pairing;
     }
 
     public async updatePairing(id: string, attrs: Partial<PairingAttributes>) {
@@ -46,17 +44,15 @@ class PairingService {
         );
 
         if (updated) {
-            const updatedPairing = await Pairing.findByPk(id);
-            return updatedPairing;
+            return await Pairing.findByPk(id);
         }
         return null;
     }
 
     public async deletePairing(id: string) {
-        const deleted = await Pairing.destroy({
-            where: { id }
+        return await Pairing.destroy({
+            where: {id}
         });
-        return deleted;
     }
 }
 

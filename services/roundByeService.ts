@@ -1,5 +1,5 @@
 import RoundBye from "../models/RoundBye";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 export interface RoundByeAttributes {
     round_id: string;
@@ -9,11 +9,10 @@ export interface RoundByeAttributes {
 class RoundByeService {
     public async createRoundBye(attrs: RoundByeAttributes) {
         try {
-            const newRoundBye = RoundBye.create({
+            return RoundBye.create({
                 id: uuidv4(),
                 ...attrs
             });
-            return newRoundBye;
         } catch (error: any) {
             throw error;
         }
@@ -24,8 +23,7 @@ class RoundByeService {
     }
 
     public async deleteRoundBye(id: string) {
-        const deleted = await RoundBye.destroy({ where: { id } });
-        return deleted;
+        return await RoundBye.destroy({where: {id}});
     }
 }
 

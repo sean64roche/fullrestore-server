@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
 
@@ -9,30 +9,26 @@ interface PlayerAttributes {
 
 class PlayerService {
     public async createPlayer(attrs: PlayerAttributes) {
-        const newPlayer = await Player.create({
+        return await Player.create({
             id: uuidv4(),
             ...attrs
         });
-        return newPlayer;
     }
 
     public async getAllPlayers() {
-        const players = await Player.findAll();
-        return players;
+        return await Player.findAll();
     }
 
     public async getPlayerById(id: string) {
-        const player = await Player.findByPk(id);
-        return player;
+        return await Player.findByPk(id);
     }
 
     public async getPlayerCompetitions(id: string) {
-        const competitions = await EntrantPlayer.findAll({
+        return await EntrantPlayer.findAll({
             where: {
                 player_id: id,
             },
         });
-        return competitions;
     }
 
     public async updatePlayer(id: string, attrs: PlayerAttributes) {
@@ -42,17 +38,15 @@ class PlayerService {
         );
 
         if (updated) {
-            const updatedPlayer = await Player.findByPk(id);
-            return updatedPlayer;
+            return await Player.findByPk(id);
         }
         return null;
     }
 
     public async deletePlayer(id: string) {
-        const deleted = await Player.destroy({
-            where: { id },
+        return await Player.destroy({
+            where: {id},
         });
-        return deleted;
     }
 }
 

@@ -1,6 +1,6 @@
 import Round from '../models/Round';
 import Pairing from '../models/Pairing';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import RoundBye from '../models/RoundBye';
 
 export interface RoundAttributes {
@@ -12,11 +12,10 @@ export interface RoundAttributes {
 class RoundService {
     public async createRound(attrs: RoundAttributes) {
         try {
-            const newRound = Round.create({
+            return Round.create({
                 id: uuidv4(),
                 ...attrs
             });
-            return newRound;
         } catch (error: any) {
             throw error;
         }
@@ -45,15 +44,13 @@ class RoundService {
             { where: { id } }
         );
         if (updated) {
-            const round = await Round.findByPk(id);
-            return round;
+            return await Round.findByPk(id);
         }
         return null;
     }
 
     public async deleteRound(id: string) {
-        const deleted = await Round.destroy({ where: { id } });
-        return deleted;
+        return await Round.destroy({where: {id}});
     }
 }
 

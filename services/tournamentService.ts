@@ -1,7 +1,7 @@
 import Tournament from '../models/Tournament';
 import Round from '../models/Round';
 import EntrantPlayer from '../models/EntrantPlayer';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 export interface TournamentAttributes {
     name: string;
@@ -17,11 +17,10 @@ export interface TournamentAttributes {
 class TournamentService {
     public async createTournament(attrs: TournamentAttributes) {
         try {
-            const newTournament = await Tournament.create({
+            return await Tournament.create({
                 id: uuidv4(),
                 ...attrs,
             });
-            return newTournament;
         } catch (error: any) {
             throw error;
         }
@@ -35,29 +34,25 @@ class TournamentService {
         if (format) queryOptions.where.format = format;
         if (season) queryOptions.where.season = season;
 
-        const tournaments = await Tournament.findAll(queryOptions);
-        return tournaments;
+        return await Tournament.findAll(queryOptions);
     }
 
     public async getTournamentById(id: string) {
-        const tournament = await Tournament.findByPk(id);
-        return tournament;
+        return await Tournament.findByPk(id);
     }
 
     public async getEntrantsByTournamentId(id: string) {
-        const entrants = await EntrantPlayer.findAll({
-            where: { tournament_id: id },
+        return await EntrantPlayer.findAll({
+            where: {tournament_id: id},
             order: [['seed', 'ASC']],
         });
-        return entrants;
     }
 
     public async getRoundsByTournamentId(id: string) {
-        const rounds = await Round.findAll({
-            where: { tournament_id: id },
+        return await Round.findAll({
+            where: {tournament_id: id},
             order: [['round', 'ASC']],
         });
-        return rounds;
     }
 
     public async updateTournament(
@@ -68,17 +63,15 @@ class TournamentService {
             where: { id },
         });
         if (updated) {
-            const tournament = await Tournament.findByPk(id);
-            return tournament;
+            return await Tournament.findByPk(id);
         }
         return null;
     }
 
     public async deleteTournament(id: string) {
-        const deleted = await Tournament.destroy({
-            where: { id },
+        return await Tournament.destroy({
+            where: {id},
         });
-        return deleted;
     }
 
 }

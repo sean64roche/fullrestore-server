@@ -7,26 +7,23 @@ interface PlayerAliasAttributes {
 
 class PlayerAliasService {
     public async createPlayerAlias(attrs: PlayerAliasAttributes) {
-        const newPlayerAlias = await PlayerAlias.create({
+        return await PlayerAlias.create({
             ...attrs
         });
-        return newPlayerAlias;
     }
 
     public async getPlayerAlias(alias: string) {
-        const player = await PlayerAlias.findOne({
+        return await PlayerAlias.findOne({
             where: {
                 ps_alias: alias
             }
         });
-        return player;
     }
 
     public async deletePlayerAlias(ps_alias: string) {
-        const deleted = await PlayerAlias.destroy({
-            where: { ps_alias }
+        return await PlayerAlias.destroy({
+            where: {ps_alias}
         });
-        return deleted;
     }
 }
 
