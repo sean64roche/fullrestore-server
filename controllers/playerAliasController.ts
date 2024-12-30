@@ -7,6 +7,11 @@ export async function createPlayerAlias(req: Request, res: Response) {
         const newPlayerAlias = await playerAliasService.createPlayerAlias({ player_id, ps_alias });
         return res.status(201).json(newPlayerAlias);
     } catch (error: any) {
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({
+                error: 'Alias record already exists',
+            });
+        }
         return res.status(400).json({ error: error.message });
     }
 }

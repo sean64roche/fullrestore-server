@@ -7,7 +7,12 @@ export async function createPlayer(req: Request, res: Response) {
         const newPlayer = await playerService.createPlayer({ ps_user, discord_user });
         return res.status(201).json(newPlayer);
     } catch (error: any) {
-        return res.status(400).json({ error: error.message });
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({
+                error: 'Player record already exists',
+            });
+        }
+        return res.status(400).json({error: error.message});
     }
 }
 

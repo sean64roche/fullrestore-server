@@ -9,6 +9,11 @@ export async function createReplay(req: Request, res: Response) {
         const replay = await replayService.createReplay({ pairing_id, url, match_number });
         return res.status(201).json(replay);
     } catch (error: any) {
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({
+                error: 'Replay already exists',
+            });
+        }
         return res.status(400).json({ error: error.message });
     }
 }

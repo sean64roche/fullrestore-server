@@ -9,7 +9,7 @@ export async function createRound(req: Request, res: Response) {
         return res.status(201).json(newRound);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(400).json({ error: 'Round already exists on this tournament' });
+            return res.status(409).json({ error: 'Round already exists on this tournament' });
         }
         return res.status(400).json({ error: error.message });
     }

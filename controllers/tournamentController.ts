@@ -7,7 +7,7 @@ export async function createTournament(req: Request, res: Response) {
         return res.status(201).json(newTournament);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(400).json({
+            return res.status(409).json({
                 error: 'A tournament with this name and season already exists.',
             });
         }

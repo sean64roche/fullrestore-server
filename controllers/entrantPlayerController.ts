@@ -7,7 +7,7 @@ export async function createEntrantPlayer(req: Request, res: Response) {
         return res.status(201).json(entrant);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(400).json({
+            return res.status(409).json({
                 error: 'Entrant record already exists for this tournament',
             });
         }

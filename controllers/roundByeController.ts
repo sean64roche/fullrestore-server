@@ -8,7 +8,7 @@ export async function createRoundBye(req: Request, res: Response) {
         return res.status(201).json(newRound);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(400).json({ error: 'Player already has a bye record for this round' });
+            return res.status(409).json({ error: 'Player already has a bye record for this round' });
         }
         return res.status(400).json({ error: error.message });
     }

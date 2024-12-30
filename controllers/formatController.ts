@@ -6,8 +6,12 @@ export async function createFormat(req: Request, res: Response) {
         const newFormat = await formatService.createFormat(req.body as FormatAttributes)
         return res.status(201).json(newFormat);
     } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).json({
+                error: 'Format already exists',
+            });
+        }
+        return res.status(400).json({ error: error.message });    }
 }
 
 export async function getAllFormats(req: Request, res: Response) {

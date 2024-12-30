@@ -9,7 +9,7 @@ export async function createPairing(req: Request, res: Response) {
         return res.status(201).json(newPairing);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
-            return res.status(400).json({
+            return res.status(409).json({
                 error: 'A player in this pairing has already been paired for this round',
             });
         }
