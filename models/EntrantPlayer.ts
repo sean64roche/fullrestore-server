@@ -1,8 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
-import Player from './Player';
 import Pairing from './Pairing';
-import Tournament from './Tournament';
+import RoundBye from "./RoundBye";
 
 class EntrantPlayer extends Model {
     declare id: string;
@@ -77,12 +76,15 @@ EntrantPlayer.init({
     ]
 });
 
-EntrantPlayer.hasMany(EntrantPlayer, {foreignKey: 'entrant1_id' });
-EntrantPlayer.hasMany(EntrantPlayer, {foreignKey: 'entrant2_id' });
-EntrantPlayer.hasMany(EntrantPlayer, {foreignKey: 'winner_id' });
-Pairing.belongsTo(EntrantPlayer, { foreignKey: 'entrant1_id' });
-Pairing.belongsTo(EntrantPlayer, { foreignKey: 'entrant2_id' });
-Pairing.belongsTo(EntrantPlayer, { foreignKey: 'winner_id' });
+EntrantPlayer.hasMany(Pairing, { as: 'Entrant1', foreignKey: 'entrant1_id' });
+EntrantPlayer.hasMany(Pairing, { as: 'Entrant2', foreignKey: 'entrant2_id' });
+EntrantPlayer.hasMany(Pairing, { as: 'Winner', foreignKey: 'winner_id' });
+EntrantPlayer.hasMany(RoundBye, { foreignKey: 'entrant_player_id' });
+Pairing.belongsTo(EntrantPlayer, { as: 'Entrant1', foreignKey: 'entrant1_id' });
+Pairing.belongsTo(EntrantPlayer, { as: 'Entrant2', foreignKey: 'entrant2_id' });
+Pairing.belongsTo(EntrantPlayer, { as: 'Winner', foreignKey: 'winner_id' });
+RoundBye.belongsTo(EntrantPlayer, { foreignKey: 'entrant_player_id' });
+
 
 
 export default EntrantPlayer;

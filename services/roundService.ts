@@ -2,6 +2,7 @@ import Round from '../models/Round';
 import Pairing from '../models/Pairing';
 import {v4 as uuidv4} from 'uuid';
 import RoundBye from '../models/RoundBye';
+import Tournament from "../models/Tournament";
 
 export interface RoundAttributes {
     tournament_id: string;
@@ -22,7 +23,9 @@ class RoundService {
     }
 
     public async getRoundById(id: string) {
-        return Round.findByPk(id);
+        return Round.findByPk(id, {
+            include: Tournament
+        });
     }
 
     public async getPairingsByRoundId(roundId: string) {

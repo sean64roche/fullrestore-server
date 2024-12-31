@@ -16,9 +16,14 @@ export async function createPlayer(req: Request, res: Response) {
     }
 }
 
-export async function getAllPlayers(req: Request, res: Response) {
+export async function getPlayers(req: Request, res: Response) {
     try {
-        const players = await playerService.getAllPlayers();
+        const {
+            user,
+        } = req.query;
+        const players = await playerService.getPlayers({
+            user: user as string,
+        });
         return res.json(players);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });

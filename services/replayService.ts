@@ -2,6 +2,7 @@
 
 import {v4 as uuidv4} from 'uuid';
 import Replay from '../models/Replay';
+import Pairing from "../models/Pairing";
 
 interface ReplayAttributes {
     pairing_id: string;
@@ -23,7 +24,9 @@ class ReplayService {
     }
 
     public async getReplayById(id: string) {
-        return await Replay.findByPk(id);
+        return await Replay.findByPk(id, {
+            include: Pairing
+        });
     }
 
     public async deleteReplay(id: string) {

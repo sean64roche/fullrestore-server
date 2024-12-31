@@ -1,5 +1,3 @@
-// src/controllers/pairingController.ts
-
 import { Request, Response } from 'express';
 import pairingService from '../services/pairingService';
 
@@ -14,6 +12,23 @@ export async function createPairing(req: Request, res: Response) {
             });
         }
         return res.status(400).json({ error: error.message });
+    }
+}
+
+export async function getPairings(req: Request, res: Response) {
+    try {
+        const {
+            roundId, tournament, player, winner
+        } = req.query;
+        const pairings = await pairingService.getPairings({
+            roundId: roundId as string,
+            tournament: tournament as string,
+            player: player as string,
+            winner: winner as string,
+        });
+        return res.json(pairings);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
     }
 }
 

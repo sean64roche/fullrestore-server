@@ -1,18 +1,19 @@
 import express from 'express';
 import {
   createPlayer,
-  getAllPlayers,
+  getPlayers,
   getPlayerById,
   getPlayerCompetitions,
   updatePlayer,
   deletePlayer,
 } from '../controllers/playerController';
+import {validateQueryParams} from "./validateQueryParams";
 
 const router = express.Router();
 
 router.post('/', createPlayer);
 
-router.get('/', getAllPlayers);
+router.get('/', validateQueryParams(['user']), getPlayers);
 
 router.get('/:id', getPlayerById);
 

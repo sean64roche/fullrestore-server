@@ -2,6 +2,8 @@
 
 import {v4 as uuidv4} from 'uuid';
 import EntrantPlayer from '../models/EntrantPlayer';
+import Player from "../models/Player";
+import Tournament from "../models/Tournament";
 
 interface EntrantPlayerAttributes {
     player_id: string;
@@ -28,13 +30,20 @@ class EntrantPlayerService {
 
     public async getActiveEntrantPlayers() {
         return await EntrantPlayer.findAll({
+            include: Player,
             where: {active: true},
             order: [['tournament_id', 'ASC']],
         });
     }
 
     public async getEntrantPlayerById(id: string) {
-        return await EntrantPlayer.findByPk(id);
+        return await EntrantPlayer.findByPk(id, {
+            include: [{
+                model: Player
+            }, {
+                model: Tournament
+            }]
+        });
     }
 
     public async updateEntrantPlayer(id: string, attrs: Partial<EntrantPlayerAttributes>) {

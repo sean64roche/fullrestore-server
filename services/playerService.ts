@@ -1,10 +1,15 @@
 import {v4 as uuidv4} from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
+import { Op } from "sequelize";
 
 interface PlayerAttributes {
     ps_user: string;
     discord_user?: string;
+}
+
+interface GetPlayersParams {
+    user?: string;
 }
 
 class PlayerService {
@@ -15,8 +20,16 @@ class PlayerService {
         });
     }
 
-    public async getAllPlayers() {
-        return await Player.findAll();
+    public async getPlayers(params: GetPlayersParams) {
+        const whereClause: any = {};
+        if (params.user) {
+            whereClause[Op.or] = [{ ps_user: params.user }, { discord_user: params.user }]
+        }
+        return await Player.findAll({
+            where: {
+                ...whereClause
+            }
+        });
     }
 
     public async getPlayerById(id: string) {

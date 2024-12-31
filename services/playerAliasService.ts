@@ -1,4 +1,5 @@
 import PlayerAlias from "../models/PlayerAlias";
+import Player from "../models/Player";
 
 interface PlayerAliasAttributes {
     player_id: string;
@@ -16,7 +17,8 @@ class PlayerAliasService {
         return await PlayerAlias.findOne({
             where: {
                 ps_alias: alias
-            }
+            },
+            include: Player
         });
     }
 
