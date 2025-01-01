@@ -16,4 +16,4 @@ RUN npm install
 
 EXPOSE 3000
 
-CMD ["npx tsx", "app/app.ts"]
+CMD ["npx", "tsx", "app/app.ts"]
