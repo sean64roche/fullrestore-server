@@ -46,20 +46,20 @@ class PairingService {
             }
             //this isn't important yet. Come back to it later
             if (player) {
-                whereClause[Op.or] = [
-                    // {
-                    //     [Op.or]: [{
-                    //         '$Entrant1.Player.ps_user$': player
-                    //     }, {
-                    //         '$Entrant1.Player.discord_user$': player
-                    //     }],
-                    //     [Op.or]: [{
-                    //         '$Entrant2.Player.ps_user$': player
-                    //     }, {
-                    //         '$Entrant2.Player.discord_user$': player
-                    //     }]
-                    // }
-                ]
+                // whereClause[Op.or] = [
+                //     {
+                //         [Op.or]: [{
+                //             '$Entrant1.Player.ps_user$': player
+                //         }, {
+                //             '$Entrant1.Player.discord_user$': player
+                //         }],
+                //         [Op.or]: [{
+                //             '$Entrant2.Player.ps_user$': player
+                //         }, {
+                //             '$Entrant2.Player.discord_user$': player
+                //         }]
+                //     }
+                // ]
             }
             if (winner) {
                 whereClause[Op.or] = [
