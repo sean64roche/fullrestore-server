@@ -21,8 +21,6 @@ Player.init({
     unique: true,
     validate: {
         notEmpty: true,
-        isAlphanumeric: true
-
     }
   },
   discord_user: {

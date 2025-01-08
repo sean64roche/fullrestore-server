@@ -16,7 +16,8 @@ PlayerAlias.init({
         allowNull: false,
         unique: true,
         validate: {
-            notEmpty: true
+            notEmpty: true,
+            isAlphanumeric: true
         },
         primaryKey: true
     }
