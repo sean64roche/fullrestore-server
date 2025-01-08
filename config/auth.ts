@@ -1,11 +1,12 @@
 import * as dotenv from 'dotenv';
+import { Request, Response, NextFunction } from 'express';
 
 dotenv.config();
 
 const BOT_JWT_TOKEN = process.env.BOT_JWT_TOKEN;
 const ADMIN_JWT_TOKEN = process.env.ADMIN_JWT_TOKEN;
 
-export const authenticateToken = (req, res, next) => {
+export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     // Allow all GET requests to pass through
     // if (req.method === 'GET') {
     //     return next();
