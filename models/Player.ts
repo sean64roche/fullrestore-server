@@ -20,7 +20,9 @@ Player.init({
     allowNull: false,
     unique: true,
     validate: {
-        notEmpty: true
+        notEmpty: true,
+        isAlphanumeric: true
+
     }
   },
   discord_user: {
@@ -29,7 +31,7 @@ Player.init({
     unique: true,
     validate: {
         notEmpty: true,
-        isAlphanumeric: true
+        is: /[^a-zA-Z0-9]/g
     }
   }
 }, {
