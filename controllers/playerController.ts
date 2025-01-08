@@ -20,9 +20,13 @@ export async function getPlayers(req: Request, res: Response) {
     try {
         const {
             user,
+            ps_user,
+            discord_user
         } = req.query;
         const players = await playerService.getPlayers({
             user: user as string,
+            ps_user: ps_user as string,
+            discord_user: discord_user as string
         });
         return res.json(players);
     } catch (error: any) {

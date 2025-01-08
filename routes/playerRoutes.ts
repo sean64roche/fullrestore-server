@@ -7,13 +7,13 @@ import {
   updatePlayer,
   deletePlayer,
 } from '../controllers/playerController';
-import {validateQueryParams} from "./validateQueryParams";
+import { validateQueryParams } from "./validateQueryParams";
 
 const router = express.Router();
 
 router.post('/', createPlayer);
 
-router.get('/', validateQueryParams(['user']), getPlayers);
+router.get('/', validateQueryParams(['user', 'ps_user', 'discord_user']), getPlayers);
 
 router.get('/:id', getPlayerById);
 

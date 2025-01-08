@@ -10,6 +10,8 @@ interface PlayerAttributes {
 
 interface GetPlayersParams {
     user?: string;
+    ps_user?: string;
+    discord_user?: string;
 }
 
 class PlayerService {
@@ -21,9 +23,14 @@ class PlayerService {
     }
 
     public async getPlayers(params: GetPlayersParams) {
+        const { user, ps_user, discord_user } = params;
         const whereClause: any = {};
-        if (params.user) {
-            whereClause[Op.or] = [{ ps_user: params.user }, { discord_user: params.user }]
+        if (user) {
+            whereClause[Op.or] = [{ ps_user: user }, { discord_user: user }];
+        } else if (ps_user) {
+            whereClause.ps_user = ps_user;
+        } else if (discord_user) {
+            whereClause.discord_user = discord_user;
         }
         return await Player.findAll({
             where: {
