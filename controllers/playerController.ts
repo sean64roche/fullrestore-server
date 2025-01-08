@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import playerService from '../services/playerService';
+import Player from "../models/Player";
 
 export async function createPlayer(req: Request, res: Response) {
     try {
         const { ps_user, discord_user } = req.body;
-        const newPlayer = await playerService.createPlayer({ ps_user, discord_user });
+        const newPlayer: Player = await playerService.createPlayer({ ps_user, discord_user });
         return res.status(201).json(newPlayer);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -23,11 +24,14 @@ export async function getPlayers(req: Request, res: Response) {
             ps_user,
             discord_user
         } = req.query;
-        const players = await playerService.getPlayers({
+        const players: Player[] = await playerService.getPlayers({
             user: user as string,
             ps_user: ps_user as string,
             discord_user: discord_user as string
         });
+        if (players.length < 1) {
+            return res.status(404).json( { error: 'Player not found' });
+        }
         return res.json(players);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
@@ -62,7 +66,6 @@ export async function updatePlayer(req: Request, res: Response) {
             ps_user,
             discord_user,
         });
-
         if (!updatedPlayer) {
             return res.status(404).json({ error: 'Player not found' });
         }
