@@ -31,7 +31,7 @@ Player.init({
     unique: true,
     validate: {
         notEmpty: true,
-        is: /[^a-zA-Z0-9]/g
+        is: /^[a-zA-Z0-9._]+$/
     }
   }
 }, {
