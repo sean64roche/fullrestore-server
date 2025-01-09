@@ -17,9 +17,7 @@ export async function createPairing(req: Request, res: Response) {
 
 export async function getPairings(req: Request, res: Response) {
     try {
-        const {
-            roundId, tournament, player, winner
-        } = req.query;
+        const { roundId, tournament, player, winner } = req.query;
         const pairings = await pairingService.getPairings({
             roundId: roundId as string,
             tournament: tournament as string,

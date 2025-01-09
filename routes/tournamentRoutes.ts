@@ -2,18 +2,19 @@ import express from 'express';
 import {
     createTournament,
     deleteTournament,
-    getAllTournaments,
+    getTournaments,
     getEntrantsByTournamentId,
     getRoundsByTournamentId,
     getTournamentById,
     updateTournament,
   } from '../controllers/tournamentController';
+import {validateQueryParams} from "./validateQueryParams";
 
 const router = express.Router();
 
 router.post('/', router.post('/', createTournament));
 
-router.get('/', getAllTournaments);
+router.get('/', validateQueryParams(['name', 'season', 'format', 'individual_winner']), getTournaments);
 
 router.get('/:id', getTournamentById);
 

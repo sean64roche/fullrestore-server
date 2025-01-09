@@ -15,13 +15,15 @@ export async function createTournament(req: Request, res: Response) {
     }
 }
 
-export async function getAllTournaments(req: Request, res: Response) {
+export async function getTournaments(req: Request, res: Response) {
     try {
-        const { format, season } = req.query;
-        const tournaments = await tournamentService.getAllTournaments(
-            format as string,
-            season as string
-        );
+        const { name, season, format, individual_winner } = req.query;
+        const tournaments = await tournamentService.getTournaments({
+                name: name as string,
+                season: season as unknown as number,
+                format: format as string,
+                individual_winner: individual_winner as string
+        });
         return res.json(tournaments);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });

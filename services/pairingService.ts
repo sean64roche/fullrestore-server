@@ -16,7 +16,7 @@ interface PairingAttributes {
     winner_id?: string;
 }
 
-interface GetPairingsParams {
+interface GetPairingParams {
     roundId?: string;
     tournament?: string;
     player?: string;
@@ -35,7 +35,7 @@ class PairingService {
         }
     }
 
-    public async getPairings(params: GetPairingsParams) {
+    public async getPairings(params: GetPairingParams) {
             const { roundId, tournament, player, winner } = params;
             const whereClause: any = {};
             if (roundId) {

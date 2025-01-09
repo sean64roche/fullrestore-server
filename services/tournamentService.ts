@@ -14,6 +14,13 @@ export interface TournamentAttributes {
     team_winner?: string;
 }
 
+interface GetTournamentParams {
+    name?: string;
+    season?: number;
+    format?: string;
+    individual_winner?: string;
+}
+
 class TournamentService {
     public async createTournament(attrs: TournamentAttributes) {
         try {
@@ -26,16 +33,20 @@ class TournamentService {
         }
     }
 
-    public async getAllTournaments(
-        format?: string,
-        season?: string
-    ) {
-        const queryOptions: any = { where: {} };
-        if (format) queryOptions.where.format = format;
-        if (season) queryOptions.where.season = season;
-
-        return await Tournament.findAll(queryOptions);
+    public async getTournaments(params: GetTournamentParams) {
+        const { name, season, format, individual_winner } = params;
+        const whereClause: any = {};
+        if (name) whereClause.name = name;
+        if (season) whereClause.season = season;
+        if (format) whereClause.format = format;
+        if (individual_winner) whereClause.individual_winner = individual_winner;
+        return await Tournament.findAll({
+            where: {
+                ...whereClause
+            }
+        });
     }
+
 
     public async getTournamentById(id: string) {
         return await Tournament.findByPk(id);
