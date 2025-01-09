@@ -16,6 +16,12 @@ interface EntrantPlayerAttributes {
     seed?: number;
 }
 
+interface GetEntrantPlayerParams {
+    player_id?: string;
+    tournament_id?: string;
+    active?: boolean;
+}
+
 class EntrantPlayerService {
     public async createEntrantPlayer(attrs: EntrantPlayerAttributes) {
         try {
@@ -28,12 +34,28 @@ class EntrantPlayerService {
         }
     }
 
-    public async getActiveEntrantPlayers() {
+    async getEntrantPlayer(params: GetEntrantPlayerParams) {
+        const { player_id, tournament_id, active } = params;
+        const whereClause: any = {};
+        if (player_id) {
+            whereClause.player_id = player_id;
+        }
+        if (tournament_id) {
+            whereClause.tournament_id = tournament_id;
+        }
+        if (active) {
+            whereClause.active = active;
+        }
         return await EntrantPlayer.findAll({
-            include: Player,
-            where: {active: true},
-            order: [['tournament_id', 'ASC']],
-        });
+            include: [{
+                model: Player
+            }, {
+                model: Tournament
+            }],
+            where: {
+                ...whereClause
+            }
+        })
     }
 
     public async getEntrantPlayerById(id: string) {

@@ -15,10 +15,15 @@ export async function createEntrantPlayer(req: Request, res: Response) {
     }
 }
 
-export async function getActiveEntrantPlayers(req: Request, res: Response) {
+export async function getEntrantPlayer(req: Request, res: Response) {
     try {
-        const activeEntrants = await entrantPlayerService.getActiveEntrantPlayers();
-        return res.json(activeEntrants);
+        const { player_id, tournament_id, active } = req.query;
+        const entrantPlayer = await entrantPlayerService.getEntrantPlayer({
+            player_id: player_id as string,
+            tournament_id: tournament_id as string,
+            active: active as unknown as boolean,
+        });
+        return res.json(entrantPlayer);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }

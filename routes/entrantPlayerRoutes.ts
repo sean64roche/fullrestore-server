@@ -1,17 +1,18 @@
 import express from 'express';
 import {
   createEntrantPlayer,
-  getActiveEntrantPlayers,
+  getEntrantPlayer,
   getEntrantPlayerById,
   updateEntrantPlayer,
   deleteEntrantPlayer,
 } from '../controllers/entrantPlayerController';
+import { validateQueryParams } from "./validateQueryParams";
 
 const router = express.Router();
 
 router.post('/', createEntrantPlayer);
 
-router.get('/active', getActiveEntrantPlayers);
+router.get('/', validateQueryParams(['player_id', 'tournament_id', 'active']), getEntrantPlayer)
 
 router.get('/:id', getEntrantPlayerById);
 
