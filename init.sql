@@ -254,14 +254,6 @@ ALTER TABLE ONLY public.entrant_player
 
 
 --
--- Name: entrant_player entrant_player_seed_key1; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.entrant_player
-    ADD CONSTRAINT entrant_player_seed_key1 UNIQUE (seed);
-
-
---
 -- Name: entrant_player entrant_player_tournament_id_player_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -323,14 +315,6 @@ ALTER TABLE ONLY public.player_alias
 
 ALTER TABLE ONLY public.player
     ADD CONSTRAINT player_discord_user_key UNIQUE (discord_user);
-
-
---
--- Name: player player_discord_user_key1; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.player
-    ADD CONSTRAINT player_discord_user_key1 UNIQUE (discord_user);
 
 
 --
@@ -470,6 +454,13 @@ CREATE UNIQUE INDEX round_tournament_id_round ON public.round USING btree (tourn
 --
 
 CREATE UNIQUE INDEX tournament_name_season ON public.tournament USING btree (name, season);
+
+
+--
+-- Name: uniq_round_entrant_pairing; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX uniq_round_entrant_pairing ON public.pairing USING btree (round_id, LEAST(entrant1_id, entrant2_id), GREATEST(entrant1_id, entrant2_id));
 
 
 --
