@@ -104,7 +104,7 @@ class PairingService {
                     },
                     {
                         model: Replay,
-                        attributes: ['match_number', 'url', 'id'],
+                        attributes: ['match_number', 'url'],
                         order: [['match_number', 'ASC']],
                     },
                 ],
