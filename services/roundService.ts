@@ -10,6 +10,13 @@ export interface RoundAttributes {
     name?: string;
     deadline: string;
 }
+
+interface GetRoundParams {
+    tournament_id: string;
+    round: number;
+    name?: string;
+}
+
 class RoundService {
     public async createRound(attrs: RoundAttributes) {
         try {
@@ -20,6 +27,19 @@ class RoundService {
         } catch (error: any) {
             throw error;
         }
+    }
+
+    async getRounds(params: GetRoundParams) {
+        const { tournament_id, round, name } = params;
+        const whereClause: any = {};
+        if (tournament_id) whereClause.tournament_id = tournament_id;
+        if (round) whereClause.round = round;
+        if (name) whereClause.name = name;
+        return await Round.findAll({
+            where: {
+                ...whereClause
+            }
+        });
     }
 
     public async getRoundById(id: string) {

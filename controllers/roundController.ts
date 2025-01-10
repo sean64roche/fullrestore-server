@@ -15,6 +15,20 @@ export async function createRound(req: Request, res: Response) {
     }
 }
 
+export async function getRounds(req: Request, res: Response) {
+    try {
+        const { tournament_id, round, name } = req.query;
+        const rounds = await roundService.getRounds({
+            tournament_id: tournament_id as string,
+            round: round as unknown as number,
+            name: name as string,
+        });
+        return res.json(rounds);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 export async function getRoundById(req: Request, res: Response) {
     try {
         const round = await roundService.getRoundById(req.params.id);
