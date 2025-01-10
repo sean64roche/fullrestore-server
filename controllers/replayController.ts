@@ -5,8 +5,7 @@ import replayService from '../services/replayService';
 
 export async function createReplay(req: Request, res: Response) {
     try {
-        let { pairing_id, url, match_number } = req.body;
-        if (url.endsWith('?p2')) url = url.substring(0, url.length - 3);
+        const { pairing_id, url, match_number } = req.body;
         const replay = await replayService.createReplay({ pairing_id, url, match_number });
         return res.status(201).json(replay);
     } catch (error: any) {

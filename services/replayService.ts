@@ -16,6 +16,9 @@ interface GetReplayParams {
 class ReplayService {
     public async createReplay(attrs: ReplayAttributes) {
         try {
+            if (attrs.url.endsWith('?p2')) {
+                attrs.url = attrs.url.substring(0, attrs.url.length - 3);
+            }
             return await Replay.create({
                 ...attrs
             });
