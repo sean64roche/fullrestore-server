@@ -38,7 +38,7 @@ CREATE FUNCTION public.check_url_no_p2_suffix(url text) RETURNS boolean
     LANGUAGE plpgsql IMMUTABLE
     AS $_$
 BEGIN
-    RETURN NOT (url SIMILAR TO '%\?p2$');
+    RETURN url !~ '\?p2$';
 END;
 $_$;
 
@@ -149,8 +149,8 @@ CREATE TABLE public.replay (
     url text NOT NULL,
     pairing_id uuid NOT NULL,
     match_number integer NOT NULL,
-    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
     CONSTRAINT url_no_p2_suffix_check CHECK (public.check_url_no_p2_suffix(url)),
     CONSTRAINT valid_url CHECK ((url ~ '^(http|https)://'::text))
 );
@@ -254,6 +254,14 @@ ALTER TABLE ONLY public.entrant_player
 
 
 --
+-- Name: entrant_player entrant_player_seed_key1; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entrant_player
+    ADD CONSTRAINT entrant_player_seed_key1 UNIQUE (seed);
+
+
+--
 -- Name: entrant_player entrant_player_tournament_id_player_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -315,6 +323,14 @@ ALTER TABLE ONLY public.player_alias
 
 ALTER TABLE ONLY public.player
     ADD CONSTRAINT player_discord_user_key UNIQUE (discord_user);
+
+
+--
+-- Name: player player_discord_user_key1; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.player
+    ADD CONSTRAINT player_discord_user_key1 UNIQUE (discord_user);
 
 
 --
@@ -429,6 +445,13 @@ CREATE UNIQUE INDEX entrant_player_tournament_id_player_id ON public.entrant_pla
 
 
 --
+-- Name: replay_pairing_id_match_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX replay_pairing_id_match_number ON public.replay USING btree (pairing_id, match_number);
+
+
+--
 -- Name: round_bye_round_id_entrant_player_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -498,14 +521,6 @@ ALTER TABLE ONLY public.entrant_team
 
 
 --
--- Name: replay FK_replay_pairing_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.replay
-    ADD CONSTRAINT "FK_replay_pairing_id" FOREIGN KEY (pairing_id) REFERENCES public.pairing(id);
-
-
---
 -- Name: entrant_player entrant_player_entrant_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -559,6 +574,14 @@ ALTER TABLE ONLY public.pairing
 
 ALTER TABLE ONLY public.pairing
     ADD CONSTRAINT pairing_winner_id_fkey FOREIGN KEY (winner_id) REFERENCES public.entrant_player(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: replay replay_pairing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.replay
+    ADD CONSTRAINT replay_pairing_id_fkey FOREIGN KEY (pairing_id) REFERENCES public.pairing(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
