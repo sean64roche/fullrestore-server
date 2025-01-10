@@ -8,13 +8,13 @@ import {
     updateRound,
     deleteRound
 } from '../controllers/roundController';
-import {validateQueryParams} from "./validateQueryParams";
+import { validateQueryParams } from "./validateQueryParams";
 
 const router = express.Router();
 
 router.post('/', createRound);
 
-router.get('/', validateQueryParams(['tournament_id', 'round', 'deadline']), getRounds);
+router.get('/', validateQueryParams(['tournament_id', 'round', 'name']), getRounds);
 
 router.get('/:id', getRoundById);
 

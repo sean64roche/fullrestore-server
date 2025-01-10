@@ -5,7 +5,8 @@ import replayService from '../services/replayService';
 
 export async function createReplay(req: Request, res: Response) {
     try {
-        const { pairing_id, url, match_number } = req.body;
+        let { pairing_id, url, match_number } = req.body;
+        if (url.endsWith('?p2')) url = url.substring(0, url.length - 3);
         const replay = await replayService.createReplay({ pairing_id, url, match_number });
         return res.status(201).json(replay);
     } catch (error: any) {
@@ -18,15 +19,16 @@ export async function createReplay(req: Request, res: Response) {
     }
 }
 
-export async function getReplayById(req: Request, res: Response) {
+export async function getReplays(req: Request, res: Response) {
     try {
-        const replay = await replayService.getReplayById(req.params.id);
-        if (!replay) {
-            return res.status(404).json({ error: 'Replay not found' });
-        }
-        return res.json(replay);
+        const { url, pairing_id } = req.params;
+        const replays = await replayService.getReplays({
+            url: url as string,
+            pairing_id: pairing_id as string,
+        });
+        return res.json(replays);
     } catch (error: any) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({error: error.message });
     }
 }
 

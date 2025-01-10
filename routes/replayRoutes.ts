@@ -1,15 +1,16 @@
 import express from 'express';
 import {
   createReplay,
-  getReplayById,
   deleteReplay,
+  getReplays,
 } from '../controllers/replayController';
+import {validateQueryParams} from "./validateQueryParams";
 
 const router = express.Router();
 
 router.post('/', createReplay);
 
-router.get('/:id', getReplayById);
+router.get('/', validateQueryParams(['url', 'pairing_id']), getReplays);
 
 router.delete('/:id', deleteReplay);
 

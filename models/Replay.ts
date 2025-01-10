@@ -2,17 +2,24 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
 
 class Replay extends Model {
-    declare id: string;
-    declare pairing_id: string;
     declare url: string;
+    declare pairing_id: string;
     declare match_number: number;
 }
 
 Replay.init({
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
+    url: {
+        type: DataTypes.TEXT,
+        validate: {
+            isUrl: true,
+            notEmpty: true,
+            is: {
+                args: /^(?!.*\?p2$).*/,
+                msg: 'illegal URL with \'?p2\' suffix'
+            }
+        },
+        allowNull: false,
+        primaryKey: true,
     },
     pairing_id: {
         type: DataTypes.UUID,
@@ -21,15 +28,6 @@ Replay.init({
             key: 'id'
         },
         allowNull: false
-    },
-    url: {
-        type: DataTypes.TEXT,
-        validate: {
-            isUrl: true,
-            notEmpty: true,
-        },
-        allowNull: false,
-        unique: true
     },
     match_number: {
         type: DataTypes.INTEGER,

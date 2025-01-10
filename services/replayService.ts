@@ -1,8 +1,6 @@
 // src/services/replayService.ts
 
-import {v4 as uuidv4} from 'uuid';
 import Replay from '../models/Replay';
-import Pairing from "../models/Pairing";
 
 interface ReplayAttributes {
     pairing_id: string;
@@ -10,11 +8,15 @@ interface ReplayAttributes {
     match_number: number;
 }
 
+interface GetReplayParams {
+    url: string;
+    pairing_id: string;
+}
+
 class ReplayService {
     public async createReplay(attrs: ReplayAttributes) {
         try {
             return await Replay.create({
-                id: uuidv4(),
                 ...attrs
             });
         } catch (error: any) {
@@ -23,9 +25,15 @@ class ReplayService {
 
     }
 
-    public async getReplayById(id: string) {
-        return await Replay.findByPk(id, {
-            include: Pairing
+    async getReplays(params: GetReplayParams) {
+        const { url, pairing_id } = params;
+        const whereClause: any = {};
+        if (url) whereClause.url = url;
+        if (pairing_id) whereClause.pairing_id = pairing_id;
+        return await Replay.findAll({
+            where: {
+                ...whereClause,
+            }
         });
     }
 
