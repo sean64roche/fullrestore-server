@@ -149,6 +149,8 @@ CREATE TABLE public.replay (
     url text NOT NULL,
     pairing_id uuid NOT NULL,
     match_number integer NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT url_no_p2_suffix_check CHECK (public.check_url_no_p2_suffix(url)),
     CONSTRAINT valid_url CHECK ((url ~ '^(http|https)://'::text))
 );
