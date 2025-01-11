@@ -13,7 +13,7 @@ export function initAssociations() {
     Player.hasMany(EntrantPlayer, { foreignKey: 'player_id' });
     Player.hasMany(PlayerAlias, { as: 'PlayerAlias', foreignKey: 'player_id' });
     EntrantPlayer.belongsTo(Player, { foreignKey: 'player_id' });
-    PlayerAlias.belongsTo(Player, { as: 'PlayerAlias', foreignKey: 'player_id' });
+    PlayerAlias.belongsTo(Player, { foreignKey: 'player_id' });
 
     EntrantPlayer.hasMany(Pairing, { as: 'Entrant1', foreignKey: 'entrant1_id' });
     EntrantPlayer.hasMany(Pairing, { as: 'Entrant2', foreignKey: 'entrant2_id' });

@@ -24,7 +24,7 @@ class PlayerAliasService {
 
     public async deletePlayerAlias(ps_alias: string) {
         return await PlayerAlias.destroy({
-            where: {ps_alias}
+            where: { ps_alias }
         });
     }
 }
