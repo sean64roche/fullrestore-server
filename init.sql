@@ -38,6 +38,8 @@ CREATE FUNCTION public.check_url_no_p2_suffix(url text) RETURNS boolean
     LANGUAGE plpgsql IMMUTABLE
     AS $_$
 BEGIN
+    -- Using a regular expression for more precise matching
+    -- $ ensures it's at the end of the string
     RETURN url !~ '\?p2$';
 END;
 $_$;
@@ -294,19 +296,11 @@ ALTER TABLE ONLY public.pairing
 
 
 --
--- Name: player_alias player_alias_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.player_alias
-    ADD CONSTRAINT player_alias_pkey PRIMARY KEY (player_id, ps_alias);
-
-
---
 -- Name: player_alias player_alias_ps_alias_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.player_alias
-    ADD CONSTRAINT player_alias_ps_alias_key UNIQUE (ps_alias);
+    ADD CONSTRAINT player_alias_ps_alias_key PRIMARY KEY (ps_alias);
 
 
 --
@@ -464,14 +458,6 @@ CREATE UNIQUE INDEX uniq_round_entrant_pairing ON public.pairing USING btree (ro
 
 
 --
--- Name: player_alias FK_alias_player_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.player_alias
-    ADD CONSTRAINT "FK_alias_player_id" FOREIGN KEY (player_id) REFERENCES public.player(id);
-
-
---
 -- Name: captain FK_captain_entrant_team_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -565,6 +551,14 @@ ALTER TABLE ONLY public.pairing
 
 ALTER TABLE ONLY public.pairing
     ADD CONSTRAINT pairing_winner_id_fkey FOREIGN KEY (winner_id) REFERENCES public.entrant_player(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: player_alias player_alias_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.player_alias
+    ADD CONSTRAINT player_alias_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.player(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
