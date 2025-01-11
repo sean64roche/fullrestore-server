@@ -20,12 +20,12 @@ export async function createPlayer(req: Request, res: Response) {
 export async function getPlayers(req: Request, res: Response) {
     try {
         const {
-            user,
+            player,
             ps_user,
             discord_user
         } = req.query;
         const players: Player[] = await playerService.getPlayers({
-            user: user as string,
+            player: player as string,
             ps_user: ps_user as string,
             discord_user: discord_user as string
         });

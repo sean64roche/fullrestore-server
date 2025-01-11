@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post('/', createPlayer);
 
-router.get('/', validateQueryParams(['user', 'ps_user', 'discord_user']), getPlayers);
+router.get('/', validateQueryParams(['player', 'ps_user', 'discord_user']), getPlayers);
 
 router.get('/:id', getPlayerById);
 
