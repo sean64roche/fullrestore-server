@@ -9,12 +9,15 @@ class PlayerAlias extends Model {
 PlayerAlias.init({
     player_id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        allowNull: false,
+        references: {
+            model: 'player',
+            key: 'id'
+        }
     },
     ps_alias: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
             notEmpty: true,
             isAlphanumeric: true

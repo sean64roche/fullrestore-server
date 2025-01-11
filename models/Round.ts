@@ -1,7 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
-import Pairing from './Pairing';
-import RoundBye from './RoundBye';
 
 class Round extends Model {
     declare id: string;
@@ -47,10 +45,5 @@ Round.init({
         }
     ]
 });
-
-Round.hasMany(Pairing, { foreignKey: 'round_id', onDelete: 'CASCADE' });
-Round.hasMany(RoundBye, { foreignKey: 'round_id', onDelete: 'CASCADE' });
-Pairing.belongsTo(Round, { foreignKey: 'round_id' });
-RoundBye.belongsTo(Round, { foreignKey: 'round_id' });
 
 export default Round;

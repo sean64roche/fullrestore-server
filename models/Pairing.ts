@@ -1,7 +1,5 @@
-import { DataTypes, Error, Model, Sequelize, ValidationError } from 'sequelize';
+import { DataTypes, Model, ValidationError } from 'sequelize';
 import sequelize from '../config/database';
-import Replay from './Replay';
-import EntrantPlayer from './EntrantPlayer';
 
 
 class Pairing extends Model {
@@ -83,8 +81,5 @@ Pairing.init({
         }
     },
 });
-
-Pairing.hasMany(Replay, { foreignKey: 'pairing_id' });
-Replay.belongsTo(Pairing, { foreignKey: 'pairing_id' });
 
 export default Pairing;

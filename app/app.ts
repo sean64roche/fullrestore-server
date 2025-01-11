@@ -10,6 +10,7 @@ import pairingRoutes from '../routes/pairingRoutes';
 import entrantPlayerRoutes from '../routes/entrantPlayerRoutes';
 import replayRoutes from '../routes/replayRoutes';
 import { authenticateToken } from '../config/auth.js';
+import { initAssociations } from "../associations/initAssociations";
 
 // Import other route files as needed
 
@@ -35,8 +36,9 @@ app.use('/api/players', playerRoutes)
 // Add other route middleware
 
 // Database connection
-async function initializeDatabase() {
+async function initDatabase() {
   try {
+    initAssociations();
     await sequelize.authenticate();
     console.log('Database connection established successfully.');
     
@@ -51,7 +53,7 @@ async function initializeDatabase() {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  initializeDatabase();
+  initDatabase();
 });
 
 export default app;

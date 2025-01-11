@@ -1,7 +1,5 @@
 import { DataTypes, Model, ValidationError } from 'sequelize';
 import sequelize from '../config/database';
-import EntrantPlayer from './EntrantPlayer';
-import Round from './Round';
 
 class Tournament extends Model {
     declare id: string;
@@ -98,24 +96,6 @@ Tournament.init({
             }
         }
     }
-});
-
-Tournament.hasMany(EntrantPlayer, {
-    foreignKey: 'tournament_id',
-    onDelete: 'CASCADE' 
-});
-
-Tournament.hasMany(Round, {
-    foreignKey: 'tournament_id',
-    onDelete: 'CASCADE' 
-});
-
-EntrantPlayer.belongsTo(Tournament, {
-    foreignKey: 'tournament_id',
-});
-
-Round.belongsTo(Tournament, {
-    foreignKey: 'tournament_id',
 });
 
 export default Tournament;
