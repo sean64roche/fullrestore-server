@@ -72,7 +72,6 @@ class PairingService {
                 ];
             }
             return await Pairing.findAll({
-                logging: console.log,
                 include: [
                     {
                         model: Round,
