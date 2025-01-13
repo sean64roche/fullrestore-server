@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.post('/', createReplay);
 
-router.get('/', validateQueryParams(['url', 'pairing_id']), getReplays);
+router.get('/', validateQueryParams(['url', 'pairing_id', 'match_number']), getReplays);
 
-router.delete('/:id', deleteReplay);
+router.delete('/:url', deleteReplay);
 
 export default router;

@@ -20,10 +20,15 @@ export async function createReplay(req: Request, res: Response) {
 
 export async function getReplays(req: Request, res: Response) {
     try {
-        const { url, pairing_id } = req.params;
+        const {
+            url,
+            pairing_id,
+            match_number
+        } = req.query;
         const replays = await replayService.getReplays({
             url: url as string,
             pairing_id: pairing_id as string,
+            match_number: match_number as unknown as number
         });
         return res.json(replays);
     } catch (error: any) {
@@ -33,7 +38,7 @@ export async function getReplays(req: Request, res: Response) {
 
 export async function deleteReplay(req: Request, res: Response) {
     try {
-        const deleted = await replayService.deleteReplay(req.params.id);
+        const deleted = await replayService.deleteReplay(req.params.url);
         if (deleted) {
             return res.sendStatus(204);
         }
