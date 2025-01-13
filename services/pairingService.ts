@@ -18,9 +18,10 @@ interface PairingAttributes {
 }
 
 interface GetPairingParams {
-    roundId?: string;
+    round_id?: string;
     tournament?: string;
     player?: string;
+    discord_user?: string;
     winner?: string;
 }
 
@@ -37,10 +38,10 @@ class PairingService {
     }
 
     public async getPairings(params: GetPairingParams) {
-            const { roundId, tournament, player, winner } = params;
+            const { round_id, tournament, player, discord_user, winner } = params;
             const whereClause: any = {};
-            if (roundId) {
-                whereClause.round = roundId;
+            if (round_id) {
+                whereClause.round_id = round_id;
             }
             if (tournament) {
                 whereClause.name = tournament;
@@ -56,19 +57,20 @@ class PairingService {
                             '$Entrant1.Player.PlayerAlias.ps_alias$': player
                         },{
                             '$Entrant2.Player.PlayerAlias.ps_alias$': player
-                        }, {
-                            '$Entrant1.Player.discord_user$': player
-                        }, {
-                            '$Entrant2.Player.discord_user$': player
                         }]
                     }
                 ]
             }
+            if (discord_user) {
+                whereClause[Op.or] = [
+                    { '$Entrant1.Player.discord_user$': discord_user },
+                    { '$Entrant2.Player.discord_user$': discord_user }
+                ];
+            }
             if (winner) {
                 whereClause[Op.or] = [
                     { '$Winner.Player.ps_user$': winner },
-                    { '$Winner.Player.PlayerAlias.ps_alias$': winner },
-                    { '$Winner.Player.discord_user$': winner }
+                    { '$Winner.Player.PlayerAlias.ps_alias$': winner }
                 ];
             }
             return await Pairing.findAll({
@@ -164,7 +166,7 @@ class PairingService {
                 },
                 {
                     model: Replay,
-                    attributes: ['match_number', 'url', 'id'],
+                    attributes: ['match_number', 'url'],
                     order: [['match_number', 'ASC']],
                 },
             ],

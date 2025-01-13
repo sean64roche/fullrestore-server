@@ -17,11 +17,12 @@ export async function createPairing(req: Request, res: Response) {
 
 export async function getPairings(req: Request, res: Response) {
     try {
-        const { roundId, tournament, player, winner } = req.query;
+        const { round_id, tournament, player, discord_user, winner } = req.query;
         const pairings = await pairingService.getPairings({
-            roundId: roundId as string,
+            round_id: round_id as string,
             tournament: tournament as string,
             player: player as string,
+            discord_user: discord_user as string,
             winner: winner as string,
         });
         return res.json(pairings);
