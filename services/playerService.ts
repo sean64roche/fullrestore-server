@@ -18,7 +18,12 @@ class PlayerService {
     public async createPlayer(attrs: PlayerAttributes) {
         return await Player.create({
             id: uuidv4(),
-            ...attrs
+            ...attrs,
+            PlayerAlias: {
+                ps_alias: attrs.ps_user.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+            },
+        }, {
+            include: ['PlayerAlias'],
         });
     }
 
