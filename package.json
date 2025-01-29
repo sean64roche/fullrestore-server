@@ -1,0 +1,42 @@
+{
+  "name": "fullrestore-service",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "keywords": [],
+  "author": "Sean Roche",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "fs": "^0.0.1-security"
+  },
+  "peerDependencies": {
+    "log4js": "^6.9.1"
+  },
+  "devDependencies": {
+    "csv-parser": "^3.1.0",
+    "@types/node": "^22.10.7",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/fullrestore/fullrestore-service.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/fullrestore/fullrestore-service/issues"
+  },
+  "homepage": "https://gitlab.com/fullrestore/fullrestore-service#readme"
+}
