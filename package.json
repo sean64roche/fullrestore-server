@@ -1,11 +1,14 @@
 {
-  "name": "fullrestore-service",
+  "name": "@sean64roche/fullrestore-service",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "@sean64roche:registry": "https://gitlab.com/api/v4/projects/66553564/packages/npm"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build"
