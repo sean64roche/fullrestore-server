@@ -10,6 +10,7 @@
     "@sean64roche:registry": "https://gitlab.com/api/v4/projects/66553564/packages/npm"
   },
   "scripts": {
+    "preinstall": "typescript",
     "build": "npx tsc",
     "prepare": "npm run build"
   },
