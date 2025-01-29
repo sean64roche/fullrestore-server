@@ -6,7 +6,7 @@ stages:
 deploy:
   stage: deploy
   script:
-    - echo "@products:registry=http://${CI_SERVER_HOST}:${CI_SERVER_PORT}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/">.npmrc
+    - echo "@sean64roche:fullrestore-services=http://${CI_SERVER_HOST}:${CI_SERVER_PORT}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/">.npmrc
     - echo "//${CI_SERVER_HOST}:${CI_SERVER_PORT}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">>.npmrc
     - npm install -y
     - npm publish --verbose
