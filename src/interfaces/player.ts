@@ -1,4 +1,4 @@
-import {Tournament} from "./tournament";
+import { Tournament, TournamentResponse, transformTournamentResponse } from "./tournament";
 
 export type SheetPlayer = {
     showdown_user: string;
@@ -14,17 +14,50 @@ export type PlayerDto = {
     seed?: number;
 }
 
+export type PlayerResponse = {
+    id: string;
+    ps_user: string;
+    discord_user?: string;
+    discord_id?: string;
+    PlayerAliases: PlayerAliasResponse[];
+}
+
 export interface Player {
     id: string;
     psUser: string;
     discordUser?: string;
     discordId?: string;
-    spreadsheetAlias: PlayerAlias;
-    // aliases: PlayerAlias[];
+    spreadsheetAlias?: PlayerAlias;
+    playerAliases?: PlayerAlias[];
+}
+
+export function transformPlayerResponse(data: PlayerResponse): Player {
+    const aliases: PlayerAlias[] = [];
+    data.PlayerAliases.forEach((alias: PlayerAliasResponse) => {
+        aliases.push(transformPlayerAliasResponse(alias));
+    });
+    return {
+        id: data.id,
+        psUser: data.ps_user,
+        discordUser: data.discord_user,
+        discordId: data.discord_id,
+        playerAliases: aliases
+    }
 }
 
 export interface PlayerAlias {
     psAlias: string;
+}
+
+export type PlayerAliasResponse = {
+    player_id: string;
+    ps_alias: string;
+}
+
+export function transformPlayerAliasResponse(data: PlayerAliasResponse): PlayerAlias {
+    return {
+        psAlias: data.ps_alias
+    }
 }
 
 export interface EntrantPlayer {
@@ -41,6 +74,30 @@ export type EntrantPlayerDto = {
     seed?: number;
 }
 
+export type EntrantPlayerResponse = {
+    id: string;
+    player_id: string;
+    tournament_id: string;
+    entrant_team_id: string;
+    active: boolean;
+    wins: number;
+    losses: number;
+    max_round: number;
+    seed?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    Player: PlayerResponse;
+    Tournament: TournamentResponse;
+}
 
-
-
+export function transformEntrantPlayerResponse(data: EntrantPlayerResponse): EntrantPlayer {
+    return {
+        id: data.id,
+        tournament: transformTournamentResponse(data.Tournament),
+        player: transformPlayerResponse(data.Player),
+        // entrantTeam: data.EntrantTeam,
+        active: data.active,
+        maxRound: data.max_round,
+        seed: data.seed,
+    }
+}
