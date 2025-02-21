@@ -129,7 +129,8 @@ CREATE TABLE public.pairing (
 CREATE TABLE public.player (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     ps_user character varying(255) NOT NULL,
-    discord_user character varying(255)
+    discord_user character varying(255),
+    discord_id character varying(255),
 );
 
 
