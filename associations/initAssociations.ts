@@ -11,7 +11,7 @@ import Format from "../models/Format";
 export function initAssociations() {
 
     Player.hasMany(EntrantPlayer, { foreignKey: 'player_id' });
-    Player.hasMany(PlayerAlias, { as: 'PlayerAlias', foreignKey: 'player_id' });
+    Player.hasMany(PlayerAlias, { as: 'Aliases', foreignKey: 'player_id' });
     EntrantPlayer.belongsTo(Player, { foreignKey: 'player_id' });
     PlayerAlias.belongsTo(Player, { foreignKey: 'player_id' });
 

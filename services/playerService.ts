@@ -24,11 +24,14 @@ class PlayerService {
                 ps_alias: attrs.ps_user.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
             },
         }, {
-            include: ['PlayerAlias'],
+            include: {
+                model: PlayerAlias,
+                as: 'Aliases'
+            },
         });
     }
 
-    public async getPlayers(params: GetPlayersParams) {
+    public async getPlayer(params: GetPlayersParams) {
         const { player, ps_user, discord_user } = params;
         const whereClause: any = {};
         if (player) {
@@ -38,15 +41,14 @@ class PlayerService {
         } else if (discord_user) {
             whereClause.discord_user = discord_user;
         }
-        return await Player.findAll({
+        return await Player.findOne({
             where: {
                 ...whereClause,
-                include: [{
-                    model: PlayerAlias,
-                    as: 'PlayerAlias',
-                    required: false
-                }]
-            }
+            },
+            include: {
+                model: PlayerAlias,
+                as: 'Aliases'
+            },
         });
     }
 
@@ -69,7 +71,12 @@ class PlayerService {
         );
 
         if (updated) {
-            return await Player.findByPk(id);
+            return await Player.findByPk(id, {
+                include: {
+                    model: PlayerAlias,
+                    as: 'Aliases'
+                },
+            });
         }
         return null;
     }
