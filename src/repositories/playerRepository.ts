@@ -1,5 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import {PlayerDto, Player, EntrantPlayer} from "../interfaces/player";
+import {
+    PlayerDto,
+    Player,
+    EntrantPlayer,
+    EntrantPlayerResponse,
+    transformEntrantPlayerResponse
+} from "../interfaces/player";
 import {Tournament} from "../interfaces/tournament";
 import {cleanPsUsername} from "../utils/helpers";
 import {Logger} from "../utils/logger";
@@ -72,7 +78,8 @@ class PlayerRepository extends Repository {
         } catch (error) {
             switch (error.status) {
                 case 409:
-                    this.logger.warn(`WARNING: player '${player.spreadsheetAlias.psAlias}' already has entrant record`);
+                    const username: string = player.spreadsheetAlias?.psAlias || player.psUser;
+                    this.logger.warn(`WARNING: player '${username}' already has entrant record`);
                     throw (error);
                 default:
                     this.logger.error(`FATAL on creating entrant player: ${error.message}`);
@@ -128,6 +135,19 @@ class PlayerRepository extends Repository {
                 seed: seed,
             }
         } catch (error) {
+            this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(error.message);
+        }
+    }
+
+    async findEntrantPlayerByPlayerId(playerId: string): Promise<EntrantPlayer | void> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}`);
+            const data: EntrantPlayerResponse = response.data[0];
+            if (data === undefined) return;
+            else return transformEntrantPlayerResponse(data);
+        }
+        catch (error) {
             this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data)}`);
             throw new Error(error.message);
         }

@@ -1,9 +1,9 @@
-import axios, {AxiosError, AxiosResponse} from "axios";
-import {Pairing, PairingDto, Replay, ReplayDto} from "../interfaces/pairing";
-import {EntrantPlayer} from "../interfaces/player";
-import {Round} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { Pairing, PairingDto, Replay, ReplayDto, ReplayResponse, transformReplayResponse } from "../interfaces/pairing";
+import { EntrantPlayer } from "../interfaces/player";
+import { Round } from "../interfaces/tournament";
+import { Logger } from "../utils/logger";
+import { ApiConfig } from "../config";
 import Repository from "./repository";
 
 class PairingRepository extends Repository {
@@ -24,9 +24,9 @@ class PairingRepository extends Repository {
         winner?: EntrantPlayer
     ): Promise<Pairing> {
         this.logger.info(`INFO: attempting to send Pairing DTO`);
-        const playerAlias1: string = entrantPlayer1.player.spreadsheetAlias.psAlias;
-        const playerAlias2: string = entrantPlayer2.player.spreadsheetAlias.psAlias;
-        const winnerAlias: string | undefined = winner?.player.spreadsheetAlias.psAlias;
+        const playerAlias1: string = entrantPlayer1.player.spreadsheetAlias?.psAlias || entrantPlayer1.player.psUser;
+        const playerAlias2: string = entrantPlayer2.player.spreadsheetAlias?.psAlias || entrantPlayer2.player.psUser;
+        const winnerAlias: string | undefined = winner?.player.spreadsheetAlias?.psAlias || winner?.player.psUser;
         const pairingDto: PairingDto = {
             round_id: round.id,
             entrant1_id: entrantPlayer1.id,
@@ -87,8 +87,9 @@ class PairingRepository extends Repository {
     }
 
     async getPairing(round: Round, player1: EntrantPlayer, player2: EntrantPlayer): Promise<Pairing | null> {
+        const username1: string = player1.player.spreadsheetAlias?.psAlias || player1.player.psUser;
         try {
-            const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${round.id}&player=${player1.player.spreadsheetAlias.psAlias}`);
+            const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${round.id}&player=${username1}`);
             const { id, round_id, entrant1_id, entrant2_id, time_scheduled, time_completed, winner_id } = response.data[0];
             const winner: EntrantPlayer = player1.id === winner_id ? player1 : player2;
             return {
@@ -124,23 +125,19 @@ class PairingRepository extends Repository {
         }
         try {
             const response: AxiosResponse = await axios.post(this.replaysUrl, replayDto);
-            const { url, pairing_id, match_number } = response.data;
-            this.logger.info(`Replay created, URL is ${url}`);
-            return {
-              pairing: pairing,
-              url: url,
-              matchNumber: match_number,
-            };
+            const replay: ReplayResponse = response.data;
+            this.logger.info(`Replay created, URL is ${replay.url}`);
+            return transformReplayResponse(replay);
         } catch (error) {
             switch (error.status) {
                 case 409:
                     const existingReplay: Replay = await this.getReplay(pairing, sheetUrl, sheetMatchNumber);
-                    this.logger.info(`Existing UUID: ${existingReplay.pairing.id},
+                    this.logger.info(`Existing UUID: ${existingReplay.pairingId},
                         request UUID: ${pairing.id},
                         existing match number: ${existingReplay.matchNumber},
                         request match number: ${sheetMatchNumber}
                     `);
-                    if (existingReplay.pairing.id === pairing.id && existingReplay.matchNumber === sheetMatchNumber) {
+                    if (existingReplay.pairingId === pairing.id && existingReplay.matchNumber === sheetMatchNumber) {
                         this.logger.info(`Replay already found, URL is ${sheetUrl}`);
                         break;
                     } else {
@@ -157,12 +154,7 @@ class PairingRepository extends Repository {
     async getReplay(pairing: Pairing, sheetUrl: string, sheetMatchNumber?: number): Promise<Replay> {
         try {
             const response: AxiosResponse = await axios.get(`${this.replaysUrl}?url=${sheetUrl}`);
-            const { url, pairing_id, match_number } = response.data[0];
-            return {
-                pairing: pairing,
-                url: url,
-                matchNumber: match_number,
-            };
+            return transformReplayResponse(response.data[0]);
         } catch (error) {
             this.logger.error(`FATAL on getReplay: ${JSON.stringify(error.response?.data)}`);
             throw new Error(error.message);

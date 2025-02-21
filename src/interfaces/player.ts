@@ -19,7 +19,7 @@ export type PlayerResponse = {
     ps_user: string;
     discord_user?: string;
     discord_id?: string;
-    PlayerAliases: PlayerAliasResponse[];
+    Aliases: PlayerAliasResponse[];
 }
 
 export interface Player {
@@ -28,12 +28,12 @@ export interface Player {
     discordUser?: string;
     discordId?: string;
     spreadsheetAlias?: PlayerAlias;
-    playerAliases?: PlayerAlias[];
+    Aliases?: PlayerAlias[];
 }
 
 export function transformPlayerResponse(data: PlayerResponse): Player {
     const aliases: PlayerAlias[] = [];
-    data.PlayerAliases.forEach((alias: PlayerAliasResponse) => {
+    data.Aliases.forEach((alias: PlayerAliasResponse) => {
         aliases.push(transformPlayerAliasResponse(alias));
     });
     return {
@@ -41,7 +41,7 @@ export function transformPlayerResponse(data: PlayerResponse): Player {
         psUser: data.ps_user,
         discordUser: data.discord_user,
         discordId: data.discord_id,
-        playerAliases: aliases
+        Aliases: aliases,
     }
 }
 
@@ -67,7 +67,7 @@ export interface EntrantPlayer {
     entrantTeam?: string;
     active?: boolean;
     maxRound: number;
-    seed?: number;
+    seed: number | null;
 }
 
 export type EntrantPlayerDto = {
@@ -78,12 +78,12 @@ export type EntrantPlayerResponse = {
     id: string;
     player_id: string;
     tournament_id: string;
-    entrant_team_id: string;
+    entrant_team_id: string | null;
     active: boolean;
     wins: number;
     losses: number;
     max_round: number;
-    seed?: number;
+    seed: number | null;
     createdAt?: string;
     updatedAt?: string;
     Player: PlayerResponse;

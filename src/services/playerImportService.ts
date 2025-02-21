@@ -40,7 +40,7 @@ export class PlayerImportService {
                     discord_id: record.discord_id,
             });
             players.add(playerResponse);
-            this.logger.info(`Player added as '${playerResponse.spreadsheetAlias.psAlias}'`);
+            this.logger.info(`Player added as '${playerResponse.spreadsheetAlias!.psAlias}'`);
         }
         return players;
     }
@@ -52,7 +52,7 @@ export class PlayerImportService {
                 const response: EntrantPlayer = await new PlayerRepository(this.config, this.logger)
                     .createEntrantPlayer(player, tournament);
                 entrantPlayers.add(response);
-                this.logger.info(`Entrant '${player.spreadsheetAlias.psAlias}' added with UUID ${response.id}`);
+                this.logger.info(`Entrant '${player.spreadsheetAlias!.psAlias}' added with UUID ${response.id}`);
             } catch (error) {
                 if (error.status === 409) {
                     const existingEntrantPlayer: EntrantPlayer = await new PlayerRepository(this.config, this.logger)

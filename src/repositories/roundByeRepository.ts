@@ -15,13 +15,14 @@ class RoundByeRepository extends Repository {
     }
 
     async create(round: Round, entrantPlayer: EntrantPlayer): Promise<RoundBye | undefined> {
+        const username = entrantPlayer.player.spreadsheetAlias?.psAlias || entrantPlayer.player.psUser;
         try {
             const response: AxiosResponse = await axios.post(this.roundByesUrl, {
                 round_id: round.id,
                 entrant_player_id: entrantPlayer.id,
             });
             const { id, round_id, entrant_player_id } = response.data;
-            this.logger.info(`Bye created for entrant ${entrantPlayer.player.spreadsheetAlias.psAlias} with UUID ${id}`);
+            this.logger.info(`Bye created for entrant ${username} with UUID ${id}`);
             return {
                 id: id,
                 round: round,
@@ -30,7 +31,7 @@ class RoundByeRepository extends Repository {
         } catch (error) {
             switch (error.status) {
                 case 409:
-                    this.logger.warn(`WARNING: Bye already exists for ${entrantPlayer.player.spreadsheetAlias.psAlias} in round ${round.roundNumber}`);
+                    this.logger.warn(`WARNING: Bye already exists for ${username} in round ${round.roundNumber}`);
                     return undefined;
                 default:
                     this.logger.error(`FATAL on creating RoundBye: ${error.message}`);

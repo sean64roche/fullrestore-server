@@ -1,4 +1,4 @@
-import { EntrantPlayer, Player, PlayerResponse, transformPlayerResponse } from "./player";
+import { Player, PlayerResponse, transformPlayerResponse } from "./player";
 
 export type SheetTournament = {
     name: string;
@@ -27,7 +27,7 @@ export interface Tournament {
     season: number | string;
     format: string;
     currentRound: number;
-    prizePool?: number;
+    prizePool: number | null;
     individualWinner?: Player;
 }
 
@@ -37,13 +37,13 @@ export type TournamentResponse = {
     season: number | string;
     format: string;
     current_round: number;
-    prize_pool?: number;
-    individual_winner?: string;
-    team_tour: boolean;
-    team_winner?: string;
+    prize_pool: number | null;
+    individual_winner: string | null;
+    team_tour: boolean | null;
+    team_winner: string | null;
     Player?: PlayerResponse;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export function transformTournamentResponse(data: TournamentResponse): Tournament {

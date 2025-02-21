@@ -25,7 +25,7 @@ export class RoundByeImportService {
                 this.logger.error(msg);
                 throw new Error(msg);
             }
-            const entrantPlayer: EntrantPlayer | undefined = Array.from(entrantPlayers).find(entrant => entrant.player.spreadsheetAlias.psAlias);
+            const entrantPlayer: EntrantPlayer | undefined = Array.from(entrantPlayers).find(entrant => entrant.player.spreadsheetAlias!.psAlias);
             if (!entrantPlayer) {
                 const msg = `FATAL: Player '${record.player}' not identifiable`;
                 this.logger.error(msg);

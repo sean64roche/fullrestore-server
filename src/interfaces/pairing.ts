@@ -70,6 +70,7 @@ export type ReplayDto = {
 }
 
 export interface Replay {
+    pairingId: string;
     url: string;
     matchNumber: number;
 }
@@ -84,6 +85,7 @@ export type ReplayResponse = {
 
 export function transformReplayResponse(replay: ReplayResponse): Replay {
     return {
+        pairingId: replay.pairing_id,
         url: replay.url,
         matchNumber: replay.match_number
     }
