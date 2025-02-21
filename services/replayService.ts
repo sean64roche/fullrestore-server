@@ -26,7 +26,6 @@ class ReplayService {
         } catch (error: any) {
             throw error;
         }
-
     }
 
     async getReplays(params: GetReplayParams) {

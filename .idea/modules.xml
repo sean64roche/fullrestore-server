@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/fullrestore-api.iml" filepath="$PROJECT_DIR$/.idea/fullrestore-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../fullrestore-importer/.idea/fullrestore-importer.iml" filepath="$PROJECT_DIR$/../fullrestore-importer/.idea/fullrestore-importer.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../fullrestore-service/.idea/fullrestore-service.iml" filepath="$PROJECT_DIR$/../fullrestore-service/.idea/fullrestore-service.iml" />
     </modules>
   </component>
 </project>

@@ -4,6 +4,7 @@ import {v4 as uuidv4} from 'uuid';
 import EntrantPlayer from '../models/EntrantPlayer';
 import Player from "../models/Player";
 import Tournament from "../models/Tournament";
+import PlayerAlias from "../models/PlayerAlias";
 
 interface EntrantPlayerAttributes {
     player_id: string;
@@ -48,7 +49,12 @@ class EntrantPlayerService {
         }
         return await EntrantPlayer.findAll({
             include: [{
-                model: Player
+                model: Player,
+                include: [{
+                    model: PlayerAlias,
+                    as: 'PlayerAlias',
+                    required: false
+                }]
             }, {
                 model: Tournament
             }],

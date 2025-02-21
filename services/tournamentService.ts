@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 
 export interface TournamentAttributes {
     name: string;
-    season: number;
+    season: string | number;
     format: string;
     current_round?: number;
     prize_pool?: number;
@@ -16,7 +16,7 @@ export interface TournamentAttributes {
 
 interface GetTournamentParams {
     name?: string;
-    season?: number;
+    season?: string | number;
     format?: string;
     individual_winner?: string;
 }

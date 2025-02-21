@@ -2,6 +2,7 @@ import {v4 as uuidv4} from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
 import { Op } from "sequelize";
+import PlayerAlias from "../models/PlayerAlias";
 
 interface PlayerAttributes {
     ps_user: string;
@@ -39,7 +40,12 @@ class PlayerService {
         }
         return await Player.findAll({
             where: {
-                ...whereClause
+                ...whereClause,
+                include: [{
+                    model: PlayerAlias,
+                    as: 'PlayerAlias',
+                    required: false
+                }]
             }
         });
     }

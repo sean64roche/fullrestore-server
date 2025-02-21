@@ -25,11 +25,9 @@ class RoundByeService {
         return RoundBye.findByPk(id, {
             include: [{
                 model: Round,
-                attributes: ['id', 'round', 'name']
             },
             {
                 model: EntrantPlayer,
-                attributes: ['id'],
                 include: [Player]
             }]
         });

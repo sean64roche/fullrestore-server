@@ -77,17 +77,14 @@ class PairingService {
                 include: [
                     {
                         model: Round,
-                        attributes: ['id', 'round', 'name'],
 
                         include: [{
                             model: Tournament,
-                            attributes: ['id', 'name', 'season'],
                         }]
                     },
                     {
                         model: EntrantPlayer,
                         as: 'Entrant1',
-                        attributes: ['id'],
                         include: [{
                             model: Player,
                             include: [{
@@ -100,7 +97,6 @@ class PairingService {
                     {
                         model: EntrantPlayer,
                         as: 'Entrant2',
-                        attributes: ['id'],
                         include: [{
                             model: Player,
                             include: [{
@@ -113,7 +109,6 @@ class PairingService {
                     {
                         model: EntrantPlayer,
                         as: 'Winner',
-                        attributes: ['id'],
                         include: [{
                             model: Player,
                             include: [{
@@ -140,28 +135,23 @@ class PairingService {
             include: [
                 {
                     model: Round,
-                    attributes: ['id', 'round', 'name'],
                     include: [{
                         model: Tournament,
-                        attributes: ['id','name', 'season'],
                     }]
                 },
                 {
                     model: EntrantPlayer,
                     as: 'Entrant1',
-                    attributes: ['id'],
                     include: [Player]
                 },
                 {
                     model: EntrantPlayer,
                     as: 'Entrant2',
-                    attributes: ['id'],
                     include: [Player]
                 },
                 {
                     model: EntrantPlayer,
                     as: 'Winner',
-                    attributes: ['id'],
                     include: [Player]
                 },
                 {

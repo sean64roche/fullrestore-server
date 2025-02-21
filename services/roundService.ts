@@ -36,6 +36,9 @@ class RoundService {
         if (round) whereClause.round = round;
         if (name) whereClause.name = name;
         return await Round.findAll({
+            include: [{
+                model: Tournament,
+            }],
             where: {
                 ...whereClause
             }
