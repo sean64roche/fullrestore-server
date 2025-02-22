@@ -52,7 +52,7 @@ class EntrantPlayerService {
                 model: Player,
                 include: [{
                     model: PlayerAlias,
-                    as: 'PlayerAlias',
+                    as: 'Aliases',
                     required: false
                 }]
             }, {
