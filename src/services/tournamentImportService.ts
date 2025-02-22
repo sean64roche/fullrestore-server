@@ -25,7 +25,7 @@ export class TournamentImportService {
         }
         const tournament: TournamentDto = tournamentData[0];
         if (!!tournament.individual_winner) {
-            const winner: Player | null = await new PlayerRepository(this.config, this.logger).findPlayer(tournament.individual_winner);
+            const winner: Player | null = await new PlayerRepository(this.config, this.logger).findPlayerByAlias(tournament.individual_winner);
             tournament.individual_winner = winner?.id;
         } else {
             this.logger.warn(`WARNING: tournament winner not matched to a player ID`);

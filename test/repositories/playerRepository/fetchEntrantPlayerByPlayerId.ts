@@ -54,7 +54,7 @@ test('successfully fetches entrant player data with valid UUID', async (t) => {
         };
     });
 
-    const result = await pr.findEntrantPlayerByPlayerId(validPlayerId);
+    const result = await pr.findEntrantByPlayerId(validPlayerId);
     assert.deepStrictEqual(result, transformEntrantPlayerResponse(mockResponse[0]));
 });
 
@@ -68,7 +68,7 @@ test('returns nothing when no player is found', async (t) => {
         };
     });
 
-    const result: EntrantPlayer | void = await pr.findEntrantPlayerByPlayerId(nonExistentPlayerId);
+    const result: EntrantPlayer | void = await pr.findEntrantByPlayerId(nonExistentPlayerId);
     assert.deepStrictEqual(result, undefined);
 });
 
@@ -80,7 +80,7 @@ test('throws error when API request fails', async (t) => {
         throw error;
     });
     await assert.rejects(
-        () => pr.findEntrantPlayerByPlayerId(validPlayerId),
+        () => pr.findEntrantByPlayerId(validPlayerId),
         {
             message: 'Failed to fetch entrant player data'
         }
@@ -95,7 +95,7 @@ test('throws error with invalid UUID format', async (t) => {
         throw error;
     });
     await assert.rejects(
-        () => pr.findEntrantPlayerByPlayerId(invalidPlayerId),
+        () => pr.findEntrantByPlayerId(invalidPlayerId),
         {
             message: 'Invalid player ID format'
         }
@@ -112,7 +112,7 @@ test('handles network errors gracefully', async (t) => {
     });
 
     await assert.rejects(
-        () => pr.findEntrantPlayerByPlayerId(validPlayerId),
+        () => pr.findEntrantByPlayerId(validPlayerId),
         {
             message: 'Network Error'
         }

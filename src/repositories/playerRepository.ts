@@ -4,7 +4,11 @@ import {
     Player,
     EntrantPlayer,
     EntrantPlayerResponse,
-    transformEntrantPlayerResponse
+    transformEntrantPlayerResponse,
+    PlayerResponse,
+    PlayerAliasResponse,
+    transformPlayerResponse,
+    transformPlayerAliasResponse, PlayerAlias
 } from "../interfaces/player";
 import {Tournament} from "../interfaces/tournament";
 import {cleanPsUsername} from "../utils/helpers";
@@ -88,20 +92,11 @@ class PlayerRepository extends Repository {
         }
     }
 
-    async findPlayer(alias: string): Promise<Player | null> {
+    async findPlayerByAlias(alias: string): Promise<Player | null> {
         try {
             const response: AxiosResponse = await axios.get(`${this.playerAliasesUrl}/${alias}`);
-            const { ps_user, discord_user, discord_id } = response.data.Player;
-            const { player_id, ps_alias } = response.data;
-            return {
-                id: player_id,
-                psUser: ps_user,
-                discordUser: discord_user,
-                discordId: discord_id,
-                spreadsheetAlias: {
-                    psAlias: ps_alias,
-                }
-            };
+            const aliasData: PlayerAliasResponse = response.data;
+            return transformPlayerResponse(aliasData.Player);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.response?.status) {
@@ -124,23 +119,15 @@ class PlayerRepository extends Repository {
     async getEntrantPlayer(player: Player, tournament: Tournament): Promise<EntrantPlayer> {
         try {
             const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${player.id}&tournament_id=${tournament.id}`);
-            const { id, entrant_team_id, active, max_round, seed } = response.data[0];
-            return {
-                id: id,
-                tournament: tournament,
-                player: player,
-                entrantTeam: entrant_team_id,
-                active: active,
-                maxRound: max_round,
-                seed: seed,
-            }
+            const data: EntrantPlayerResponse = response.data[0];
+            return transformEntrantPlayerResponse(data);
         } catch (error) {
             this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data)}`);
             throw new Error(error.message);
         }
     }
 
-    async findEntrantPlayerByPlayerId(playerId: string): Promise<EntrantPlayer | void> {
+    async findEntrantByPlayerId(playerId: string): Promise<EntrantPlayer | void> {
         try {
             const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}`);
             const data: EntrantPlayerResponse = response.data[0];

@@ -52,6 +52,7 @@ export interface PlayerAlias {
 export type PlayerAliasResponse = {
     player_id: string;
     ps_alias: string;
+    Player: PlayerResponse;
 }
 
 export function transformPlayerAliasResponse(data: PlayerAliasResponse): PlayerAlias {

@@ -27,7 +27,7 @@ export class PlayerImportService {
             const cleanPsUser: string = cleanPsUsername(record.showdown_user).toLowerCase();
             if (!!record.discord_user) validateDiscordUsername(record.discord_user, this.logger);
             const existingPlayer: Player | null =  await new PlayerRepository(this.config, this.logger)
-                .findPlayer(cleanPsUser);
+                .findPlayerByAlias(cleanPsUser);
             if (!!existingPlayer) {
                 players.add(existingPlayer);
                 this.logger.info(`Alias ${cleanPsUser} already exists, skipping`);
