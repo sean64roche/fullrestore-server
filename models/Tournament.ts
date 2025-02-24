@@ -11,6 +11,7 @@ class Tournament extends Model {
     declare individual_winner?: string;
     declare team_tour: boolean;
     declare team_winner?: string;
+    declare info?: string;
 }
 
 function winnersAreOverloaded() {
@@ -72,8 +73,11 @@ Tournament.init({
             model: 'team',
             key: 'id'
         }
+    },
+    info: {
+        type: DataTypes.TEXT,
     }
-    
+
 }, {
     sequelize,
     modelName: 'Tournament',
