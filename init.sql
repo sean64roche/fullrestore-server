@@ -45,6 +45,42 @@ END;
 $_$;
 
 
+--
+-- Name: maintain_round_entrant(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.maintain_round_entrant() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO round_entrant (round_id, entrant_player_id)
+        VALUES 
+            (NEW.round_id, NEW.entrant1_id),
+            (NEW.round_id, NEW.entrant2_id);
+    ELSIF TG_OP = 'UPDATE' THEN
+        IF OLD.round_id != NEW.round_id OR 
+           OLD.entrant1_id != NEW.entrant1_id OR 
+           OLD.entrant2_id != NEW.entrant2_id THEN
+            DELETE FROM round_entrant 
+            WHERE round_id = OLD.round_id 
+            AND entrant_player_id IN (OLD.entrant1_id, OLD.entrant2_id);
+            
+            INSERT INTO round_entrant (round_id, entrant_player_id)
+            VALUES 
+                (NEW.round_id, NEW.entrant1_id),
+                (NEW.round_id, NEW.entrant2_id);
+        END IF;
+    ELSIF TG_OP = 'DELETE' THEN
+        DELETE FROM round_entrant 
+        WHERE round_id = OLD.round_id 
+        AND entrant_player_id IN (OLD.entrant1_id, OLD.entrant2_id);
+    END IF;
+    RETURN NULL;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -57,6 +93,20 @@ CREATE TABLE public.captain (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     player_id uuid NOT NULL,
     entrant_team_id uuid NOT NULL
+);
+
+
+--
+-- Name: content; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.content (
+    url text NOT NULL,
+    pairing_id uuid NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT url_no_p2_suffix_check CHECK (public.check_url_no_p2_suffix(url)),
+    CONSTRAINT valid_url CHECK ((url ~ '^(http|https)://'::text))
 );
 
 
@@ -130,7 +180,7 @@ CREATE TABLE public.player (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     ps_user character varying(255) NOT NULL,
     discord_user character varying(255),
-    discord_id character varying(255),
+    discord_id character varying(255)
 );
 
 
@@ -188,6 +238,16 @@ CREATE TABLE public.round_bye (
 
 
 --
+-- Name: round_entrant; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.round_entrant (
+    round_id uuid NOT NULL,
+    entrant_player_id uuid NOT NULL
+);
+
+
+--
 -- Name: team; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -211,8 +271,9 @@ CREATE TABLE public.tournament (
     individual_winner uuid,
     team_tour boolean NOT NULL,
     team_winner uuid,
+    info text
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
 );
 
 
@@ -238,6 +299,14 @@ ALTER TABLE ONLY public.pairing
 
 ALTER TABLE ONLY public.captain
     ADD CONSTRAINT captain_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: content content_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.content
+    ADD CONSTRAINT content_pkey PRIMARY KEY (url);
 
 
 --
@@ -302,6 +371,14 @@ ALTER TABLE ONLY public.pairing
 
 ALTER TABLE ONLY public.player_alias
     ADD CONSTRAINT player_alias_ps_alias_key PRIMARY KEY (ps_alias);
+
+
+--
+-- Name: player player_discord_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.player
+    ADD CONSTRAINT player_discord_id_key UNIQUE (discord_id);
 
 
 --
@@ -417,10 +494,32 @@ ALTER TABLE ONLY public.tournament
 
 
 --
+-- Name: round_entrant unique_entrant_per_round; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.round_entrant
+    ADD CONSTRAINT unique_entrant_per_round UNIQUE (round_id, entrant_player_id);
+
+
+--
 -- Name: entrant_player_tournament_id_player_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX entrant_player_tournament_id_player_id ON public.entrant_player USING btree (tournament_id, player_id);
+
+
+--
+-- Name: no_cross_duplicate_entrants_round_1; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX no_cross_duplicate_entrants_round_1 ON public.pairing USING btree (round_id, entrant1_id, entrant2_id) WHERE (entrant1_id < entrant2_id);
+
+
+--
+-- Name: no_cross_duplicate_entrants_round_2; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX no_cross_duplicate_entrants_round_2 ON public.pairing USING btree (round_id, entrant2_id, entrant1_id) WHERE (entrant1_id > entrant2_id);
 
 
 --
@@ -452,10 +551,24 @@ CREATE UNIQUE INDEX tournament_name_season ON public.tournament USING btree (nam
 
 
 --
--- Name: uniq_round_entrant_pairing; Type: INDEX; Schema: public; Owner: -
+-- Name: uniq_round_entrant1; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX uniq_round_entrant_pairing ON public.pairing USING btree (round_id, LEAST(entrant1_id, entrant2_id), GREATEST(entrant1_id, entrant2_id));
+CREATE UNIQUE INDEX uniq_round_entrant1 ON public.pairing USING btree (round_id, entrant1_id);
+
+
+--
+-- Name: uniq_round_entrant2; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX uniq_round_entrant2 ON public.pairing USING btree (round_id, entrant2_id);
+
+
+--
+-- Name: pairing maintain_round_entrant_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER maintain_round_entrant_trigger AFTER INSERT OR DELETE OR UPDATE ON public.pairing FOR EACH ROW EXECUTE FUNCTION public.maintain_round_entrant();
 
 
 --
@@ -496,6 +609,14 @@ ALTER TABLE ONLY public.entrant_team
 
 ALTER TABLE ONLY public.entrant_team
     ADD CONSTRAINT "FK_entrant_team_tournament_id" FOREIGN KEY (tournament_id) REFERENCES public.tournament(id);
+
+
+--
+-- Name: round_entrant FK_round_entrant_entrant_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.round_entrant
+    ADD CONSTRAINT "FK_round_entrant_entrant_player_id_fkey" FOREIGN KEY (entrant_player_id) REFERENCES public.entrant_player(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -567,6 +688,14 @@ ALTER TABLE ONLY public.player_alias
 --
 
 ALTER TABLE ONLY public.replay
+    ADD CONSTRAINT replay_pairing_id_fkey FOREIGN KEY (pairing_id) REFERENCES public.pairing(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: content replay_pairing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.content
     ADD CONSTRAINT replay_pairing_id_fkey FOREIGN KEY (pairing_id) REFERENCES public.pairing(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
