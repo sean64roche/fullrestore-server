@@ -8,10 +8,8 @@ import {
     PlayerResponse,
     PlayerAliasResponse,
     transformPlayerResponse,
-    transformPlayerAliasResponse, PlayerAlias
 } from "../interfaces/player";
 import {Tournament} from "../interfaces/tournament";
-import {cleanPsUsername} from "../utils/helpers";
 import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
@@ -35,13 +33,9 @@ class PlayerRepository extends Repository {
                 discord_user: player.discord_user,
                 discord_id: player.discord_id,
             });
-            this.logger.info(`Player '${player.ps_user}' created with UUID ${response.data.id}`);
-            return {
-                ...response.data,
-                spreadsheetAlias: {
-                    psAlias: cleanPsUsername(player.ps_user).toLowerCase()
-                }
-            }
+            const playerData: PlayerResponse = response.data;
+            this.logger.info(`Player '${player.ps_user}' created with UUID ${playerData.id}`);
+            return transformPlayerResponse(playerData);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.status) {
@@ -69,16 +63,8 @@ class PlayerRepository extends Repository {
                 player_id: player.id,
                 tournament_id: tournament.id
             });
-            const { id, entrant_team_id, active, max_round, seed } = response.data;
-            return {
-                id: id,
-                player: player,
-                tournament: tournament,
-                entrantTeam: entrant_team_id,
-                active: active,
-                maxRound: max_round,
-                seed: seed
-            };
+            const entrantData: EntrantPlayerResponse = response.data;
+            return transformEntrantPlayerResponse(entrantData);
         } catch (error) {
             switch (error.status) {
                 case 409:
@@ -116,27 +102,33 @@ class PlayerRepository extends Repository {
         }
     }
 
-    async getEntrantPlayer(player: Player, tournament: Tournament): Promise<EntrantPlayer> {
+    async findEntrant(player: Player, tournament: Tournament): Promise<EntrantPlayer> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${player.id}&tournament_id=${tournament.id}`);
-            const data: EntrantPlayerResponse = response.data[0];
-            return transformEntrantPlayerResponse(data);
+            const entrant: EntrantPlayer = await this.findEntrantById(player.id, tournament.id);
+            if (!entrant) {
+                throw new Error(`Entrant not found with UUID ${player.id}`);
+            }
+            return entrant;
         } catch (error) {
             this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.message);
+            throw error;
         }
     }
 
-    async findEntrantByPlayerId(playerId: string): Promise<EntrantPlayer | void> {
+    async findEntrantById(playerId: string, tournamentId: string): Promise<EntrantPlayer> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}`);
+            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentId}`);
             const data: EntrantPlayerResponse = response.data[0];
-            if (data === undefined) return;
-            else return transformEntrantPlayerResponse(data);
+            if (!data) {
+                const error = new Error(`ERROR: Player not found with UUID ${playerId}`);
+                this.logger.warn(error.message);
+                throw error;
+            }
+            return transformEntrantPlayerResponse(data);
         }
         catch (error) {
-            this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.message);
+            this.logger.error(`FATAL on findEntrantPlayerById: ${JSON.stringify(error.response?.data)}`);
+            throw error;
         }
     }
 }

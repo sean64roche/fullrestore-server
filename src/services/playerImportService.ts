@@ -55,10 +55,10 @@ export class PlayerImportService {
                 this.logger.info(`Entrant '${player.spreadsheetAlias!.psAlias}' added with UUID ${response.id}`);
             } catch (error) {
                 if (error.status === 409) {
-                    const existingEntrantPlayer: EntrantPlayer = await new PlayerRepository(this.config, this.logger)
-                        .getEntrantPlayer(player, tournament);
-                    entrantPlayers.add(existingEntrantPlayer);
-                    this.logger.warn(`WARNING: duplicate entry found with UUID ${existingEntrantPlayer.id}`);
+                    const existingEntrantPlayer: EntrantPlayer | void = await new PlayerRepository(this.config, this.logger)
+                        .findEntrant(player, tournament);
+                    entrantPlayers.add(existingEntrantPlayer!);
+                    this.logger.warn(`WARNING: duplicate entry found with UUID ${existingEntrantPlayer!.id}`);
                 } else {
                     throw (error);
                 }
