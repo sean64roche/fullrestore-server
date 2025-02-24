@@ -5,6 +5,7 @@ class Player extends Model {
   declare id: string;
   declare ps_user: string;
   declare discord_user?: string;
+  declare discord_id?: string;
 }
 
 Player.init({
@@ -28,6 +29,15 @@ Player.init({
     validate: {
         notEmpty: true,
         is: /^[a-zA-Z0-9._]+$/
+    }
+  },
+  discord_id: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: true,
+    validate: {
+      notEmpty: true,
+      isNumeric: true,
     }
   }
 }, {
