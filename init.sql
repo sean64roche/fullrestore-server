@@ -273,7 +273,7 @@ CREATE TABLE public.tournament (
     team_winner uuid,
     info text,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL
 );
 
 
