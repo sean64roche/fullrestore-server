@@ -271,7 +271,7 @@ CREATE TABLE public.tournament (
     individual_winner uuid,
     team_tour boolean NOT NULL,
     team_winner uuid,
-    info text
+    info text,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
 );
