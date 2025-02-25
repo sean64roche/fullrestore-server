@@ -120,8 +120,8 @@ class PlayerRepository extends Repository {
             const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentId}`);
             const data: EntrantPlayerResponse = response.data[0];
             if (!data) {
-                const error = new Error(`ERROR: Player not found with UUID ${playerId}`);
-                this.logger.warn(error.message);
+                const error = new Error(`ERROR: entrantPlayer not found with UUID ${playerId}`);
+                this.logger.error(error.message);
                 throw error;
             }
             return transformEntrantPlayerResponse(data);
