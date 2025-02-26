@@ -71,7 +71,7 @@ test('returns error when no player is found', async (t) => {
     });
     await assert.rejects(
         () => pr.findEntrantById(nonExistentPlayerId, nonExistentTournamentId),
-        { message: 'ERROR: Player not found with UUID 00000000-0000-0000-0000-000000000000' });
+        { message: 'ERROR: entrantPlayer not found with UUID 00000000-0000-0000-0000-000000000000' });
 });
 
 test('throws error when API request fails', async (t) => {
