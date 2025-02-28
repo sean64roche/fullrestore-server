@@ -33,9 +33,6 @@ app.use('/api/players', playerRoutes)
   .use('/api/pairings', pairingRoutes)
   .use('/api/replays', replayRoutes);
 
-// Add other route middleware
-
-// Database connection
 async function initDatabase() {
   try {
     initAssociations();
@@ -50,7 +47,6 @@ async function initDatabase() {
   }
 }
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   initDatabase();

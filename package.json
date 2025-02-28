@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app/app.ts",
   "scripts": {
-    "test": "npx tsx --test test/*.test.ts"
+    "test": "npx tsx --test test/**/*.ts"
   },
   "keywords": [],
   "author": "",
