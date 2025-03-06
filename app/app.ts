@@ -12,8 +12,6 @@ import replayRoutes from '../routes/replayRoutes';
 import { authenticateToken } from '../config/auth.js';
 import { initAssociations } from "../associations/initAssociations";
 
-// Import other route files as needed
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
