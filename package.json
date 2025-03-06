@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "app/app.ts",
   "scripts": {
-    "test": "npx tsx --test test/**/*.ts"
+    "test": "npx tsx --test test/**/*.ts",
+    "test:integration": " node --test test",
+    "test:integration:setup": "npx tsx test/dbScript.ts",
+    "test:integration:teardown": "docker stop fullrestore-integration-test && docker rm fullrestore-integration-test",
+    "test:database": "npx tsx test/db.ts"
   },
   "keywords": [],
   "author": "",
