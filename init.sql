@@ -39,7 +39,7 @@ CREATE FUNCTION public.also_create_player_alias() RETURNS trigger
     AS $$
 BEGIN
     -- Insert a new record into player_alias table
-    INSERT INTO player_alias (player_id, ps_user)
+    INSERT INTO player_alias (player_id, ps_alias)
     VALUES (NEW.id, NEW.ps_user);
     
     -- Return the NEW record to complete the trigger function
