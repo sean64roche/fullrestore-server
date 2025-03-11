@@ -28,6 +28,7 @@ export async function setupDb() {
         }
 
         execSync(`docker run -d \
+          --name fullrestore-integration-test \
           -e POSTGRES_DB=fullrestore-integration-test \
           -e POSTGRES_PASSWORD=password \
           -p 5433:5432 \
@@ -241,7 +242,6 @@ async function insertPlayerAliases(db: Pool) {
                            ('20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4'::uuid, 'buzzed'),
                            ('2c53e1c3-a865-4910-aeca-0f08c4c018d4'::uuid, 'zacpz'),
                            ('160bbc5d-9d37-41f1-b3f9-cd6280e26eac'::uuid, 'techsavage'),
-                           ('a8177b3c-e07a-4e03-8813-720e5aaff072'::uuid, 'rezzo64'),
                            ('a8177b3c-e07a-4e03-8813-720e5aaff072'::uuid, 'tryingfunstuff2day'),
                            ('20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4'::uuid, 'buzzed27'),
                            ('25b3b075-f648-40cc-867e-ee2d322b56e7'::uuid, 'bored713');
@@ -308,75 +308,7 @@ async function insertPlayerAliases(db: Pool) {
            ('74235ec2-d3b6-46fe-9df3-58874f8c4012'::uuid, 'kingraska'),
            ('8473c391-d78c-4066-9acc-b5997a837db0'::uuid, 'blaise2245'),
            ('60764709-5b39-4283-ba18-d562bdf6a906'::uuid, 'rimato13'),
-           ('3f93c444-4354-4fd3-85f5-2d098ec131f3'::uuid, 'drainu'),
-           ('61f74133-dd93-4d9d-92fa-bce347adef11'::uuid, 'jeem16'),
-           ('84097a2b-07f2-4d37-9e9b-d9a8f2435517'::uuid, 'xxericxx');
-    INSERT INTO public.player_alias (player_id, ps_alias)
-    VALUES ('f311e716-e932-4785-918a-864ce3130d0e'::uuid, 'wyliolivete'),
-           ('b858c8d0-b47a-4814-b6d9-d03d159b622c'::uuid, 'oofmaxima'),
-           ('0b3f411d-2422-4448-aa9c-4e80c4a27408'::uuid, 'leftwingbo'),
-           ('6b229fd3-d7d9-4b08-9670-a050009a8f19'::uuid, 'shinyduskull'),
-           ('050c2a2e-daa9-46a8-b541-c0140534cc8d'::uuid, 'lubloom'),
-           ('045f174d-00cd-49fc-8c7c-a2abdc4be112'::uuid, 'sheikhater'),
-           ('a7690aee-4f1e-4e02-822c-5ef7e0372f91'::uuid, 'jstnjhnsn'),
-           ('24aa2c0e-e304-45a0-b629-a421f3874c7a'::uuid, 'vayun0906'),
-           ('7e0a0a6e-ad53-4094-9de6-1bc1775450f9'::uuid, 'monchooo'),
-           ('7c276b06-c549-4c61-8bce-8fa4df1a91b7'::uuid, 'rabsca');
-    INSERT INTO public.player_alias (player_id, ps_alias)
-    VALUES ('329137e1-77db-4ff5-8068-0b0c0b2c9be0'::uuid, 'jumpy23'),
-           ('9c1e7449-7f19-4ecc-9b62-53c216b5be1a'::uuid, 'uri2814'),
-           ('47c0350e-009b-49fb-b964-48ff6084dd9a'::uuid, 'mielke'),
-           ('b13148cb-9cb5-4c98-a330-5084ca4a8897'::uuid, 'racistorg'),
-           ('69df6bb6-f055-4fb5-973e-927aa435befa'::uuid, 'jojmac'),
-           ('2ec71ac6-9256-43e8-a80e-41c051822205'::uuid, 'zakyarameru'),
-           ('fc8eac3f-affb-4bd4-a737-e2878da89bf1'::uuid, 'whomstvedst'),
-           ('968e07d2-ac2d-476b-998d-d06bd0d247b2'::uuid, 'nirauwu'),
-           ('86eceb7a-1517-4670-b89b-22c8b9764310'::uuid, 'oozpng'),
-           ('25143efb-d920-4fcd-8f00-71ce0fabf9f1'::uuid, 'knexhawk');
-    INSERT INTO public.player_alias (player_id, ps_alias)
-    VALUES ('4f54fea4-b3e1-4be6-a28b-08caa5d27327'::uuid, 'snakesnakesnakesnake'),
-           ('9cb8529a-7212-4d5f-8893-b5b9d4d0b99e'::uuid, 'manser'),
-           ('a8108e5a-aecc-43c3-9082-2ae4420f7fcb'::uuid, 'shadowtime2000'),
-           ('c0ea4182-5d6c-4d38-b032-90937c4d582e'::uuid, 'jordankcdtgmt5'),
-           ('b0dcd6b8-13e5-447d-8d05-9ab67f94a903'::uuid, 'walterbite'),
-           ('d0c182c6-c8a7-458a-a262-4de02e07911c'::uuid, 'msousa'),
-           ('ef9844b0-1535-46f7-9c59-afe17fd8dcd6'::uuid, 'primum75'),
-           ('a2aa00ab-85b2-4dd4-bd10-da0a2383b26a'::uuid, 'kenuckz'),
-           ('039e1bdf-fec8-49b0-99b4-c309f64eaf09'::uuid, 'ssjsilver650'),
-           ('c0a5fce6-d300-41ed-a6a4-9a223ac1e77a'::uuid, 'mayopockets');
-    INSERT INTO public.player_alias (player_id, ps_alias)
-    VALUES ('513e241f-2936-4aac-a60a-1d33fda5588e'::uuid, 'royyamaha'),
-           ('8d923ef4-d652-42b9-88c4-65cb904f37e5'::uuid, 'alcuno2'),
-           ('377ec77d-fc32-41c0-82a1-b65c04ff616c'::uuid, 'jake0blong'),
-           ('46e8e767-3f4b-4677-923a-b79c7b54414b'::uuid, 'jotaentrena'),
-           ('5ed605b8-8fec-45d6-b579-0c49bbc3bb62'::uuid, 'saintome'),
-           ('dee8595e-5afd-4146-868e-09e087b62c81'::uuid, 'braydenbra'),
-           ('b90c69e0-e914-46e0-a35b-3f7208439cec'::uuid, 'btalb'),
-           ('7f8bf9dc-8020-42bb-a568-d2741998376f'::uuid, 'spin2win'),
-           ('102c9fd1-501b-46e0-a527-e5837149f1fe'::uuid, 'grillking'),
-           ('02dc8d89-1412-4735-992f-58c75f89ba24'::uuid, 'calmstiege');
-    INSERT INTO public.player_alias (player_id, ps_alias)
-    VALUES ('446204a9-82b9-4d4a-bccb-880a7cc22e70'::uuid, 'omarzx'),
-           ('562c2579-7f22-432d-b71f-b186cf4f99e8'::uuid, 'neroatlas'),
-           ('c147d459-ce51-4612-909d-7cade331d015'::uuid, 'nintagofoxo'),
-           ('53069730-ca09-4e70-a69d-d6eae6516a37'::uuid, 'marshy'),
-           ('1b8ddbc4-a841-4252-8f28-f7300ee2a205'::uuid, 'awfily'),
-           ('fb9c8a90-fbd1-430b-929e-b9d47525b0fb'::uuid, 'coderedxz'),
-           ('deae3b84-704a-4757-86f6-c5bc84356987'::uuid, 'wonderfulwhiscash'),
-           ('eeca17ef-191a-437e-be4c-deff91986ded'::uuid, 'johnwn1207'),
-           ('cd82c2cd-5fbb-486b-83f9-a59ce0e880bb'::uuid, 'jsockisama'),
-           ('4c16ccd6-ce8f-4985-8447-19ace04ec7ec'::uuid, 'bydy');
-    INSERT INTO public.player_alias (player_id, ps_alias)
-    VALUES ('75838c5e-24dc-4a5a-a384-4fcf3b226d5f'::uuid, 'bananatree'),
-           ('2bcf15de-8dc4-4b5e-9e0a-7b3fdbd6990b'::uuid, 'alexgarcia9774'),
-           ('eb07f25a-20e7-4023-8e20-cd9de2ecd6c1'::uuid, 'edenn'),
-           ('d1712a35-18e5-400a-b2cc-d91d0a13e079'::uuid, 'smallow'),
-           ('7f529b16-bf9f-4a52-93ab-297e761a5066'::uuid, 'hiroginko'),
-           ('f6ab82b8-a0a2-4cfc-96e4-a9a378321207'::uuid, 'ameliam313'),
-           ('820601cb-2872-4a1a-8855-17fd42b373a2'::uuid, 'puruglyisugly'),
-           ('93ac4668-be27-45a1-9a35-f4b3c96ea226'::uuid, 'zinc4'),
-           ('a3f211a9-1f02-4ce4-be62-c0f048db86c5'::uuid, 'zpanther17'),
-           ('e2ad4491-a995-496c-8ce8-e7f68cd3e695'::uuid, 'kingofironfrisk');`);
+           ('3f93c444-4354-4fd3-85f5-2d098ec131f3'::uuid, 'drainu');`);
     console.log('Player aliases successfully inserted.');
 }
 
