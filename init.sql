@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.6 (Ubuntu 16.6-0ubuntu0.24.04.1)
--- Dumped by pg_dump version 16.6 (Ubuntu 16.6-0ubuntu0.24.04.1)
+-- Dumped from database version 16.8 (Ubuntu 16.8-0ubuntu0.24.04.1)
+-- Dumped by pg_dump version 16.8 (Ubuntu 16.8-0ubuntu0.24.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -28,6 +28,24 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+--
+-- Name: also_create_player_alias(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.also_create_player_alias() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    -- Insert a new record into player_alias table
+    INSERT INTO player_alias (player_id, ps_user)
+    VALUES (NEW.id, NEW.ps_user);
+    
+    -- Return the NEW record to complete the trigger function
+    RETURN NEW;
+END;
+$$;
 
 
 --
@@ -271,9 +289,9 @@ CREATE TABLE public.tournament (
     individual_winner uuid,
     team_tour boolean NOT NULL,
     team_winner uuid,
-    info text,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL
+    "updatedAt" timestamp with time zone NOT NULL,
+    info text
 );
 
 
@@ -572,6 +590,13 @@ CREATE TRIGGER maintain_round_entrant_trigger AFTER INSERT OR DELETE OR UPDATE O
 
 
 --
+-- Name: player player_insert_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER player_insert_trigger AFTER INSERT ON public.player FOR EACH ROW EXECUTE FUNCTION public.also_create_player_alias();
+
+
+--
 -- Name: captain FK_captain_entrant_team_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -684,19 +709,19 @@ ALTER TABLE ONLY public.player_alias
 
 
 --
--- Name: replay replay_pairing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.replay
-    ADD CONSTRAINT replay_pairing_id_fkey FOREIGN KEY (pairing_id) REFERENCES public.pairing(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: content replay_pairing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.content
     ADD CONSTRAINT replay_pairing_id_fkey FOREIGN KEY (pairing_id) REFERENCES public.pairing(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: replay replay_pairing_id_fkey1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.replay
+    ADD CONSTRAINT replay_pairing_id_fkey1 FOREIGN KEY (pairing_id) REFERENCES public.pairing(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
