@@ -1,11 +1,12 @@
-import tournamentRoutes from "../routes/tournamentRoutes";
 
 import test from 'node:test';
 import { setupDb, teardownDb } from "./dbScript";
 import express from "express";
 import playerRoutes from "../routes/playerRoutes";
+import tournamentRoutes from "../routes/tournamentRoutes";
 import assert from "node:assert";
 import request from "supertest";
+import formatRoutes from "../routes/formatRoutes";
 
 test.before(async () => {
     await setupDb();
@@ -36,7 +37,7 @@ test.describe('API GET player', async () => {
                 }) => alias.ps_alias === 'tryingfunstuff2day')
             );
         } catch (error) {
-            console.error('Test error:', error);
+            console.error('Players error:', error);
             throw error;
         }
     });
@@ -53,14 +54,32 @@ test.describe('API GET tournament', async () => {
             const response = await request(app)
                 .get('/api/tournaments?name=Old Money Open&season=1');
             const result = response.body[0]
-            console.log(result);
             assert.equal(response.status, 200);
             assert.equal(result.name, 'Old Money Open');
             assert.equal(result.season, '1');
             assert.equal(result.format, 'gen3ou');
             assert.equal(result.info, 'test');
         } catch (error) {
-            console.error('Test error:', error);
+            console.error('Tournaments error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET format', async () => {
+    const app = express();
+    app.use(express.json())
+        .use(express.urlencoded({extended: true}))
+        .use('/api/formats', formatRoutes);
+
+    await test('GET /api/formats/gen3ou', async () => {
+        try {
+            const response = await request(app)
+                .get('/api/formats/gen3ou');
+            assert.equal(response.status, 200);
+            assert.equal(response.body.format, 'gen3ou');
+        } catch (error) {
+            console.error('Formats error:', error);
             throw error;
         }
     });
