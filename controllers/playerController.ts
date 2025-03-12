@@ -17,22 +17,22 @@ export async function createPlayer(req: Request, res: Response) {
     }
 }
 
-export async function getPlayers(req: Request, res: Response) {
+export async function getPlayer(req: Request, res: Response) {
     try {
         const {
             player,
             ps_user,
             discord_user
         } = req.query;
-        const players: Player[] = await playerService.getPlayer({
+        const _player: Player = await playerService.getPlayer({
             player: player as string,
             ps_user: ps_user as string,
             discord_user: discord_user as string
         });
-        if (players.length < 1) {
+        if (!_player) {
             return res.status(404).json( { error: 'Player not found' });
         }
-        return res.json(players);
+        return res.json(_player);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }

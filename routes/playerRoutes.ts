@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   createPlayer,
-  getPlayers,
+  getPlayer,
   getPlayerById,
   getPlayerCompetitions,
   updatePlayer,
@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post('/', createPlayer);
 
-router.get('/', validateQueryParams(['player', 'ps_user', 'discord_user', 'discord_id']), getPlayers);
+router.get('/', validateQueryParams(['player', 'ps_user', 'discord_user', 'discord_id']), getPlayer);
 
 router.get('/:id', getPlayerById);
 

@@ -1,4 +1,4 @@
-import {execSync} from "node:child_process";
+import {exec} from "node:child_process";
 
 require('dotenv').config();
 
@@ -8,33 +8,40 @@ const GITLAB_TOKEN: string = process.env.GITLAB_TOKEN;
 const POSTGRES_IMAGE_NAME: string = process.env.POSTGRES_IMAGE_NAME;
 const POSTGRES_IMAGE_TAG: string = 'latest';
 import {Pool} from 'pg';
+import {initAssociations} from "../associations/initAssociations";
+import {promisify} from "node:util";
+
+const execAsync = promisify(exec);
+const db = new Pool({
+    host: 'localhost',
+    port: 5433,
+    database: 'fullrestore-integration-test',
+    user: 'postgres',
+    password: 'password',
+    connectionTimeoutMillis: 5000,
+});
 
 export async function setupDb() {
+
     try {
         console.log(process.env.NODE_ENV);
-        execSync(`docker login ${GITLAB_REGISTRY} -u ${GITLAB_USERNAME} -p ${GITLAB_TOKEN}`, {
-            stdio: 'inherit'
-        });
+        await execAsync(`docker login ${GITLAB_REGISTRY} -u ${GITLAB_USERNAME} -p ${GITLAB_TOKEN}`);
 
         const fullImagePath = `${GITLAB_REGISTRY}/${POSTGRES_IMAGE_NAME}:${POSTGRES_IMAGE_TAG}`;
-        execSync(`docker pull ${fullImagePath}`, {
-            stdio: 'inherit'
-        });
+        await execAsync(`docker pull ${fullImagePath}`);
 
         try {
-            execSync('docker stop fullrestore-integration-test', {stdio: 'ignore'});
-            execSync('docker rm fullrestore-integration-test', {stdio: 'ignore'});
+            await execAsync('docker stop fullrestore-integration-test');
+            await execAsync('docker rm fullrestore-integration-test');
         } catch {
         }
 
-        execSync(`docker run -d \
+        await execAsync(`docker run -d \
           --name fullrestore-integration-test \
           -e POSTGRES_DB=fullrestore-integration-test \
           -e POSTGRES_PASSWORD=password \
           -p 5433:5432 \
-          ${fullImagePath}`, {
-            stdio: 'inherit'
-        });
+          ${fullImagePath}`);
 
         await connectDb();
     } catch (error) {
@@ -44,21 +51,13 @@ export async function setupDb() {
 }
 
 async function connectDb() {
-    const db = new Pool({
-        host: 'localhost',
-        port: 5433,
-        database: 'fullrestore-integration-test',
-        user: 'postgres',
-        password: 'password',
-        connectionTimeoutMillis: 5000,
-    });
-
     const maxRetries = 10;
     let retries = 0;
 
     while (retries < maxRetries) {
         try {
             await db.query('SELECT 1');
+            initAssociations();
             await insertPlayers(db);
             await insertPlayerAliases(db);
             await insertFormats(db);
@@ -83,8 +82,9 @@ async function connectDb() {
 
 export async function teardownDb() {
     try {
-        execSync('docker stop fullrestore-integration-test', {stdio: 'ignore'});
-        execSync('docker rm fullrestore-integration-test', {stdio: 'ignore'});
+        await db.end();
+        await execAsync('docker stop fullrestore-integration-test');
+        await execAsync('docker rm fullrestore-integration-test');
     } catch {
     }
 }
@@ -222,7 +222,7 @@ async function insertPlayers(db: Pool) {
            ('75838c5e-24dc-4a5a-a384-4fcf3b226d5f'::uuid, 'bananatree', 'bananatree', NULL),
            ('2bcf15de-8dc4-4b5e-9e0a-7b3fdbd6990b'::uuid, 'alexgarcia9774', 'alexgarcia9774', NULL),
            ('eb07f25a-20e7-4023-8e20-cd9de2ecd6c1'::uuid, 'edenn', 'eden_n', NULL),
-           ('a8177b3c-e07a-4e03-8813-720e5aaff072'::uuid, 'rezzo64', 'rezzo64', 208377004209209344);
+           ('a8177b3c-e07a-4e03-8813-720e5aaff072'::uuid, 'rezzo64', 'rezzo64', '208377004209209344');
     INSERT INTO public.player (id, ps_user, discord_user, discord_id)
     VALUES ('d1712a35-18e5-400a-b2cc-d91d0a13e079'::uuid, 'smallow', 'smallow', NULL),
            ('7f529b16-bf9f-4a52-93ab-297e761a5066'::uuid, 'hiroginko', 'hiroginko', NULL),
@@ -329,7 +329,7 @@ async function insertTournaments(db: Pool) {
                             false, NULL, '2024-12-24 09:17:22.688+00', '2024-12-24 09:17:22.688+00', NULL),
                            ('17741f63-e1eb-4e30-9e16-aa11f658fd76'::uuid, 'Old Money Open', '1', 'gen3ou', 0, NULL,
                             '8473c391-d78c-4066-9acc-b5997a837db0'::uuid, false, NULL, '2025-01-29 15:13:09.203+00',
-                            '2025-01-29 15:13:09.203+00', NULL),
+                            '2025-01-29 15:13:09.203+00', 'test'),
                            ('f6b9ea5b-1da2-4634-b072-9e2ecfc4ae8b'::uuid, 'ADV Revival', '2', 'ADV OU', 1, NULL, NULL,
                             false, NULL, '2024-12-28 11:40:38.428+00', '2024-12-28 11:40:38.428+00', NULL),
                            ('38cd7c4c-c831-4e8f-9525-da2e520145ef'::uuid, 'ADV Revival', '3', 'ADV OU', 1, 102.26, NULL,
