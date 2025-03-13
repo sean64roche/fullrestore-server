@@ -38,8 +38,7 @@ test.describe('API GET player', async () => {
     const req = '/api/players?player=rezzo64';
     await test(`GET ${req}`, async () => {
         try {
-            const response = await request(app)
-                .get(req);
+            const response = await request(app).get(req);
             assert.equal(response.status, 200);
             assert.equal(response.body.ps_user, 'rezzo64');
             assert.equal(response.body.discord_user, 'rezzo64');
@@ -61,9 +60,8 @@ test.describe('API GET tournament', async () => {
     const req = '/api/tournaments?name=Old Money Open&season=1';
     await test(`GET ${req}`, async () => {
         try {
-            const response = await request(app)
-                .get('/api/tournaments?name=Old Money Open&season=1');
-            const result = response.body[0]
+            const response = await request(app).get(req);
+            const result = response.body[0];
             assert.equal(response.status, 200);
             assert.equal(result.name, 'Old Money Open');
             assert.equal(result.season, '1');
@@ -80,8 +78,7 @@ test.describe('API GET format', async () => {
     const req = '/api/formats/gen3ou';
     await test(`GET ${req}`, async () => {
         try {
-            const response = await request(app)
-                .get(req);
+            const response = await request(app).get(req);
             assert.equal(response.status, 200);
             assert.equal(response.body.format, 'gen3ou');
         } catch (error) {
@@ -95,8 +92,7 @@ test.describe('API GET entrant players', async () => {
     const req = '/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
     await test(`GET ${req}`, async () => {
         try {
-            const response = await request(app)
-                .get(req);
+            const response = await request(app).get(req);
             const result = response.body[0];
             assert.equal(response.status, 200);
             assert.equal(result.Player.ps_user, 'player13');
@@ -108,6 +104,81 @@ test.describe('API GET entrant players', async () => {
             );
         } catch (error) {
             console.error('Entrant players error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET rounds', async () => {
+    const req = '/api/rounds?tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76&round=3';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            const result = response.body[0];
+            assert.equal(response.status, 200);
+            assert.equal(result.round, 3);
+            assert.equal(result.Tournament.name, 'Old Money Open');
+        } catch (error) {
+            console.error('Rounds error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET roundByes', async () => {
+    const req = '/api/roundByes/9f9b654a-e28e-40e4-88d6-ba0d58b5f964';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            assert.equal(response.status, 200);
+        } catch (error) {
+            console.error('Rounds error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET specific pairing', async () => {
+    const req = '/api/pairings?tournament=Old Money Open&round=4&player=jotaentrena';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            const result = response.body[0];
+            assert.equal(response.status, 200);
+            assert.equal(result.Round.round, 4);
+            assert.equal(result.Round.Tournament.name, 'Old Money Open');
+            assert.equal(result.Entrant1.Player.ps_user, 'jotaentrena');
+            assert.ok(result.Replays);
+        } catch (error) {
+            console.error('Rounds error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET pairings on a specific tournament round', async () => {
+    const req = '/api/pairings?round_id=';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            assert.equal(response.status, 200);
+
+        } catch (error) {
+            console.error('Rounds error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET all pairings for an entrant player as winner', async () => {
+    const req = '/api/pairings?winner=';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            assert.equal(response.status, 200);
+
+        } catch (error) {
+            console.error('Rounds error:', error);
             throw error;
         }
     });
