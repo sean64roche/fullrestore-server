@@ -88,7 +88,7 @@ test.describe('API GET format', async () => {
     });
 });
 
-test.describe('API GET entrant players', async () => {
+test.describe('API GET entrant player', async () => {
     const req = '/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
     await test(`GET ${req}`, async () => {
         try {
@@ -109,7 +109,7 @@ test.describe('API GET entrant players', async () => {
     });
 });
 
-test.describe('API GET rounds', async () => {
+test.describe('API GET round', async () => {
     const req = '/api/rounds?tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76&round=3';
     await test(`GET ${req}`, async () => {
         try {
@@ -125,14 +125,14 @@ test.describe('API GET rounds', async () => {
     });
 });
 
-test.describe('API GET roundByes', async () => {
+test.describe('API GET roundBye', async () => {
     const req = '/api/roundByes/9f9b654a-e28e-40e4-88d6-ba0d58b5f964';
     await test(`GET ${req}`, async () => {
         try {
             const response = await request(app).get(req);
             assert.equal(response.status, 200);
         } catch (error) {
-            console.error('Rounds error:', error);
+            console.error('RoundByes error:', error);
             throw error;
         }
     });
@@ -145,40 +145,58 @@ test.describe('API GET specific pairing', async () => {
             const response = await request(app).get(req);
             const result = response.body[0];
             assert.equal(response.status, 200);
+            assert.equal(response.body.length, 1);
             assert.equal(result.Round.round, 4);
             assert.equal(result.Round.Tournament.name, 'Old Money Open');
             assert.equal(result.Entrant1.Player.ps_user, 'jotaentrena');
             assert.ok(result.Replays);
         } catch (error) {
-            console.error('Rounds error:', error);
+            console.error('Pairings 1 error:', error);
             throw error;
         }
     });
 });
 
-test.describe('API GET pairings on a specific tournament round', async () => {
-    const req = '/api/pairings?round_id=';
+test.describe('API GET all pairings on a specific tournament round', async () => {
+    const req = '/api/pairings?tournament=Old Money Open&round=6';
     await test(`GET ${req}`, async () => {
         try {
             const response = await request(app).get(req);
             assert.equal(response.status, 200);
-
+            assert.equal(response.body.length, 2);
         } catch (error) {
-            console.error('Rounds error:', error);
+            console.error('Pairings 2 error:', error);
             throw error;
         }
     });
 });
 
 test.describe('API GET all pairings for an entrant player as winner', async () => {
-    const req = '/api/pairings?winner=';
+    const req = '/api/pairings?winner=blaise2245';
     await test(`GET ${req}`, async () => {
         try {
             const response = await request(app).get(req);
             assert.equal(response.status, 200);
-
+            assert.equal(response.body.length, 7);
         } catch (error) {
-            console.error('Rounds error:', error);
+            console.error('Pairings 3 error:', error);
+            throw error;
+        }
+    });
+});
+
+test.describe('API GET replay', async () => {
+    const req = '/api/replays?url=https://replay.pokemonshowdown.com/gen3ou-2127800301-lkibt1mzjcsjer88n6ovmqd7em2qy57pw';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            const result = response.body[0];
+            assert.equal(response.status, 200);
+            assert.equal(response.body.length, 1);
+            assert.equal(result.pairing_id, '59041b89-d85d-48cf-a9ef-1227b3850cd6');
+            assert.equal(result.match_number, 2);
+        } catch (error) {
+            console.error('Replay error:', error);
             throw error;
         }
     });
