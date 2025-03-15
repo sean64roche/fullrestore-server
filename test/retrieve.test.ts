@@ -35,24 +35,32 @@ app.use(express.json())
     // .use('api/content', contentRoutes);
 
 test.describe('API GET player', async () => {
-    const req = '/api/players?player=rezzo64';
-    await test(`GET ${req}`, async () => {
-        try {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/players', playerRoutes)
+        // other routes as needed
+    });
+    test('GET /api/players returns player data', async () => {
+        const response = await request(app).get('/api/players?player=rezzo64');
+        assert.equal(response.status, 200);
+        assert.equal(response.body.ps_user, 'rezzo64');
+        assert.equal(response.body.discord_user, 'rezzo64');
+        assert.equal(response.body.discord_id, '208377004209209344');
+        assert.ok(response.body.Aliases.some(
+            (alias: {
+                player_id: string,
+                ps_alias: string;
+            }) => alias.ps_alias === 'tryingfunstuff2day')
+        );
+    });
+    test('GET /api/players on a non-existing player', async () => {
+        const req = '/api/players?player=notaplayer';
+        await test(`GET ${req}`, async () => {
             const response = await request(app).get(req);
-            assert.equal(response.status, 200);
-            assert.equal(response.body.ps_user, 'rezzo64');
-            assert.equal(response.body.discord_user, 'rezzo64');
-            assert.equal(response.body.discord_id, '208377004209209344');
-            assert.ok(response.body.Aliases.some(
-                (alias: {
-                    player_id: string,
-                    ps_alias: string;
-                }) => alias.ps_alias === 'tryingfunstuff2day')
-            );
-        } catch (error) {
-            console.error('Players error:', error);
-            throw error;
-        }
+            assert.equal(response.status, 404);
+        });
     });
 });
 
@@ -74,7 +82,15 @@ test.describe('API GET tournament', async () => {
     });
 });
 
-test.describe('API GET format', async () => {
+test('API GET non-existing tournament', async () => {
+    const req = '/api/tournaments?name=Not a Tournament&season=1';
+    await test(`GET ${req}`, async () => {
+        const response = await request(app).get(req);
+        assert.equal(response.body.length, 0);
+    });
+});
+
+test('API GET format', async () => {
     const req = '/api/formats/gen3ou';
     await test(`GET ${req}`, async () => {
         try {
@@ -88,7 +104,15 @@ test.describe('API GET format', async () => {
     });
 });
 
-test.describe('API GET entrant player', async () => {
+test('API GET non-existing format', async () => {
+    const req = '/api/formats/notaformat';
+    await test(`GET ${req}`, async () => {
+        const response = await request(app).get(req);
+        assert.equal(response.status, 404);
+    });
+});
+
+test('API GET entrant player', async () => {
     const req = '/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
     await test(`GET ${req}`, async () => {
         try {
@@ -109,7 +133,15 @@ test.describe('API GET entrant player', async () => {
     });
 });
 
-test.describe('API GET round', async () => {
+test('API GET non-existing entrant player', async () => {
+    const req = '/api/entrantPlayers?player_id=00000000-0000-0000-0000-000000000000&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
+    await test(`GET ${req}`, async () => {
+        const response = await request(app).get(req);
+        assert.equal(response.body.length, 0);
+    });
+});
+
+test('API GET round', async () => {
     const req = '/api/rounds?tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76&round=3';
     await test(`GET ${req}`, async () => {
         try {
@@ -125,7 +157,7 @@ test.describe('API GET round', async () => {
     });
 });
 
-test.describe('API GET roundBye', async () => {
+test('API GET roundBye', async () => {
     const req = '/api/roundByes/9f9b654a-e28e-40e4-88d6-ba0d58b5f964';
     await test(`GET ${req}`, async () => {
         try {
@@ -138,7 +170,20 @@ test.describe('API GET roundBye', async () => {
     });
 });
 
-test.describe('API GET specific pairing', async () => {
+test('API GET non-existing round', async () => {
+    const req = '/api/rounds?tournament_id=00000000-0000-0000-0000-000000000000&round=1';
+    await test(`GET ${req}`, async () => {
+        try {
+            const response = await request(app).get(req);
+            assert.equal(response.body.length, 0);
+        } catch (error) {
+            console.error('Rounds error:', error);
+            throw error;
+        }
+    });
+});
+
+test('API GET specific pairing', async () => {
     const req = '/api/pairings?tournament=Old Money Open&round=4&player=jotaentrena';
     await test(`GET ${req}`, async () => {
         try {
@@ -157,7 +202,7 @@ test.describe('API GET specific pairing', async () => {
     });
 });
 
-test.describe('API GET all pairings on a specific tournament round', async () => {
+test('API GET all pairings on a specific tournament round', async () => {
     const req = '/api/pairings?tournament=Old Money Open&round=6';
     await test(`GET ${req}`, async () => {
         try {
@@ -171,7 +216,7 @@ test.describe('API GET all pairings on a specific tournament round', async () =>
     });
 });
 
-test.describe('API GET all pairings for an entrant player as winner', async () => {
+test('API GET all pairings for an entrant player as winner', async () => {
     const req = '/api/pairings?winner=blaise2245';
     await test(`GET ${req}`, async () => {
         try {
@@ -185,7 +230,7 @@ test.describe('API GET all pairings for an entrant player as winner', async () =
     });
 });
 
-test.describe('API GET replay', async () => {
+test('API GET replay', async () => {
     const req = '/api/replays?url=https://replay.pokemonshowdown.com/gen3ou-2127800301-lkibt1mzjcsjer88n6ovmqd7em2qy57pw';
     await test(`GET ${req}`, async () => {
         try {
