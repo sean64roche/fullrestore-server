@@ -3,12 +3,7 @@
   "version": "1.0.0",
   "main": "app/app.ts",
   "scripts": {
-    "test": "npx tsx --test test/**/*.ts",
-    "test:integration": " node --test test",
-    "test:integration:setup": "npx tsx test/dbScript.ts",
-    "test:integration:teardown": "docker stop fullrestore-integration-test && docker rm fullrestore-integration-test",
-    "test:database": "npx tsx test/db.test.ts",
-    "test:retrieve": "DB_NAME=fullrestore-integration-test DB_PORT=5433 npx tsx test/retrieve.test.ts"
+    "test": "DB_NAME=fullrestore-integration-test DB_PORT=5433 NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1"
   },
   "keywords": [],
   "author": "",

@@ -1,18 +1,19 @@
 import {v4 as uuidv4} from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
-import { Op } from "sequelize";
 import PlayerAlias from "../models/PlayerAlias";
 
 interface PlayerAttributes {
     ps_user: string;
     discord_user?: string;
+    discord_id?: string;
 }
 
 interface GetPlayersParams {
     player?: string;
     ps_user?: string;
     discord_user?: string;
+    discord_id?: string;
 }
 
 class PlayerService {
@@ -33,24 +34,43 @@ class PlayerService {
 
     public async getPlayer(params: GetPlayersParams) {
         const { player, ps_user, discord_user } = params;
-        const whereClause: any = {};
+        const queryOptions: any = {
+            include: {
+                model: PlayerAlias,
+                as: 'Aliases',
+                required: false
+            }
+        };
         if (player) {
-            whereClause[Op.or] = [{ ps_user: player }, { discord_user: player }];
-        } else if (ps_user) {
+            const playerWithAlias = await Player.findOne({
+                include: {
+                    model: PlayerAlias,
+                    as: 'Aliases',
+                    where: { ps_alias: player },
+                    required: true
+                }
+            });
+
+            if (!playerWithAlias) return null;
+
+            return await Player.findByPk(playerWithAlias.id, {
+                include: {
+                    model: PlayerAlias,
+                    as: 'Aliases',
+                    required: false
+                }
+            });
+        }
+        const whereClause: any = {};
+        if (ps_user) {
             whereClause.ps_user = ps_user;
         } else if (discord_user) {
             whereClause.discord_user = discord_user;
         }
-        return await Player.findOne({
-            where: {
-                ...whereClause,
-            },
-            include: {
-                model: PlayerAlias,
-                as: 'Aliases'
-            },
-        });
+        queryOptions.where = whereClause;
+        return await Player.findOne(queryOptions);
     }
+
 
     public async getPlayerById(id: string) {
         return await Player.findByPk(id);

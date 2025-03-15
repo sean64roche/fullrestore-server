@@ -4,8 +4,8 @@ import Player from "../models/Player";
 
 export async function createPlayer(req: Request, res: Response) {
     try {
-        const { ps_user, discord_user } = req.body;
-        const newPlayer: Player = await playerService.createPlayer({ ps_user, discord_user });
+        const { ps_user, discord_user, discord_id } = req.body;
+        const newPlayer: Player = await playerService.createPlayer({ ps_user, discord_user, discord_id });
         return res.status(201).json(newPlayer);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -22,12 +22,14 @@ export async function getPlayer(req: Request, res: Response) {
         const {
             player,
             ps_user,
-            discord_user
+            discord_user,
+            discord_id
         } = req.query;
         const _player: Player = await playerService.getPlayer({
             player: player as string,
             ps_user: ps_user as string,
-            discord_user: discord_user as string
+            discord_user: discord_user as string,
+            discord_id: discord_id as string
         });
         if (!_player) {
             return res.status(404).json( { error: 'Player not found' });
