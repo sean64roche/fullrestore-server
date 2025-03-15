@@ -21,20 +21,7 @@ test.after(async () => {
     await teardownDb();
 });
 
-const app = express();
-app.use(express.json())
-    .use(express.urlencoded({ extended: true }))
-    .use('/api/players', playerRoutes)
-    .use('/api/tournaments', tournamentRoutes)
-    .use('/api/formats', formatRoutes)
-    .use('/api/entrantPlayers', entrantPlayerRoutes)
-    .use('/api/rounds', roundRoutes)
-    .use('/api/roundByes', roundByeRoutes)
-    .use('/api/pairings', pairingRoutes)
-    .use('/api/replays', replayRoutes)
-    // .use('api/content', contentRoutes);
-
-test.describe('API GET player', async () => {
+test.describe('GET /api/players', async () => {
     let app: express.Application;
     test.beforeEach(async () => {
         app = express();
@@ -60,7 +47,7 @@ test.describe('API GET player', async () => {
     });
 });
 
-test.describe('API GET tournament', async () => {
+test.describe('GET /apt/tournaments', async () => {
     let app: express.Application;
     test.beforeEach(async () => {
         app = express();
@@ -130,108 +117,141 @@ test.describe('GET /api/entrantPlayers', async () => {
     });
 });
 
-test('API GET round', async () => {
-    const req = '/api/rounds?tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76&round=3';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            const result = response.body[0];
-            assert.equal(response.status, 200);
-            assert.equal(result.round, 3);
-            assert.equal(result.Tournament.name, 'Old Money Open');
-        } catch (error) {
-            console.error('Rounds error:', error);
-            throw error;
-        }
+test.describe('GET /api/rounds', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/rounds', roundRoutes);
+    });
+    test('GET /api/rounds?tournament_id&round returns round data', async () => {
+        const response = await request(app).get('/api/rounds?tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76&round=3');
+        const result = response.body[0];
+        assert.equal(response.status, 200);
+        assert.equal(result.round, 3);
+        assert.equal(result.Tournament.name, 'Old Money Open');
+    });
+    test('GET /api/rounds?tournament_id&round on non-existing round has size zero response', async () => {
+        const response = await request(app).get('/api/rounds?tournament_id=00000000-0000-0000-0000-000000000000&round=1');
+        assert.equal(response.body.length, 0);
     });
 });
 
-test('API GET roundBye', async () => {
-    const req = '/api/roundByes/9f9b654a-e28e-40e4-88d6-ba0d58b5f964';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            assert.equal(response.status, 200);
-        } catch (error) {
-            console.error('RoundByes error:', error);
-            throw error;
-        }
+test.describe('API GET /api/roundByes', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/roundByes', roundByeRoutes);
+    });
+    test('GET /api/roundByes/:id returns roundBye', async () => {
+        const response = await request(app).get('/api/roundByes/9f9b654a-e28e-40e4-88d6-ba0d58b5f964');
+        assert.equal(response.status, 200);
+    });
+    test ('GET /api/roundByes/:id on non-existing bye responds 404', async () => {
+        const response = await request(app).get('/api/roundByes/00000000-0000-0000-0000-000000000000');
+        assert.equal(response.status, 404);
     });
 });
 
-test('API GET non-existing round', async () => {
-    const req = '/api/rounds?tournament_id=00000000-0000-0000-0000-000000000000&round=1';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            assert.equal(response.body.length, 0);
-        } catch (error) {
-            console.error('Rounds error:', error);
-            throw error;
-        }
+test.describe('API GET /api/pairings', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/pairings', pairingRoutes);
+    });
+
+    test('GET /api/pairings/?tournament&round&player returns single pairing data', async () => {
+        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=4&player=jotaentrena');
+        const result = response.body[0];
+        assert.equal(response.status, 200);
+        assert.equal(response.body.length, 1);
+        assert.equal(result.Round.round, 4);
+        assert.equal(result.Round.Tournament.name, 'Old Money Open');
+        assert.equal(result.Entrant1.Player.ps_user, 'jotaentrena');
+        assert.ok(result.Replays[0]);
+    });
+
+    test('GET /api/pairings?tournament&round returns multiple pairing data', async () => {
+        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=2');
+        assert.equal(response.status, 200);
+        assert.equal(response.body.length, 32);
+        assert.ok(response.body.every((
+            pairing: {
+                Round: {
+                    id: string;
+                    round: number,
+                    Tournament: {
+                        name: string;
+                    };
+                };
+            }) => pairing.Round.Tournament.name === 'Old Money Open' && pairing.Round.round === 2
+        ));
+    });
+
+    test('GET /api/pairings?winner returns multiple pairing data', async () => {
+        const response = await request(app).get('/api/pairings?winner=blaise2245');
+        assert.equal(response.status, 200);
+        assert.equal(response.body.length, 7);
+        assert.ok(response.body.every((pairing: {
+            Winner: {
+                Player: {
+                    Aliases: [{
+                        ps_alias: string;
+                    }];
+                };
+            };
+        }) => pairing.Winner.Player.Aliases.some(
+            (alias: {
+                ps_alias: string;
+            }) => alias.ps_alias === 'blaise2245')
+        ));
+    });
+
+    test('GET /api/pairings?winner - dead game has size zero replays', async () => {
+        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=1&player=adamc77777');
+        assert.equal(response.body[0].Replays.length, 0);
+    });
+
+    test('GET /api/pairings?player - non-existing player has size zero response', async () => {
+        const response = await request(app).get('/api/pairings?player=notaplayer');
+        assert.equal(response.body.length, 0);
+    });
+
+    test('GET /api/pairings?tournament - non-existing tournament has size zero response', async () => {
+        const response = await request(app).get('/api/pairings?tournament=Not a Tournament');
+        assert.equal(response.body.length, 0);
+    });
+
+    test('GET /api/pairings?tournament&round&player - non-existing matchup has size zero response body', async () => {
+        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=2&player=jumpy23');
+        assert.equal(response.body.length, 0);
+    });
+
+    test('GET /api/pairings?winner - non-existing winner has zero response body', async () => {
+        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=1&winner=jumpy23');
+        assert.equal(response.body.length, 0);
     });
 });
 
-test('API GET specific pairing', async () => {
-    const req = '/api/pairings?tournament=Old Money Open&round=4&player=jotaentrena';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            const result = response.body[0];
-            assert.equal(response.status, 200);
-            assert.equal(response.body.length, 1);
-            assert.equal(result.Round.round, 4);
-            assert.equal(result.Round.Tournament.name, 'Old Money Open');
-            assert.equal(result.Entrant1.Player.ps_user, 'jotaentrena');
-            assert.ok(result.Replays);
-        } catch (error) {
-            console.error('Pairings 1 error:', error);
-            throw error;
-        }
+test.describe('GET /api/replays', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/replays', replayRoutes);
     });
-});
-
-test('API GET all pairings on a specific tournament round', async () => {
-    const req = '/api/pairings?tournament=Old Money Open&round=6';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            assert.equal(response.status, 200);
-            assert.equal(response.body.length, 2);
-        } catch (error) {
-            console.error('Pairings 2 error:', error);
-            throw error;
-        }
+    test('GET /api/replays?url returns single replay data', async () => {
+        const response = await request(app).get('/api/replays?url=https://replay.pokemonshowdown.com/gen3ou-2127800301-lkibt1mzjcsjer88n6ovmqd7em2qy57pw');
+        const result = response.body[0];
+        assert.equal(response.status, 200);
+        assert.equal(response.body.length, 1);
+        assert.equal(result.pairing_id, '59041b89-d85d-48cf-a9ef-1227b3850cd6');
+        assert.equal(result.match_number, 2);
     });
-});
-
-test('API GET all pairings for an entrant player as winner', async () => {
-    const req = '/api/pairings?winner=blaise2245';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            assert.equal(response.status, 200);
-            assert.equal(response.body.length, 7);
-        } catch (error) {
-            console.error('Pairings 3 error:', error);
-            throw error;
-        }
-    });
-});
-
-test('API GET replay', async () => {
-    const req = '/api/replays?url=https://replay.pokemonshowdown.com/gen3ou-2127800301-lkibt1mzjcsjer88n6ovmqd7em2qy57pw';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            const result = response.body[0];
-            assert.equal(response.status, 200);
-            assert.equal(response.body.length, 1);
-            assert.equal(result.pairing_id, '59041b89-d85d-48cf-a9ef-1227b3850cd6');
-            assert.equal(result.match_number, 2);
-        } catch (error) {
-            console.error('Replay error:', error);
-            throw error;
-        }
+    test('GET /api/replays?url on non-existing replay has empty response body', async () => {
+        const response = await request(app).get('/api/replays?url=https://replay.pokemonshowdown.com/notarealreplay');
+        assert.equal(response.body.length, 0);
     });
 });
