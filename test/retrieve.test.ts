@@ -39,10 +39,9 @@ test.describe('API GET player', async () => {
     test.beforeEach(async () => {
         app = express();
         app.use(express.json())
-            .use('/api/players', playerRoutes)
-        // other routes as needed
+            .use('/api/players', playerRoutes);
     });
-    test('GET /api/players returns player data', async () => {
+    test('GET /api/players?player returns player data', async () => {
         const response = await request(app).get('/api/players?player=rezzo64');
         assert.equal(response.status, 200);
         assert.equal(response.body.ps_user, 'rezzo64');
@@ -55,89 +54,79 @@ test.describe('API GET player', async () => {
             }) => alias.ps_alias === 'tryingfunstuff2day')
         );
     });
-    test('GET /api/players on a non-existing player', async () => {
-        const req = '/api/players?player=notaplayer';
-        await test(`GET ${req}`, async () => {
-            const response = await request(app).get(req);
-            assert.equal(response.status, 404);
-        });
-    });
-});
-
-test.describe('API GET tournament', async () => {
-    const req = '/api/tournaments?name=Old Money Open&season=1';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            const result = response.body[0];
-            assert.equal(response.status, 200);
-            assert.equal(result.name, 'Old Money Open');
-            assert.equal(result.season, '1');
-            assert.equal(result.format, 'gen3ou');
-            assert.equal(result.info, 'test');
-        } catch (error) {
-            console.error('Tournaments error:', error);
-            throw error;
-        }
-    });
-});
-
-test('API GET non-existing tournament', async () => {
-    const req = '/api/tournaments?name=Not a Tournament&season=1';
-    await test(`GET ${req}`, async () => {
-        const response = await request(app).get(req);
-        assert.equal(response.body.length, 0);
-    });
-});
-
-test('API GET format', async () => {
-    const req = '/api/formats/gen3ou';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            assert.equal(response.status, 200);
-            assert.equal(response.body.format, 'gen3ou');
-        } catch (error) {
-            console.error('Formats error:', error);
-            throw error;
-        }
-    });
-});
-
-test('API GET non-existing format', async () => {
-    const req = '/api/formats/notaformat';
-    await test(`GET ${req}`, async () => {
-        const response = await request(app).get(req);
+    test('GET /api/players?player has 404 on non-existing player', async () => {
+        const response = await request(app).get('/api/players?player=notaplayer');
         assert.equal(response.status, 404);
     });
 });
 
-test('API GET entrant player', async () => {
-    const req = '/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
-    await test(`GET ${req}`, async () => {
-        try {
-            const response = await request(app).get(req);
-            const result = response.body[0];
-            assert.equal(response.status, 200);
-            assert.equal(result.Player.ps_user, 'player13');
-            assert.ok(result.Player.Aliases.some(
-                (alias: {
-                    player_id: string,
-                    ps_alias: string;
-                }) => alias.ps_alias === 'udm31')
-            );
-        } catch (error) {
-            console.error('Entrant players error:', error);
-            throw error;
-        }
+test.describe('API GET tournament', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/tournaments', tournamentRoutes);
+    });
+    test('GET /api/tournaments?name&season returns tournament data', async () => {
+        const response = await request(app).get('/api/tournaments?name=Old Money Open&season=1');
+        const result = response.body[0];
+        assert.equal(response.status, 200);
+        assert.equal(result.name, 'Old Money Open');
+        assert.equal(result.season, '1');
+        assert.equal(result.format, 'gen3ou');
+        assert.equal(result.info, 'test');
+    });
+    test('GET /api/tournaments?name&season on non-existing tournament has size zero response', async () => {
+        const response = await request(app).get('/api/tournaments?name=Not a Tournament&season=1');
+        assert.equal(response.body.length, 0);
     });
 });
 
-test('API GET non-existing entrant player', async () => {
-    const req = '/api/entrantPlayers?player_id=00000000-0000-0000-0000-000000000000&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
-    await test(`GET ${req}`, async () => {
-        const response = await request(app).get(req);
-        assert.equal(response.body.length, 0);
+
+
+test.describe('GET /api/formats', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/formats', formatRoutes);
+    });
+    test('GET /api/formats/format returns format', async () => {
+        const response = await request(app).get('/api/formats/gen3ou');
+        assert.equal(response.status, 200);
+        assert.equal(response.body.format, 'gen3ou');
+    });
+    test('GET /api/formats/format has 404 on non-existing format', async () => {
+        const response = await request(app).get('/api/formats/notaformat');
+        assert.equal(response.status, 404);
+    });
+});
+
+test.describe('GET /api/entrantPlayers', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/entrantPlayers', entrantPlayerRoutes);
+    });
+    test('GET /api/entrantPlayers?player_id&tournament_id returns entrant player data', async () => {
+        const response = await request(app).get('/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76');
+        const result = response.body[0];
+        assert.equal(response.status, 200);
+        assert.equal(result.Player.ps_user, 'player13');
+        assert.ok(result.Player.Aliases.some(
+            (alias: {
+                player_id: string,
+                ps_alias: string;
+            }) => alias.ps_alias === 'udm31')
+        );
+    });
+    test('GET /api/entrantPlayers?player_id&tournament_id on non-existing entrant player has size zero response', async () => {
+        const req = '/api/entrantPlayers?player_id=00000000-0000-0000-0000-000000000000&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
+        await test(`GET ${req}`, async () => {
+            const response = await request(app).get(req);
+            assert.equal(response.body.length, 0);
+        });
     });
 });
 
