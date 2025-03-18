@@ -1,4 +1,4 @@
-import test, {describe} from 'node:test';
+import test from 'node:test';
 import express from "express";
 import assert from "node:assert";
 import request from "supertest";
