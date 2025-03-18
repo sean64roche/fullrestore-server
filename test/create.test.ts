@@ -6,6 +6,9 @@ import playerRoutes from "../routes/playerRoutes";
 import playerAliasRoutes from "../routes/playerAliasRoutes";
 import {globalSetup, globalTeardown} from "./dbSetup";
 
+let testPlayer1Id: string;
+let coolGamerPlayerId: string;
+
 test.before(async () => {
     const setupSuccess = await globalSetup();
     assert.strictEqual(setupSuccess, true, "Database setup failed");
@@ -24,7 +27,7 @@ test.describe('POST /api/players', () => {
             .use('/api/players', playerRoutes)
             .use('/api/playerAliases', playerAliasRoutes);
     });
-    const body = {
+    const postBody = {
         ps_user: 'testplayer1',
         discord_user: 'testdiscord1',
         discord_id: '01234567890',
@@ -37,14 +40,15 @@ test.describe('POST /api/players', () => {
 
     test('POST /api/players new player succeeds', { timeout: 10000 }, async () => {
         const response = await request(app).post('/api/players')
-            .send(body)
+            .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 201);
         assert.ok(response.body.id);
-        assert.equal(response.body.ps_user, body.ps_user);
+        assert.equal(response.body.ps_user, postBody.ps_user);
         assert.equal(response.body.discord_user, 'testdiscord1');
         assert.equal(response.body.discord_id, '01234567890');
+        testPlayer1Id = response.body.id;
     });
 
     test('POST /api/players transforms PS usernames and discord usernames correctly', { timeout: 10000 }, async () => {
@@ -55,6 +59,8 @@ test.describe('POST /api/players', () => {
         assert.equal(response.status, 201);
         assert.equal(response.body.ps_user, psUser2Transformed);
         assert.equal(response.body.discord_user, discordUser2Transformed);
+        assert.ok(response.body.id);
+        coolGamerPlayerId = response.body.id;
     });
 
     test('POST /api/players also creates alias entry correctly', { timeout: 10000 }, async () => {
@@ -77,5 +83,39 @@ test.describe('POST /api/players', () => {
 });
 
 test.describe('POST /api/playerAliases', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/playerAliases', playerAliasRoutes);
+    });
 
-})
+    const newAlias = 'Very Cool Gamer..!';
+    const aliasTransformed = 'verycoolgamer';
+
+    test('POST /api/playerAliases new alias succeeds', { timeout: 10000 }, async () => {
+        const postBody = {
+            player_id: coolGamerPlayerId,
+            ps_alias: newAlias,
+        };
+        const response = await request(app).post('/api/playerAliases')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 201);
+        assert.equal(response.body.player_id, coolGamerPlayerId);
+        assert.equal(response.body.ps_alias, aliasTransformed);
+    });
+
+    test('POST /api/playerAliases alias cannot be assigned to more than one \'player\'', { timeout: 10000 }, async () => {
+        const postBody2 = {
+            player_id: testPlayer1Id,
+            ps_alias: newAlias,
+        };
+        const response = await request(app).post('/api/playerAliases')
+            .send(postBody2)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+});
