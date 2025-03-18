@@ -7,9 +7,11 @@ import playerAliasRoutes from "../routes/playerAliasRoutes";
 import {globalSetup, globalTeardown} from "./dbSetup";
 import formatRoutes from "../routes/formatRoutes";
 import tournamentRoutes from "../routes/tournamentRoutes";
+import roundRoutes from "../routes/roundRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
+let testTournamentId: string;
 
 test.before(async () => {
     const setupSuccess = await globalSetup();
@@ -203,6 +205,7 @@ test.describe('POST /api/tournaments', () => {
         assert.equal(current_round, 0);
         assert.ok(!prize_pool);
         assert.ok(!team_winner);
+        testTournamentId = id;
     });
 
     test('duplicate tournament name and season fails', { timeout: 10000 }, async () => {
@@ -221,6 +224,54 @@ test.describe('POST /api/tournaments', () => {
             info: tourInfo,
         };
         const response = await request(app).post('/api/tournaments')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+});
+
+test.describe('POST /api/rounds', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/rounds', roundRoutes);
+    });
+
+    test('new round on new tournament succeeds', { timeout: 10000 }, async () => {
+        const newRound = 1;
+        const newDeadline = '2025-01-06T04:59:00.688Z';
+        const postBody = {
+            tournament_id: testTournamentId,
+            round: newRound,
+            deadline: newDeadline,
+        };
+        const response = await request(app).post('/api/rounds')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        const {
+            tournament_id,
+            round,
+            deadline
+        } = response.body;
+        assert.equal(response.status, 201);
+        assert.equal(testTournamentId, tournament_id);
+        assert.equal(newRound, round);
+        assert.equal(newDeadline, deadline);
+    });
+
+    test('duplicate round fails', { timeout: 10000 }, async () => {
+        const tournamentId = '5c929e7f-129a-497b-9e43-fec20eea5a2f';
+        const newRound = 1;
+        const newDeadline = '2025-01-06T04:59:00.688Z';
+        const postBody = {
+            tournament_id: tournamentId,
+            round: newRound,
+            deadline: newDeadline,
+        };
+        const response = await request(app).post('/api/rounds')
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
