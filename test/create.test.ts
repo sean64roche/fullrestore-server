@@ -15,6 +15,7 @@ let testPlayer1Id: string;
 let coolGamerPlayerId: string;
 let testTournamentId: string;
 let testRoundId: string;
+let testEntrantPlayerId: string;
 
 test.before(async () => {
     const setupSuccess = await globalSetup();
@@ -309,6 +310,7 @@ test.describe('GET /api/entrantPlayers', () => {
         assert.equal(testPlayer1Id, response.body.player_id);
         assert.equal(testTournamentId, response.body.tournament_id);
         assert.equal(newSeed, response.body.seed);
+        testEntrantPlayerId = response.body.id;
     });
 
     test('duplicate entrant player fails', { timeout: 10000 }, async () => {
@@ -334,7 +336,25 @@ test.describe('GET /api/roundByes', () => {
             .use('/api/roundByes', roundByeRoutes);
     });
 
-    test('new round bye succeeds', { timeout: 10000 }, async () => {
+    test('new bye succeeds', { timeout: 10000 }, async () => {
+        const response = await request(app).post('/api/roundByes')
+            .send({ round_id: testRoundId, entrant_player_id: testEntrantPlayerId, })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 201);
+        assert.ok(response.body.id);
+        assert.equal(response.body.round_id, testRoundId);
+        assert.equal(response.body.entrant_player_id, testEntrantPlayerId);
+    });
 
+    test('duplicate bye fails', { timeout: 10000 }, async () => {
+        const response = await request(app).post('/api/roundByes')
+            .send({
+                round_id: '3fb178f4-0d2b-4e83-a20f-f0c8f2710221',
+                entrant_player_id: 'f3873fe8-a7a4-40bf-b220-697470106917',
+            })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
     });
 });
