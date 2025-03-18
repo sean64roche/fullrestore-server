@@ -5,6 +5,7 @@ import request from "supertest";
 import playerRoutes from "../routes/playerRoutes";
 import playerAliasRoutes from "../routes/playerAliasRoutes";
 import {globalSetup, globalTeardown} from "./dbSetup";
+import formatRoutes from "../routes/formatRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
@@ -114,6 +115,34 @@ test.describe('POST /api/playerAliases', () => {
         };
         const response = await request(app).post('/api/playerAliases')
             .send(postBody2)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+});
+
+test.describe('POST /api/formats', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/formats', formatRoutes);
+    });
+
+    test('new format succeeds', { timeout: 10000 }, async () => {
+        const newFormat = 'gen1ou';
+        const response = await request(app).post('/api/formats')
+            .send({ format: newFormat })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 201);
+        assert.equal(response.body.format, newFormat);
+    });
+
+    test('duplicate format fails', { timeout: 10000 }, async () => {
+        const newFormat = 'gen3ou';
+        const response = await request(app).post('/api/formats')
+            .send({ format: newFormat })
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 409);
