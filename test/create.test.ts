@@ -6,6 +6,7 @@ import playerRoutes from "../routes/playerRoutes";
 import playerAliasRoutes from "../routes/playerAliasRoutes";
 import {globalSetup, globalTeardown} from "./dbSetup";
 import formatRoutes from "../routes/formatRoutes";
+import tournamentRoutes from "../routes/tournamentRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
@@ -143,6 +144,84 @@ test.describe('POST /api/formats', () => {
         const newFormat = 'gen3ou';
         const response = await request(app).post('/api/formats')
             .send({ format: newFormat })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+});
+
+test.describe('POST /api/tournaments', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/tournaments', tournamentRoutes);
+    });
+
+    test('new tournament succeeds', { timeout: 10000 }, async () => {
+        const tourName = 'Test Tournament';
+        const tourSeason = 1;
+        const tourFormat = 'gen3ou';
+        const tourIndividualWinner = 'a8177b3c-e07a-4e03-8813-720e5aaff072';
+        const tourTeamTour = false;
+        const tourInfo = "Info about the Tournament, coming soon!";
+        const tourCat = 'meow';
+        const postBody = {
+            name: tourName,
+            season: tourSeason,
+            format: tourFormat,
+            individual_winner: tourIndividualWinner,
+            team_tour: tourTeamTour,
+            info: tourInfo,
+            cat: tourCat
+        };
+        const response = await request(app).post('/api/tournaments')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        const {
+            id,
+            name,
+            season,
+            format,
+            current_round,
+            prize_pool,
+            individual_winner,
+            team_tour,
+            team_winner,
+            info,
+            cat } = response.body;
+        assert.equal(response.status, 201);
+        assert.ok(id);
+        assert.equal(name, tourName);
+        assert.equal(season, tourSeason);
+        assert.equal(format, tourFormat);
+        assert.equal(individual_winner, tourIndividualWinner);
+        assert.equal(team_tour, tourTeamTour);
+        assert.equal(info, tourInfo);
+        assert.notEqual(cat, tourCat);
+        assert.equal(current_round, 0);
+        assert.ok(!prize_pool);
+        assert.ok(!team_winner);
+    });
+
+    test('duplicate tournament name and season fails', { timeout: 10000 }, async () => {
+        const tourName = 'ADV Revival';
+        const tourSeason = 1;
+        const tourFormat = 'gen3ou';
+        const tourIndividualWinner = '1b8ddbc4-a841-4252-8f28-f7300ee2a205';
+        const tourTeamTour = false;
+        const tourInfo = 'I updated the info';
+        const postBody = {
+            name: tourName,
+            season: tourSeason,
+            format: tourFormat,
+            individual_winner: tourIndividualWinner,
+            team_tour: tourTeamTour,
+            info: tourInfo,
+        };
+        const response = await request(app).post('/api/tournaments')
+            .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 409);
