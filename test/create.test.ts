@@ -38,7 +38,7 @@ test.describe('POST /api/players', () => {
     const psUser2Transformed = 'coolgamer23';
     const discordUser2Transformed = 'cool_gamer_23';
 
-    test('POST /api/players new player succeeds', { timeout: 10000 }, async () => {
+    test('new player succeeds', { timeout: 10000 }, async () => {
         const response = await request(app).post('/api/players')
             .send(postBody)
             .set('Accept', 'application/json')
@@ -51,7 +51,7 @@ test.describe('POST /api/players', () => {
         testPlayer1Id = response.body.id;
     });
 
-    test('POST /api/players transforms PS usernames and discord usernames correctly', { timeout: 10000 }, async () => {
+    test('transforms PS usernames and discord usernames correctly', { timeout: 10000 }, async () => {
         const response = await request(app).post('/api/players')
             .send({ ps_user: psUser2, discord_user: discordUser2 })
             .set('Accept', 'application/json')
@@ -63,7 +63,7 @@ test.describe('POST /api/players', () => {
         coolGamerPlayerId = response.body.id;
     });
 
-    test('POST /api/players also creates alias entry correctly', { timeout: 10000 }, async () => {
+    test('also creates alias entry correctly', { timeout: 10000 }, async () => {
         const response = await request(app).get(`/api/players?player=${psUser2}`);
         assert.equal(response.status, 200);
         assert.ok(response.body.Aliases.some(
@@ -73,7 +73,7 @@ test.describe('POST /api/players', () => {
         ));
     });
 
-    test('POST /api/players duplicate player fails', { timeout: 10000 }, async () => {
+    test('duplicate player fails', { timeout: 10000 }, async () => {
         const response = await request(app).post('/api/players')
             .send({ ps_user: psUser2 })
             .set('Accept', 'application/json')
@@ -93,7 +93,7 @@ test.describe('POST /api/playerAliases', () => {
     const newAlias = 'Very Cool Gamer..!';
     const aliasTransformed = 'verycoolgamer';
 
-    test('POST /api/playerAliases new alias succeeds', { timeout: 10000 }, async () => {
+    test('new alias succeeds', { timeout: 10000 }, async () => {
         const postBody = {
             player_id: coolGamerPlayerId,
             ps_alias: newAlias,
@@ -107,7 +107,7 @@ test.describe('POST /api/playerAliases', () => {
         assert.equal(response.body.ps_alias, aliasTransformed);
     });
 
-    test('POST /api/playerAliases alias cannot be assigned to more than one \'player\'', { timeout: 10000 }, async () => {
+    test('alias cannot be assigned to more than one \'player\'', { timeout: 10000 }, async () => {
         const postBody2 = {
             player_id: testPlayer1Id,
             ps_alias: newAlias,
