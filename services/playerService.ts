@@ -18,11 +18,16 @@ interface GetPlayersParams {
 
 class PlayerService {
     public async createPlayer(attrs: PlayerAttributes) {
+        const newAttrs: PlayerAttributes = {
+            ...attrs,
+            ps_user: toPSAlias(attrs.ps_user),
+            discord_user: toDiscordAlias(attrs.discord_user),
+        }
         return await Player.create({
             id: uuidv4(),
-            ...attrs,
+            ...newAttrs,
             PlayerAlias: {
-                ps_alias: attrs.ps_user.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()
+                ps_alias: newAttrs.ps_user,
             },
         }, {
             include: {
@@ -46,7 +51,7 @@ class PlayerService {
                 include: {
                     model: PlayerAlias,
                     as: 'Aliases',
-                    where: { ps_alias: player },
+                    where: { ps_alias: toPSAlias(player) },
                     required: true
                 }
             });
@@ -63,9 +68,9 @@ class PlayerService {
         }
         const whereClause: any = {};
         if (ps_user) {
-            whereClause.ps_user = ps_user;
+            whereClause.ps_user = toPSAlias(ps_user);
         } else if (discord_user) {
-            whereClause.discord_user = discord_user;
+            whereClause.discord_user = toDiscordAlias(discord_user);
         }
         queryOptions.where = whereClause;
         return await Player.findOne(queryOptions);
@@ -86,7 +91,7 @@ class PlayerService {
 
     public async updatePlayer(id: string, attrs: PlayerAttributes) {
         const [updated] = await Player.update(
-            { ps_user: attrs.ps_user, discord_user: attrs.discord_user },
+            { ps_user: toPSAlias(attrs.ps_user), discord_user: toDiscordAlias(attrs.discord_user) },
             { where: { id } }
         );
 
@@ -106,6 +111,14 @@ class PlayerService {
             where: {id},
         });
     }
+}
+
+function toDiscordAlias(alias: string) {
+    return alias?.toLowerCase().replace(/[^a-z0-9_.]/g, '')
+}
+
+export function toPSAlias(alias: string) {
+    return alias.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
 export default new PlayerService();

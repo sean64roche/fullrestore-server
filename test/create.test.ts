@@ -68,7 +68,7 @@ test.describe('POST /api/players', () => {
     });
 
     test('POST /api/players duplicate player fails', { timeout: 10000 }, async () => {
-        const response = await request(app).post('/api/players/')
+        const response = await request(app).post('/api/players')
             .send({ ps_user: psUser2 })
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
