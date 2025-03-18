@@ -1,17 +1,20 @@
-import test from 'node:test';
+import test, {describe} from 'node:test';
 import express from "express";
 import assert from "node:assert";
 import request from "supertest";
+import {globalSetup, globalTeardown} from "./dbSetup";
 import playerRoutes from "../routes/playerRoutes";
 import playerAliasRoutes from "../routes/playerAliasRoutes";
-import {globalSetup, globalTeardown} from "./dbSetup";
 import formatRoutes from "../routes/formatRoutes";
 import tournamentRoutes from "../routes/tournamentRoutes";
 import roundRoutes from "../routes/roundRoutes";
+import roundByeRoutes from "../routes/roundByeRoutes";
+import entrantPlayerRoutes from "../routes/entrantPlayerRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
 let testTournamentId: string;
+let testRoundId: string;
 
 test.before(async () => {
     const setupSuccess = await globalSetup();
@@ -252,14 +255,17 @@ test.describe('POST /api/rounds', () => {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         const {
+            id,
             tournament_id,
             round,
             deadline
         } = response.body;
         assert.equal(response.status, 201);
+        assert.ok(id);
         assert.equal(testTournamentId, tournament_id);
         assert.equal(newRound, round);
         assert.equal(newDeadline, deadline);
+        testRoundId = id;
     });
 
     test('duplicate round fails', { timeout: 10000 }, async () => {
@@ -276,5 +282,59 @@ test.describe('POST /api/rounds', () => {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 409);
+    });
+});
+
+test.describe('GET /api/entrantPlayers', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/entrantPlayers', entrantPlayerRoutes);
+    });
+
+    test('new entrant player succeeds', { timeout: 10000 }, async () => {
+        const newSeed = 64;
+        const postBody = {
+            player_id: testPlayer1Id,
+            tournament_id: testTournamentId,
+            seed: newSeed,
+        };
+        const response = await request(app).post('/api/entrantPlayers')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 201);
+        assert.ok(response.body.id);
+        assert.equal(testPlayer1Id, response.body.player_id);
+        assert.equal(testTournamentId, response.body.tournament_id);
+        assert.equal(newSeed, response.body.seed);
+    });
+
+    test('duplicate entrant player fails', { timeout: 10000 }, async () => {
+        const newSeed = 3;
+        const postBody = {
+            player_id: '7500feb1-e261-42bb-87fb-55509612e14c',
+            tournament_id: '17741f63-e1eb-4e30-9e16-aa11f658fd76',
+            seed: newSeed,
+        };
+        const response = await request(app).post('/api/entrantPlayers')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+});
+
+test.describe('GET /api/roundByes', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/roundByes', roundByeRoutes);
+    });
+
+    test('new round bye succeeds', { timeout: 10000 }, async () => {
+
     });
 });
