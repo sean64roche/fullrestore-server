@@ -10,12 +10,14 @@ import tournamentRoutes from "../routes/tournamentRoutes";
 import roundRoutes from "../routes/roundRoutes";
 import roundByeRoutes from "../routes/roundByeRoutes";
 import entrantPlayerRoutes from "../routes/entrantPlayerRoutes";
+import pairingRoutes from "../routes/pairingRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
 let testTournamentId: string;
 let testRoundId: string;
-let testEntrantPlayerId: string;
+let testEntrantId1: string;
+// let testPairingId: string;
 
 test.before(async () => {
     const setupSuccess = await globalSetup();
@@ -286,7 +288,7 @@ test.describe('POST /api/rounds', () => {
     });
 });
 
-test.describe('GET /api/entrantPlayers', () => {
+test.describe('POST /api/entrantPlayers', () => {
     let app: express.Application;
     test.beforeEach(async () => {
         app = express();
@@ -310,7 +312,7 @@ test.describe('GET /api/entrantPlayers', () => {
         assert.equal(testPlayer1Id, response.body.player_id);
         assert.equal(testTournamentId, response.body.tournament_id);
         assert.equal(newSeed, response.body.seed);
-        testEntrantPlayerId = response.body.id;
+        testEntrantId1 = response.body.id;
     });
 
     test('duplicate entrant player fails', { timeout: 10000 }, async () => {
@@ -328,7 +330,7 @@ test.describe('GET /api/entrantPlayers', () => {
     });
 });
 
-test.describe('GET /api/roundByes', () => {
+test.describe('POST /api/roundByes', () => {
     let app: express.Application;
     test.beforeEach(async () => {
         app = express();
@@ -338,21 +340,183 @@ test.describe('GET /api/roundByes', () => {
 
     test('new bye succeeds', { timeout: 10000 }, async () => {
         const response = await request(app).post('/api/roundByes')
-            .send({ round_id: testRoundId, entrant_player_id: testEntrantPlayerId, })
+            .send({ round_id: testRoundId, entrant_player_id: testEntrantId1, })
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 201);
         assert.ok(response.body.id);
         assert.equal(response.body.round_id, testRoundId);
-        assert.equal(response.body.entrant_player_id, testEntrantPlayerId);
+        assert.equal(response.body.entrant_player_id, testEntrantId1);
     });
 
     test('duplicate bye fails', { timeout: 10000 }, async () => {
         const response = await request(app).post('/api/roundByes')
             .send({
                 round_id: '3fb178f4-0d2b-4e83-a20f-f0c8f2710221',
-                entrant_player_id: 'f3873fe8-a7a4-40bf-b220-697470106917',
+                entrant_player_id: '95cdfe84-dc04-4591-8910-82ade593ba94', // kingofironfrisk
             })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+});
+
+test.describe('POST /api/pairings', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/entrantPlayers', entrantPlayerRoutes)
+            .use('/api/pairings', pairingRoutes);
+
+    });
+    let testEntrantId2: string;
+    let testEntrantId3: string;
+    let testEntrantId4: string;
+
+    test('add some more entrant players', { timeout: 10000 }, async () => {
+        const response = await request(app).post('/api/entrantPlayers')
+            .send({
+                player_id: '2c53e1c3-a865-4910-aeca-0f08c4c018d4', // zacpz
+                tournament_id: testTournamentId,
+                seed: 1,
+            })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        const otherResponse = await request(app).post('/api/entrantPlayers')
+            .send({
+                player_id: '20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4', // buzzed
+                tournament_id: testTournamentId,
+                seed: 2,
+            })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        const anotherResponse = await request(app).post('/api/entrantPlayers')
+            .send({
+                player_id: '034abc58-0f14-4674-8827-d856dd5dde89', // player28
+                tournament_id: testTournamentId,
+                seed: 4,
+            })
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 201);
+        assert.equal(otherResponse.status, 201);
+        assert.equal(anotherResponse.status, 201);
+        testEntrantId2 = response.body.id;
+        testEntrantId3 = otherResponse.body.id;
+        testEntrantId4 = anotherResponse.body.id;
+    });
+
+    test('entrant1 and entrant2 must be different', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId2,
+            entrant2_id: testEntrantId2,
+            winner_id: testEntrantId2,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
+    });
+
+    test('winner cannot be neither player1 or player2', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId2,
+            entrant2_id: testEntrantId3,
+            winner_id: testEntrantId1,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
+    });
+
+    test('players cannot be entrants from a different tournament to each other', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId2,
+            entrant2_id: 'a6abd0d1-36f3-4431-a7a8-c2ae317638e4', // jumpy23, OMO1
+            winner_id: testEntrantId2,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
+    });
+
+    test('round cannot be from a different tournament to both entrants', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: '3fb178f4-0d2b-4e83-a20f-f0c8f2710221', // ADV Revival 1
+            entrant1_id: testEntrantId2,
+            entrant2_id: testEntrantId3,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
+    });
+
+    test('bye player cannot also be in a pairing', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId1,
+            entrant2_id: testEntrantId3,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
+    });
+
+    test('new pairing succeeds', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId2,
+            entrant2_id: testEntrantId3,
+            winner_id: testEntrantId2,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        const newPairing = response.body;
+        assert.equal(response.status, 201);
+        assert.ok(newPairing.id);
+        assert.equal(newPairing.entrant1_id, testEntrantId2);
+        assert.equal(newPairing.entrant2_id, testEntrantId3);
+        assert.equal(newPairing.winner_id, testEntrantId2);
+    });
+
+    test('duplicate pairing fails', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId2,
+            entrant2_id: testEntrantId3,
+            winner_id: testEntrantId2,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+
+    test('player cannot be paired twice in one round', { timeout: 10000 }, async () => {
+        const postBody = {
+            round_id: testRoundId,
+            entrant1_id: testEntrantId2,
+            entrant2_id: testEntrantId4,
+            winner_id: testEntrantId2,
+        };
+        const response = await request(app).post('/api/pairings')
+            .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 409);
