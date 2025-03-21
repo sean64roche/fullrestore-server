@@ -49,6 +49,42 @@ $$;
 
 
 --
+-- Name: check_tournament_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.check_tournament_ids() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    round_tournament_id UUID;
+    entrant1_tournament_id UUID;
+    entrant2_tournament_id UUID;
+BEGIN
+    -- Get the tournament IDs from the related tables
+    SELECT tournament_id INTO round_tournament_id 
+    FROM round 
+    WHERE id = NEW.round_id;
+    
+    SELECT tournament_id INTO entrant1_tournament_id 
+    FROM entrant_player 
+    WHERE id = NEW.entrant1_id;
+    
+    SELECT tournament_id INTO entrant2_tournament_id 
+    FROM entrant_player 
+    WHERE id = NEW.entrant2_id;
+    
+    -- Check if all tournament IDs match
+    IF round_tournament_id != entrant1_tournament_id OR 
+       round_tournament_id != entrant2_tournament_id THEN
+        RAISE EXCEPTION 'Tournament IDs must match across round and entrants';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: check_url_no_p2_suffix(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -580,6 +616,13 @@ CREATE UNIQUE INDEX uniq_round_entrant1 ON public.pairing USING btree (round_id,
 --
 
 CREATE UNIQUE INDEX uniq_round_entrant2 ON public.pairing USING btree (round_id, entrant2_id);
+
+
+--
+-- Name: pairing enforce_tournament_id_match; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER enforce_tournament_id_match BEFORE INSERT OR UPDATE ON public.pairing FOR EACH ROW EXECUTE FUNCTION public.check_tournament_ids();
 
 
 --
