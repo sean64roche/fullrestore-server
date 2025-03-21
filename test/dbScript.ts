@@ -787,7 +787,7 @@ async function insertRounds(db: Pool) {
 async function insertRoundByes(db: Pool) {
     await db.query(`INSERT INTO public.round_bye (id, round_id, entrant_player_id, "createdAt", "updatedAt")
                     VALUES ('9f9b654a-e28e-40e4-88d6-ba0d58b5f964'::uuid, '3fb178f4-0d2b-4e83-a20f-f0c8f2710221'::uuid,
-                            'f3873fe8-a7a4-40bf-b220-697470106917'::uuid, '2025-01-29 15:13:09.543+00',
+                            '95cdfe84-dc04-4591-8910-82ade593ba94'::uuid, '2025-01-29 15:13:09.543+00',
                             '2025-01-29 15:13:09.543+00');`);
     console.log('Round byes inserted successfully.');
 }
