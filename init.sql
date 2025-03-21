@@ -49,6 +49,38 @@ $$;
 
 
 --
+-- Name: check_bye_constraint(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.check_bye_constraint() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    pairing_exists BOOLEAN;
+BEGIN
+    -- Check if player already exists in a pairing for this round
+    SELECT EXISTS (
+        SELECT 1
+        FROM pairing p
+        WHERE p.round_id = NEW.round_id 
+        AND (p.entrant1_id = NEW.entrant_player_id OR p.entrant2_id = NEW.entrant_player_id)
+    ) INTO pairing_exists;
+    
+    IF pairing_exists THEN
+        RAISE EXCEPTION 'Player % is already part of a pairing in round %', 
+                        NEW.entrant_player_id, NEW.round_id;
+    END IF;
+    
+    -- Proceed with inserting the record in round_entrant
+    INSERT INTO round_entrant (round_id, entrant_player_id)
+    VALUES (NEW.round_id, NEW.entrant_player_id);
+    
+    RETURN NEW;
+END;
+$$;
+
+
+--
 -- Name: check_tournament_ids(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -106,16 +138,43 @@ $_$;
 CREATE FUNCTION public.maintain_round_entrant() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
+DECLARE
+    conflicting_record RECORD;
 BEGIN
     IF TG_OP = 'INSERT' THEN
+        SELECT rb.* INTO conflicting_record
+        FROM round_bye rb
+        WHERE rb.round_id = NEW.round_id 
+        AND rb.entrant_player_id IN (NEW.entrant1_id, NEW.entrant2_id)
+        LIMIT 1;
+        
+        IF FOUND THEN
+            RAISE EXCEPTION 'Player % is already marked as a bye in round %', 
+                            conflicting_record.entrant_player_id, conflicting_record.round_id;
+        END IF;
+        
         INSERT INTO round_entrant (round_id, entrant_player_id)
         VALUES 
             (NEW.round_id, NEW.entrant1_id),
             (NEW.round_id, NEW.entrant2_id);
+            
     ELSIF TG_OP = 'UPDATE' THEN
         IF OLD.round_id != NEW.round_id OR 
            OLD.entrant1_id != NEW.entrant1_id OR 
            OLD.entrant2_id != NEW.entrant2_id THEN
+            
+            -- Check if new entrants already exist in round_bye for the new round
+            SELECT rb.* INTO conflicting_record
+            FROM round_bye rb
+            WHERE rb.round_id = NEW.round_id 
+            AND rb.entrant_player_id IN (NEW.entrant1_id, NEW.entrant2_id)
+            LIMIT 1;
+            
+            IF FOUND THEN
+                RAISE EXCEPTION 'Player % is already marked as a bye in round %', 
+                                conflicting_record.entrant_player_id, conflicting_record.round_id;
+            END IF;
+            
             DELETE FROM round_entrant 
             WHERE round_id = OLD.round_id 
             AND entrant_player_id IN (OLD.entrant1_id, OLD.entrant2_id);
@@ -125,11 +184,13 @@ BEGIN
                 (NEW.round_id, NEW.entrant1_id),
                 (NEW.round_id, NEW.entrant2_id);
         END IF;
+        
     ELSIF TG_OP = 'DELETE' THEN
         DELETE FROM round_entrant 
         WHERE round_id = OLD.round_id 
         AND entrant_player_id IN (OLD.entrant1_id, OLD.entrant2_id);
     END IF;
+    
     RETURN NULL;
 END;
 $$;
@@ -616,6 +677,13 @@ CREATE UNIQUE INDEX uniq_round_entrant1 ON public.pairing USING btree (round_id,
 --
 
 CREATE UNIQUE INDEX uniq_round_entrant2 ON public.pairing USING btree (round_id, entrant2_id);
+
+
+--
+-- Name: round_bye check_bye_constraint_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER check_bye_constraint_trigger BEFORE INSERT OR UPDATE ON public.round_bye FOR EACH ROW EXECUTE FUNCTION public.check_bye_constraint();
 
 
 --
