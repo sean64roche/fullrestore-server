@@ -34,7 +34,6 @@ docker-build:
         docker tag "$DOCKER_IMAGE_NAME" "$CI_REGISTRY_IMAGE:latest"
         docker push "$CI_REGISTRY_IMAGE:latest"
       fi
-  # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH
       exists:
@@ -46,10 +45,8 @@ integration_tests:
   services:
     - docker:dind
   variables:
-    # We need to disable TLS since we're in the GitLab CI environment
     DOCKER_TLS_CERTDIR: ""
     DOCKER_HOST: tcp://docker:2375
-    # Using a different port for the test database as specified in your test script
     POSTGRES_PORT: 5433
   before_script:
     - apk add --no-cache docker-compose
@@ -58,14 +55,9 @@ integration_tests:
     - cp ${ASSISTANT_ENV_PROD} assistant.env
     - cp ${DATABASE_ENV_PROD} database.env
   script:
-    # Bring up the services defined in docker-compose.yml
-    - docker-compose -f fullrestore-services.yml up -d
-    # Allow some time for services to be ready
     - sleep 10
-    # Run the integration tests inside the fullrestore-api container
     - docker exec fullrestore-services-fullrestore-api-1 npm run test
   after_script:
-    # Clean up after tests
     - docker-compose -f fullrestore-services.yml down -v
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
