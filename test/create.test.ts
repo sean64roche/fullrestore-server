@@ -11,13 +11,14 @@ import roundRoutes from "../routes/roundRoutes";
 import roundByeRoutes from "../routes/roundByeRoutes";
 import entrantPlayerRoutes from "../routes/entrantPlayerRoutes";
 import pairingRoutes from "../routes/pairingRoutes";
+import replayRoutes from "../routes/replayRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
 let testTournamentId: string;
 let testRoundId: string;
 let testEntrantId1: string;
-// let testPairingId: string;
+let testPairingId: string;
 
 test.before(async () => {
     const setupSuccess = await globalSetup();
@@ -489,6 +490,7 @@ test.describe('POST /api/pairings', async () => {
         const newPairing = response.body;
         assert.equal(response.status, 201);
         assert.ok(newPairing.id);
+        testPairingId = newPairing.id;
         assert.equal(newPairing.entrant1_id, testEntrantId2);
         assert.equal(newPairing.entrant2_id, testEntrantId3);
         assert.equal(newPairing.winner_id, testEntrantId2);
@@ -520,5 +522,74 @@ test.describe('POST /api/pairings', async () => {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 409);
+    });
+});
+
+test.describe('POST /api/replays', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/replays', replayRoutes);
+    });
+
+    test('new replay succeeds', { timeout: 10000 }, async () => {
+        const replayUrl = 'https://replay.pokemonshowdown.com/gen3ou-733899573?p2';
+        const replayUrlTransformed = 'https://replay.pokemonshowdown.com/gen3ou-733899573';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: replayUrl,
+            match_number: 1,
+        };
+        const response = await request(app).post('/api/replays')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 201);
+        assert.equal(response.body.url, replayUrlTransformed);
+        assert.equal(response.body.pairing_id, testPairingId);
+        assert.equal(response.body.match_number, 1);
+    });
+
+    test('duplicate replay fails', { timeout: 10000 }, async () => {
+        const replayUrl = 'https://replay.pokemonshowdown.com/smogtours-gen3ou-769940?p2';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: replayUrl,
+            match_number: 2,
+        };
+        const response = await request(app).post('/api/replays')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+
+    test('replay cannot have same match number and pairing as another replay', { timeout: 10000 }, async () => {
+        const replayUrl = 'https://replay.pokemonshowdown.com/gen4ou-2304542367-gd4ig3vnsbgxfd23w5u3tbm5dgu36w0pw?p2';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: replayUrl,
+            match_number: 1,
+        };
+        const response = await request(app).post('/api/replays')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+
+    test('replay must be a url', { timeout: 10000 }, async () => {
+        const replayUrl = 'notAUrl';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: replayUrl,
+            match_number: 3,
+        };
+        const response = await request(app).post('/api/replays')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
     });
 });
