@@ -57,10 +57,9 @@ integration_tests:
   script:
     - docker pull registry.gitlab.com/fullrestore/fullrestore-api:latest
     - docker run -d --env-file=api.env --name fullrestore-api-job -p 3000:3000 registry.gitlab.com/fullrestore/fullrestore-api:latest
-    - docker exec fullrestore-api-job npm run test
+    - docker exec -t fullrestore-api-job npm run test
   after_script:
     - docker stop fullrestore-api-job
-    - docker rm fullrestore-api-job
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
