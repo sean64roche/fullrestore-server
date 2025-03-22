@@ -55,10 +55,12 @@ integration_tests:
     - cp ${ASSISTANT_ENV_PROD} assistant.env
     - cp ${DATABASE_ENV_PROD} database.env
   script:
-    - sleep 10
-    - docker exec fullrestore-services-fullrestore-api-1 npm run test
+    - docker pull registry.gitlab.com/fullrestore/fullrestore-api
+    - docker run -d --env-file=api.env --name fullrestore-api-job -p 3000:3000
+    - docker exec fullrestore-api-job npm run test
   after_script:
-    - docker-compose -f fullrestore-services.yml down -v
+    - docker stop fullrestore-api-job
+    - docker rm fullrestore-api-job
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
