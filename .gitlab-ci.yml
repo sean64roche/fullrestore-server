@@ -56,14 +56,14 @@ integration_tests:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     # Bring up the services defined in docker-compose.yml
-    - docker-compose -f docker-compose.yml up -d
+    - docker-compose -f fullrestore-services.yml up -d
     # Allow some time for services to be ready
     - sleep 10
     # Run the integration tests inside the fullrestore-api container
     - docker exec fullrestore-services-fullrestore-api-1 npm run test
   after_script:
     # Clean up after tests
-    - docker-compose -f docker-compose.yml down -v
+    - docker-compose -f fullrestore-services.yml down -v
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
