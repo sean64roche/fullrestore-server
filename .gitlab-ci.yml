@@ -56,7 +56,7 @@ integration_tests:
     - cp ${DATABASE_ENV_PROD} database.env
   script:
     - docker pull registry.gitlab.com/fullrestore/fullrestore-api:latest
-    - docker run -d --env-file=api.env --name fullrestore-api-job -p 3000:3000
+    - docker run -d --env-file=api.env --name fullrestore-api-job -p 3000:3000 registry.gitlab.com/fullrestore/fullrestore-api:latest
     - docker exec fullrestore-api-job npm run test
   after_script:
     - docker stop fullrestore-api-job
