@@ -3,7 +3,7 @@ name: fullrestore-services
 services:
   fullrestore-database:
     image: postgres:16-alpine
-    port: 5432:5432
+    ports: 5432:5432
     env_file: database.env
     restart: unless-stopped
   fullrestore-assistant:
@@ -14,7 +14,7 @@ services:
       - fullrestore-database
   fullrestore-api:
     image: registry.gitlab.com/fullrestore/fullrestore-api:latest
-    port: 3000:3000
+    ports: 3000:3000
     env_file: api.env
     restart: unless-stopped
     depends_on:
