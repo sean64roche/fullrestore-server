@@ -39,7 +39,7 @@ node-test:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - npm ci
-    - npm run test
+    - npm run test || { echo "Tests failed, showing logs:"; cat logs/*.log 2>/dev/null || true; exit 1; }
   rules:
     - if: $CI_COMMIT_BRANCH
 
