@@ -19,9 +19,14 @@ node-test:
   image: node:23
   stage: test
   services:
+    - name: docker:dind
     - name: postgres:16
       alias: postgres
   variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs/client"
     POSTGRES_DB: fullrestore-integration-test
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: password
@@ -34,6 +39,9 @@ node-test:
     POSTGRES_IMAGE_NAME: fullrestore-database
     GITLAB_USERNAME: $CI_REGISTRY_USER
     GITLAB_TOKEN: $CI_REGISTRY_PASSWORD
+  before_script:
+    - apt-get update && apt-get install -y docker.io
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - npm ci
     - npm run test
