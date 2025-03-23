@@ -24,7 +24,7 @@ node-test:
   variables:
     POSTGRES_DB: fullrestore-integration-test
     POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
+    POSTGRES_PASSWORD: password
     POSTGRES_HOST_AUTH_METHOD: trust
     DB_NAME: fullrestore-integration-test
     DB_PORT: 5432
