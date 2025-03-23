@@ -30,6 +30,10 @@ node-test:
     DB_PORT: 5432
     DB_HOST: postgres
     NODE_ENV: test
+    GITLAB_REGISTRY: registry.gitlab.com/fullrestore
+    POSTGRES_IMAGE_NAME: fullrestore-database
+    GITLAB_USERNAME: $CI_REGISTRY_USER
+    GITLAB_TOKEN: $CI_REGISTRY_PASSWORD
   script:
     - npm ci
     - npm run test
