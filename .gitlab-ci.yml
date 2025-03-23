@@ -28,13 +28,6 @@ node-test:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "/certs/client"
-    POSTGRES_DB: fullrestore-integration-test
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: password
-    POSTGRES_HOST_AUTH_METHOD: trust
-    DB_NAME: fullrestore-integration-test
-    DB_PORT: 5433
-    DB_HOST: localhost
     NODE_ENV: test
     GITLAB_REGISTRY: registry.gitlab.com/fullrestore
     POSTGRES_IMAGE_NAME: fullrestore-database
@@ -44,7 +37,6 @@ node-test:
     - apt-get update && apt-get install -y docker.io
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - echo "Database connection details -- $DB_HOST:$DB_PORT/$DB_NAME"
     - npm ci
     - npm run test
   rules:
