@@ -33,8 +33,8 @@ node-test:
     POSTGRES_PASSWORD: password
     POSTGRES_HOST_AUTH_METHOD: trust
     DB_NAME: fullrestore-integration-test
-    DB_PORT: 5432
-    DB_HOST: postgres
+    DB_PORT: 5433
+    DB_HOST: localhost
     NODE_ENV: test
     GITLAB_REGISTRY: registry.gitlab.com/fullrestore
     POSTGRES_IMAGE_NAME: fullrestore-database
