@@ -13,7 +13,7 @@ import {promisify} from "node:util";
 
 const execAsync = promisify(exec);
 const db = new Pool({
-    host: 'localhost',
+    host: process.env.GITLAB_DB_HOST || 'localhost',
     port: 5433,
     database: 'fullrestore-integration-test',
     user: 'postgres',
