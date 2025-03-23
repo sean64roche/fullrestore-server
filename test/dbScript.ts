@@ -24,12 +24,9 @@ const db = new Pool({
 export async function setupDb() {
 
     try {
-        console.log(process.env.NODE_ENV);
         await execAsync(`docker login ${GITLAB_REGISTRY} -u ${GITLAB_USERNAME} -p ${GITLAB_TOKEN}`);
-
         const fullImagePath = `${GITLAB_REGISTRY}/${POSTGRES_IMAGE_NAME}:${POSTGRES_IMAGE_TAG}`;
         await execAsync(`docker pull ${fullImagePath}`);
-
         try {
             await execAsync('docker stop fullrestore-integration-test');
             await execAsync('docker rm fullrestore-integration-test');

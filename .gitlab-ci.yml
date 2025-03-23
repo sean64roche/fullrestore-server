@@ -20,7 +20,7 @@ node-test:
   stage: test
   services:
     - name: docker:dind
-    - name: postgres:16
+    - name: postgres:16.4
       alias: postgres
       command: ["postgres", "-c", "listen_addresses=*"]
   variables:
@@ -38,8 +38,8 @@ node-test:
     NODE_ENV: test
     GITLAB_REGISTRY: registry.gitlab.com/fullrestore
     POSTGRES_IMAGE_NAME: fullrestore-database
-    GITLAB_USERNAME: $CI_REGISTRY_USER
-    GITLAB_TOKEN: $CI_REGISTRY_PASSWORD
+    GITLAB_USERNAME: $CI_DEPLOY_USER
+    GITLAB_TOKEN: $GITLAB_REGISTRY_ACCESS_TOKEN
   before_script:
     - apt-get update && apt-get install -y docker.io
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
