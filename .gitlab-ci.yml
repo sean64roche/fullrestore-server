@@ -38,7 +38,7 @@ node-test:
     NODE_ENV: test
     GITLAB_REGISTRY: registry.gitlab.com/fullrestore
     POSTGRES_IMAGE_NAME: fullrestore-database
-    GITLAB_USERNAME: $CI_DEPLOY_USER
+    GITLAB_USERNAME: $GITLAB_USER_LOGIN
     GITLAB_TOKEN: $GITLAB_REGISTRY_ACCESS_TOKEN
   before_script:
     - apt-get update && apt-get install -y docker.io
