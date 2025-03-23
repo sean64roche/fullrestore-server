@@ -16,10 +16,10 @@ stages:
 
 # Run Node.js tests
 node-test:
-  image: node:18
+  image: node:23
   stage: test
   services:
-    - name: postgres:14
+    - name: postgres:16
       alias: postgres
   variables:
     POSTGRES_DB: fullrestore-integration-test
