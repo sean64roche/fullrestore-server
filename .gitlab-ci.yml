@@ -10,6 +10,32 @@
 # This template uses one generic job with conditional builds
 # for the default branch and all other (MR) branches.
 
+stages:
+  - test
+  - build
+
+# Run Node.js tests
+node-test:
+  image: node:18
+  stage: test
+  services:
+    - name: postgres:14
+      alias: postgres
+  variables:
+    POSTGRES_DB: fullrestore-integration-test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_HOST_AUTH_METHOD: trust
+    DB_NAME: fullrestore-integration-test
+    DB_PORT: 5432
+    DB_HOST: postgres
+    NODE_ENV: test
+  script:
+    - npm ci
+    - npm run test
+  rules:
+    - if: $CI_COMMIT_BRANCH
+
 docker-build:
   # Use the official docker image.
   image: docker:cli
