@@ -19,16 +19,11 @@ node-test:
   image: node:23
   stage: test
   services:
-    - name: docker:dind
     - name: registry.gitlab.com/fullrestore/fullrestore-database:latest
       alias: postgres
   variables:
     NODE_ENV: test
-    GITLAB_USERNAME: $GITLAB_USER_LOGIN
-    GITLAB_TOKEN: $GITLAB_REGISTRY_ACCESS_TOKEN
-    GITLAB_DB_HOST: postgres
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    CI_ENVIRONMENT: "true"
   script:
     - npm ci
     - npm run test:ci
