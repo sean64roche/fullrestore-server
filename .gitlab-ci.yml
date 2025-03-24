@@ -23,9 +23,11 @@ node-test:
       alias: postgres
   variables:
     NODE_ENV: test
-    CI_ENVIRONMENT: "true"
+    CI_ENV: "true"
   script:
     - npm ci
+    - apt-get update && apt-get install -y netcat
+    - nc -zv postgres 5432
     - npm run test:ci
   rules:
     - if: $CI_COMMIT_BRANCH
