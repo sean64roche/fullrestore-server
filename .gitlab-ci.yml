@@ -22,6 +22,9 @@ node-test:
     - name: registry.gitlab.com/fullrestore/fullrestore-database:latest
       alias: postgres
   variables:
+    POSTGRES_DB: fullrestore-integration-test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: password
     NODE_ENV: test
     CI_ENV: "true"
   script:
