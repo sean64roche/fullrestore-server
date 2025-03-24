@@ -7,10 +7,7 @@ export async function globalSetup() {
     if (!isSetup && !isRunning) {
         isRunning = true;
         if (!!process.env.CI_ENV) {
-            await connectDb(
-                'postgres',
-                5432,
-            );
+            await connectDb('postgres', 5432);
         } else {
             await setupLocalDb();
             await connectDb();
