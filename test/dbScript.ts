@@ -72,6 +72,13 @@ export async function connectDb(
             await insertPairings(db);
             await insertReplays(db);
             console.log('Database is ready');
+            db.query('SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'')
+                .then(result => {
+                    console.log('Available tables:', result.rows.map(row => row.table_name));
+                })
+                .catch(err => {
+                    console.error('Error checking schema:', err);
+                });
             return;
         } catch (err) {
             retries++;
@@ -85,9 +92,22 @@ export async function connectDb(
 
 export async function teardownDb() {
     try {
-        await db.end();
-        await execAsync('docker stop fullrestore-integration-test');
-        await execAsync('docker rm fullrestore-integration-test');
+        await db.query(
+            `TRUNCATE captain, 
+            content, 
+            entrant_player, 
+            entrant_team, 
+            format, 
+            pairing, 
+            player_alias, 
+            player, 
+            replay, 
+            round, 
+            round_bye, 
+            round_entrant, 
+            team, 
+            tournament 
+            CASCADE`)
     } catch {
     }
 }
