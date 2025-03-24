@@ -26,7 +26,7 @@ node-test:
     CI_ENV: "true"
   script:
     - npm ci
-    - apt-get update && apt-get install -y netcat
+    - apt-get update && apt-get install -y netcat-openbsd
     - nc -zv postgres 5432
     - npm run test:ci
   rules:
