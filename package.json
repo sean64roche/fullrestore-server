@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "app/app.ts",
   "scripts": {
-    "test": "DB_NAME=fullrestore-integration-test DB_PORT=5433 NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1"
+    "test": "DB_NAME=fullrestore-integration-test DB_PORT=5433 NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1",
+    "test:ci": "DB_NAME=fullrestore-integration-test DB_PORT=5432 CI_ENV=true NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1"
   },
   "keywords": [],
   "author": "",

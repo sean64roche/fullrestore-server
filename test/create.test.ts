@@ -21,13 +21,13 @@ let testEntrantId1: string;
 let testPairingId: string;
 
 test.before(async () => {
-    const setupSuccess = await globalSetup();
-    assert.strictEqual(setupSuccess, true, "Database setup failed");
+        const setupSuccess = await globalSetup();
+        assert.strictEqual(setupSuccess, true, "Database setup failed");
 });
 
 test.after(async () => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    await globalTeardown();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await globalTeardown();
 });
 
 test.describe('POST /api/players', () => {

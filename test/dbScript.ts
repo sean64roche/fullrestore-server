@@ -12,17 +12,9 @@ import {initAssociations} from "../associations/initAssociations";
 import {promisify} from "node:util";
 
 const execAsync = promisify(exec);
-const db = new Pool({
-    host: process.env.GITLAB_DB_HOST || 'localhost',
-    port: 5433,
-    database: 'fullrestore-integration-test',
-    user: 'postgres',
-    password: 'password',
-    connectionTimeoutMillis: 5000,
-});
+let db: Pool;
 
-export async function setupDb() {
-
+export async function setupLocalDb() {
     try {
         await execAsync(`docker login ${GITLAB_REGISTRY} -u ${GITLAB_USERNAME} -p ${GITLAB_TOKEN}`);
         const fullImagePath = `${GITLAB_REGISTRY}/${POSTGRES_IMAGE_NAME}:${POSTGRES_IMAGE_TAG}`;
@@ -40,14 +32,29 @@ export async function setupDb() {
           -p 5433:5432 \
           ${fullImagePath}`);
 
-        await connectDb();
     } catch (error) {
         console.error('Failed to set up test database:', error);
         throw error;
     }
 }
 
-async function connectDb() {
+export async function connectDb(
+    host: string = 'localhost',
+    port: number = 5433,
+    database: string = 'fullrestore-integration-test',
+    user: string = 'postgres',
+    password: string = 'password',
+    connectionTimeoutMillis: number = 5000
+) {
+
+    db = new Pool({
+        host: host,
+        port: port,
+        database: database,
+        user: user,
+        password: password,
+        connectionTimeoutMillis: connectionTimeoutMillis,
+    });
     const maxRetries = 10;
     let retries = 0;
 
@@ -73,7 +80,6 @@ async function connectDb() {
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
     }
-
     throw new Error('Could not connect to the database');
 }
 

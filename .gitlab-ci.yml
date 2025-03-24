@@ -19,27 +19,19 @@ node-test:
   image: node:23
   stage: test
   services:
-    - name: docker:dind
-    - name: postgres:16.4
+    - name: registry.gitlab.com/fullrestore/fullrestore-database:latest
       alias: postgres
-      command: ["postgres", "-c", "listen_addresses=*"]
   variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_TLS_VERIFY: 1
-    DOCKER_CERT_PATH: "/certs/client"
     NODE_ENV: test
-    GITLAB_REGISTRY: registry.gitlab.com/fullrestore
-    POSTGRES_IMAGE_NAME: fullrestore-database
+
     GITLAB_USERNAME: $GITLAB_USER_LOGIN
     GITLAB_TOKEN: $GITLAB_REGISTRY_ACCESS_TOKEN
     GITLAB_DB_HOST: postgres
   before_script:
-    - apt-get update && apt-get install -y docker.io
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - npm ci
-    - npm run test || { echo "Tests failed, showing logs:"; cat logs/*.log 2>/dev/null || true; exit 1; }
+    - npm run test:ci
   rules:
     - if: $CI_COMMIT_BRANCH
 

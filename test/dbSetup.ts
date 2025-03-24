@@ -1,4 +1,4 @@
-import { setupDb, teardownDb } from "./dbScript";
+import {connectDb, setupLocalDb, teardownDb} from "./dbScript";
 
 let isSetup = false;
 let isRunning = false;
@@ -6,7 +6,15 @@ let isRunning = false;
 export async function globalSetup() {
     if (!isSetup && !isRunning) {
         isRunning = true;
-        await setupDb();
+        if (!!process.env.CI_ENV) {
+            await connectDb(
+                'postgres',
+                5432,
+            );
+        } else {
+            await setupLocalDb();
+            await connectDb();
+        }
         isSetup = true;
         isRunning = false;
     }
