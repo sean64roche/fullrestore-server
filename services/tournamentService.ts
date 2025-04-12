@@ -19,6 +19,8 @@ interface GetTournamentParams {
     season?: string | number;
     format?: string;
     individual_winner?: string;
+    page: number;
+    limit?: number;
 }
 
 class TournamentService {
@@ -34,16 +36,20 @@ class TournamentService {
     }
 
     public async getTournaments(params: GetTournamentParams) {
-        const { name, season, format, individual_winner } = params;
+        const { name, season, format, individual_winner, page, limit } = params;
+        const offset = (page - 1) * limit;
         const whereClause: any = {};
         if (name) whereClause.name = name;
         if (season) whereClause.season = season;
         if (format) whereClause.format = format;
         if (individual_winner) whereClause.individual_winner = individual_winner;
         return await Tournament.findAll({
+            limit: limit || null,
+            offset: offset || null,
             where: {
                 ...whereClause
-            }
+            },
+            order: [['createdAt', 'DESC']],
         });
     }
 

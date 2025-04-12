@@ -14,7 +14,14 @@ const router = express.Router();
 
 router.post('/', router.post('/', createTournament));
 
-router.get('/', validateQueryParams(['name', 'season', 'format', 'individual_winner']), getTournaments);
+router.get('/', validateQueryParams([
+    'name',
+    'season',
+    'format',
+    'individual_winner',
+    'page',
+    'limit'
+]), getTournaments);
 
 router.get('/:id', getTournamentById);
 

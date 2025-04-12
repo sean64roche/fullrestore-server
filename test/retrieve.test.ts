@@ -89,6 +89,11 @@ test.describe('GET /api/tournaments', () => {
         const response = await request(app).get('/api/tournaments?name=Not a Tournament&season=1');
         assert.equal(response.body.length, 0);
     });
+    test('GET /api/tournament?page&limit has response', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/tournaments?page=1&limit=10');
+        assert.equal(response.status, 200);
+        assert.notEqual(response.body.length, 0);
+    });
 });
 
 
