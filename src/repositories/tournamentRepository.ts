@@ -1,8 +1,9 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {Tournament, TournamentDto} from "../interfaces/tournament";
+import {Tournament, TournamentDto, TournamentResponse} from "../interfaces/tournament";
 import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
+import assert from "node:assert";
 
 class TournamentRepository extends Repository {
 
@@ -65,6 +66,15 @@ class TournamentRepository extends Repository {
         } catch (error) {
             this.logger.error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data)}`);
             throw new Error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data)}`);
+        }
+    }
+    async fetchTournaments(page: number = 1, limit: number = 10): Promise<TournamentResponse[]> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?page=${page}&limit=${limit}`);
+            return response.data;
+        } catch (error) {
+            this.logger.error(`FATAL on fetchTournaments: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on fetchTournaments: ${JSON.stringify(error.response?.data)}`);
         }
     }
 }
