@@ -1,13 +1,12 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
 class FormatRepository extends Repository {
 
     readonly formatsUrl: string;
-    constructor(config: ApiConfig, logger: Logger) {
-        super(config, logger);
+    constructor(config: ApiConfig) {
+        super(config);
         this.formatsUrl = config.baseUrl + config.formatsEndpoint;
     }
 

@@ -10,7 +10,6 @@ import {
     transformPlayerResponse,
 } from "../interfaces/player";
 import {Tournament} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -19,8 +18,8 @@ class PlayerRepository extends Repository {
     readonly playersUrl: string;
     readonly playerAliasesUrl: string;
     readonly entrantPlayersUrl: string;
-    constructor(config: ApiConfig, logger: Logger) {
-        super(config, logger);
+    constructor(config: ApiConfig) {
+        super(config);
         this.playersUrl = config.baseUrl + config.playersEndpoint;
         this.playerAliasesUrl = config.baseUrl + config.playerAliasesEndpoint;
         this.entrantPlayersUrl = config.baseUrl + config.entrantPlayersEndpoint;

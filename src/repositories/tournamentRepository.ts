@@ -1,6 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {Tournament, TournamentDto, TournamentResponse} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -8,8 +7,8 @@ class TournamentRepository extends Repository {
 
     readonly playersUrl: string;
     readonly tournamentsUrl: string;
-    constructor(config: ApiConfig, logger: Logger) {
-        super(config, logger);
+    constructor(config: ApiConfig) {
+        super(config);
         this.playersUrl = config.baseUrl + config.playersEndpoint;
         this.tournamentsUrl = config.baseUrl + config.tournamentsEndpoint;
     }

@@ -2,15 +2,14 @@ import axios, {AxiosResponse} from "axios";
 import {RoundBye} from "../interfaces/pairing";
 import {EntrantPlayer} from "../interfaces/player";
 import {Round} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
 import Repository from "./repository";
 import {ApiConfig} from "../config";
 
 class RoundByeRepository extends Repository {
 
     readonly roundByesUrl: string;
-    constructor(config: ApiConfig, logger: Logger) {
-        super(config, logger);
+    constructor(config: ApiConfig) {
+        super(config);
         this.roundByesUrl = config.baseUrl + config.roundByesEndpoint;
     }
 

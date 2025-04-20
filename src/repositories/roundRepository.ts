@@ -1,6 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {Round, RoundDto, Tournament} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -8,8 +7,8 @@ class RoundRepository extends Repository {
 
     private fillerTimestamp: string = "1970-01-01T00:00:00.000Z";
     readonly roundsUrl: string;
-    constructor(config: ApiConfig, logger: Logger) {
-        super(config, logger);
+    constructor(config: ApiConfig) {
+        super(config);
         this.roundsUrl = config.baseUrl + config.roundsEndpoint;
     }
 
@@ -19,7 +18,7 @@ class RoundRepository extends Repository {
                 tournament_id: reqTournament.id,
                 round: reqRoundNumber,
                 name: reqName,
-                deadline: this.fillerTimestamp,
+                deadline: reqDeadline || this.fillerTimestamp,
             }
             const response: AxiosResponse = await axios.post(this.roundsUrl, roundDto);
             const { id, tournament_id, round, name, deadline } = response.data;

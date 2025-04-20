@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { Pairing, PairingDto, Replay, ReplayDto, ReplayResponse, transformReplayResponse } from "../interfaces/pairing";
 import { EntrantPlayer } from "../interfaces/player";
 import { Round } from "../interfaces/tournament";
-import { Logger } from "../utils/logger";
 import { ApiConfig } from "../config";
 import Repository from "./repository";
 
@@ -11,8 +10,8 @@ class PairingRepository extends Repository {
     private readonly fillerTimestamp: string = "1970-01-01T00:00:00.000Z";
     readonly pairingsUrl: string;
     readonly replaysUrl: string;
-    constructor(config: ApiConfig, logger: Logger) {
-        super(config, logger);
+    constructor(config: ApiConfig) {
+        super(config);
         this.pairingsUrl = config.baseUrl + config.pairingsEndpoint;
         this.replaysUrl = config.baseUrl + config.replaysEndpoint;
     }
