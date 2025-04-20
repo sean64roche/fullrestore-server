@@ -19,7 +19,7 @@ export class RoundImportService {
         const totalRounds: number = (await new CsvParser().load(csvPath, this.logger))[0].rounds;
         let roundNumber: number = 1;
         while (roundNumber <= totalRounds) {
-            const roundResponse: Round = await new RoundRepository(this.config, this.logger)
+            const roundResponse: Round = await new RoundRepository(this.config)
                 .create(tournament, roundNumber, name, deadline);
             rounds.add(roundResponse);
             roundNumber++;

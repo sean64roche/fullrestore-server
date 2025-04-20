@@ -2,7 +2,6 @@ import PlayerRepository from "../../../src/repositories/playerRepository";
 import test from 'node:test';
 import axios, { AxiosError } from 'axios';
 import { DEFAULT_CONFIG } from "../../../src";
-import * as log4js from "log4js";
 import assert = require("node:assert");
 import { EntrantPlayerResponse, transformEntrantPlayerResponse } from "../../../src/interfaces/player";
 
@@ -48,7 +47,7 @@ const mockResponse: EntrantPlayerResponse[] = [
     }
 ]
 
-const pr = new PlayerRepository(DEFAULT_CONFIG, log4js.getLogger());
+const pr = new PlayerRepository(DEFAULT_CONFIG);
 
 test('successfully fetches entrant player data with valid UUID', async (t) => {
     t.mock.method(axios, 'get', async (url: string) => {

@@ -64,11 +64,11 @@ export class PairingImportService {
                 .map(key => {
                     return pairing[key] as string;
                 })
-            const pairingResponse: Pairing = await new PairingRepository(this.config, this.logger)
+            const pairingResponse: Pairing = await new PairingRepository(this.config)
                 .createPairing(pairingRound, pairingPlayer1, pairingPlayer2, pairingWinner);
             for (const url of replays) {
                 if (!!pairingResponse && !!url) {
-                    const replayResponse: Replay | undefined = await new PairingRepository(this.config, this.logger)
+                    const replayResponse: Replay | undefined = await new PairingRepository(this.config)
                         .createReplay(pairingResponse, url, replays.indexOf(url) + 1);
                     if (!!replayResponse) replaysData.add(replayResponse);
                 }

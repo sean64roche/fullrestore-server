@@ -33,20 +33,6 @@ export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     };
 };
 
-const date = new Date();
-log4js.configure({
-    appenders: {
-        console: { type: 'console' },
-        app: { type: 'file', filename: `./logs/importer-${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.log`},
-    },
-    categories: {
-        default: {
-            appenders: ['console', 'app'],
-            level: process.env.LOG4JS_LEVEL || 'ERR'
-        }
-    }
-});
-
 export type { ApiConfig };
 export const DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "http://localhost:3000",

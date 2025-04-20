@@ -25,16 +25,16 @@ export class TournamentImportService {
         }
         const tournament: TournamentDto = tournamentData[0];
         if (!!tournament.individual_winner) {
-            const winner: Player | null = await new PlayerRepository(this.config, this.logger).findPlayerByAlias(tournament.individual_winner);
+            const winner: Player | null = await new PlayerRepository(this.config).findPlayerByAlias(tournament.individual_winner);
             tournament.individual_winner = winner?.id;
         } else {
             this.logger.warn(`WARNING: tournament winner not matched to a player ID`);
         }
         this.logger.info("Processing format...");
-        const formatRepository = new FormatRepository(this.config, this.logger);
+        const formatRepository = new FormatRepository(this.config);
         await formatRepository.create(tournament.format);
         makeEmptyFieldsNull(tournament);
-        return await new TournamentRepository(this.config, this.logger).create({
+        return await new TournamentRepository(this.config).create({
             ...tournament
         });
     }

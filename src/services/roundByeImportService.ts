@@ -31,7 +31,7 @@ export class RoundByeImportService {
                 this.logger.error(msg);
                 throw new Error(msg)
             }
-            const response: RoundBye | undefined = await new RoundByeRepository(this.config, this.logger)
+            const response: RoundBye | undefined = await new RoundByeRepository(this.config)
                 .create(round, entrantPlayer);
             if (!!response) {
                 roundByes.add(response);
