@@ -3,7 +3,6 @@ import {Tournament, TournamentDto, TournamentResponse} from "../interfaces/tourn
 import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
-import assert from "node:assert";
 
 class TournamentRepository extends Repository {
 
