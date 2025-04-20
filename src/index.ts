@@ -5,6 +5,7 @@ import RoundRepository from "./repositories/roundRepository";
 import FormatRepository from "./repositories/formatRepository";
 import RoundByeRepository from "./repositories/roundByeRepository";
 import PairingRepository from "./repositories/pairingRepository";
+
 export default {
     PlayerRepository,
     TournamentRepository,
@@ -31,6 +32,8 @@ export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     };
 };
 
+export type { ApiConfig };
+
 export const DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "http://localhost:3000",
     formatsEndpoint: "/api/formats",
@@ -43,4 +46,4 @@ export const DEFAULT_CONFIG: ApiConfig = {
     pairingsEndpoint: "/api/pairings",
     replaysEndpoint: "/api/replays",
     timeout: 10000,
-}
+};
