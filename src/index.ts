@@ -5,6 +5,7 @@ import RoundRepository from "./repositories/roundRepository";
 import FormatRepository from "./repositories/formatRepository";
 import RoundByeRepository from "./repositories/roundByeRepository";
 import PairingRepository from "./repositories/pairingRepository";
+import log4js from "log4js";
 
 export default {
     PlayerRepository,
@@ -32,8 +33,21 @@ export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     };
 };
 
-export type { ApiConfig };
+const date = new Date();
+log4js.configure({
+    appenders: {
+        console: { type: 'console' },
+        app: { type: 'file', filename: `./logs/importer-${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.log`},
+    },
+    categories: {
+        default: {
+            appenders: ['console', 'app'],
+            level: process.env.LOG4JS_LEVEL || 'ERR'
+        }
+    }
+});
 
+export type { ApiConfig };
 export const DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "http://localhost:3000",
     formatsEndpoint: "/api/formats",
@@ -46,4 +60,5 @@ export const DEFAULT_CONFIG: ApiConfig = {
     pairingsEndpoint: "/api/pairings",
     replaysEndpoint: "/api/replays",
     timeout: 10000,
+    logger: log4js.getLogger(),
 };

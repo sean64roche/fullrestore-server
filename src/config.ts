@@ -13,7 +13,7 @@ export interface ApiConfig {
   pairingsEndpoint: string;
   replaysEndpoint: string;
   timeout: number;
-  logger?: log4js.Logger;
+  logger: log4js.Logger;
 }
 
 
