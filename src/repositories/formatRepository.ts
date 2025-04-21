@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from "axios";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
-class FormatRepository extends Repository {
+export class FormatRepository extends Repository {
 
     readonly formatsUrl: string;
     constructor(config: ApiConfig) {
@@ -33,4 +33,4 @@ class FormatRepository extends Repository {
     }
 }
 
-export default FormatRepository;
+exports.formatRepository = FormatRepository;

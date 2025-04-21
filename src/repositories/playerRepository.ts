@@ -13,7 +13,7 @@ import {Tournament} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
-class PlayerRepository extends Repository {
+export class PlayerRepository extends Repository {
 
     readonly playersUrl: string;
     readonly playerAliasesUrl: string;
@@ -132,4 +132,4 @@ class PlayerRepository extends Repository {
     }
 }
 
-export default PlayerRepository;
+exports.PlayerRepository = PlayerRepository;

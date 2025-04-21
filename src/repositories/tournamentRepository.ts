@@ -3,7 +3,7 @@ import {Tournament, TournamentDto, TournamentResponse} from "../interfaces/tourn
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
-class TournamentRepository extends Repository {
+export class TournamentRepository extends Repository {
 
     readonly playersUrl: string;
     readonly tournamentsUrl: string;
@@ -77,4 +77,4 @@ class TournamentRepository extends Repository {
     }
 }
 
-export default TournamentRepository;
+exports.TournamentRepository = TournamentRepository;

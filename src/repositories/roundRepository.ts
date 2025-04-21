@@ -3,7 +3,7 @@ import {Round, RoundDto, Tournament} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
-class RoundRepository extends Repository {
+export class RoundRepository extends Repository {
 
     private fillerTimestamp: string = "1970-01-01T00:00:00.000Z";
     readonly roundsUrl: string;
@@ -66,4 +66,4 @@ class RoundRepository extends Repository {
     }
 }
 
-export default RoundRepository;
+exports.roundRepository = RoundRepository;

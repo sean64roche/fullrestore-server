@@ -1,18 +1,13 @@
 import {ApiConfig} from "./config";
-import PlayerRepository from "./repositories/playerRepository";
-import TournamentRepository from "./repositories/tournamentRepository";
-import RoundRepository from "./repositories/roundRepository";
-import FormatRepository from "./repositories/formatRepository";
-import RoundByeRepository from "./repositories/roundByeRepository";
-import PairingRepository from "./repositories/pairingRepository";
+import {PlayerRepository} from "./repositories/playerRepository";
+import {TournamentRepository} from "./repositories/tournamentRepository";
+import {RoundRepository} from "./repositories/roundRepository";
+import {FormatRepository} from "./repositories/formatRepository";
+import {RoundByeRepository} from "./repositories/roundByeRepository";
+import {PairingRepository} from "./repositories/pairingRepository";
 import log4js from "log4js";
 
-exports.PlayerRepository = PlayerRepository;
-exports.TournamentRepository = TournamentRepository;
-exports.RoundRepository = RoundRepository;
-exports.FormatRepository = FormatRepository;
-exports.RoundByeRepository = RoundByeRepository;
-exports.PairingRepository = PairingRepository;
+export { PlayerRepository, TournamentRepository, RoundRepository, FormatRepository, RoundByeRepository, PairingRepository };
 
 export { PairingImportService } from './services/pairingImportService';
 export { PlayerImportService } from "./services/playerImportService";
