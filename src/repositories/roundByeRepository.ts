@@ -5,7 +5,7 @@ import {Round} from "../interfaces/tournament";
 import Repository from "./repository";
 import {ApiConfig} from "../config";
 
-export class RoundByeRepository extends Repository {
+export default class RoundByeRepository extends Repository {
 
     readonly roundByesUrl: string;
     constructor(config: ApiConfig) {

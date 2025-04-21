@@ -13,7 +13,7 @@ import {Tournament} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
-export class PlayerRepository extends Repository {
+export default class PlayerRepository extends Repository {
 
     readonly playersUrl: string;
     readonly playerAliasesUrl: string;

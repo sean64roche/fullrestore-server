@@ -5,7 +5,7 @@ import { Round } from "../interfaces/tournament";
 import { ApiConfig } from "../config";
 import Repository from "./repository";
 
-export class PairingRepository extends Repository {
+export default class PairingRepository extends Repository {
 
     private readonly fillerTimestamp: string = "1970-01-01T00:00:00.000Z";
     readonly pairingsUrl: string;
