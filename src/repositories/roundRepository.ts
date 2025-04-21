@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {Round, RoundDto, Tournament} from "../interfaces/tournament";
+import {Round, RoundDto, RoundResponse, Tournament} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -62,6 +62,16 @@ export default class RoundRepository extends Repository {
         } catch (error) {
             this.logger.error(`FATAL on Round get: ${JSON.stringify(error.response?.data)}`);
             throw new Error(error.message);
+        }
+    }
+
+    async getByTournamentId(tournamentId: string): Promise<RoundResponse[]> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_id=${tournamentId}`);
+            return response.data;
+        } catch (error) {
+            this.logger.error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data)}`);
         }
     }
 }
