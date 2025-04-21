@@ -7,14 +7,12 @@ import RoundByeRepository from "./repositories/roundByeRepository";
 import PairingRepository from "./repositories/pairingRepository";
 import log4js from "log4js";
 
-export default {
-    PlayerRepository,
-    TournamentRepository,
-    RoundRepository,
-    FormatRepository,
-    RoundByeRepository,
-    PairingRepository,
-};
+exports.PlayerRepository = PlayerRepository;
+exports.TournamentRepository = TournamentRepository;
+exports.RoundRepository = RoundRepository;
+exports.FormatRepository = FormatRepository;
+exports.RoundByeRepository = RoundByeRepository;
+exports.PairingRepository = PairingRepository;
 
 export { PairingImportService } from './services/pairingImportService';
 export { PlayerImportService } from "./services/playerImportService";
