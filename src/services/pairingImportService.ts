@@ -32,8 +32,8 @@ export class PairingImportService {
             player2 = cleanPsUsername(player2).toLowerCase();
             if (typeof winner === "string") winner = cleanPsUsername(winner).toLowerCase();
             const pairingRound: Round | undefined = tournamentRounds.find(r => +pairing.round === r.roundNumber);
-            const pairingPlayer1: EntrantPlayer | undefined = tournamentPlayers.find(player => player.player.spreadsheetAlias!.psAlias === player1);
-            const pairingPlayer2: EntrantPlayer | undefined = tournamentPlayers.find(player => player.player.spreadsheetAlias!.psAlias === player2);
+            const pairingPlayer1: EntrantPlayer | undefined = tournamentPlayers.find(player => player.player.psUser === player1);
+            const pairingPlayer2: EntrantPlayer | undefined = tournamentPlayers.find(player => player.player.psUser === player2);
 
             if (!pairingRound || !pairingPlayer1 || !pairingPlayer2) {
                 const msg = `FATAL: round ${pairing.round}: '${player1}' vs '${player2} has an invalid parameter`;

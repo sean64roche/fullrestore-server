@@ -14,7 +14,7 @@ export default class RoundByeRepository extends Repository {
     }
 
     async create(round: Round, entrantPlayer: EntrantPlayer): Promise<RoundBye | undefined> {
-        const username = entrantPlayer.player.spreadsheetAlias?.psAlias || entrantPlayer.player.psUser;
+        const username = entrantPlayer.player.psUser;
         try {
             const response: AxiosResponse = await axios.post(this.roundByesUrl, {
                 round_id: round.id,

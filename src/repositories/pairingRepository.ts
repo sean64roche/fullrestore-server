@@ -23,9 +23,9 @@ export default class PairingRepository extends Repository {
         winner?: EntrantPlayer
     ): Promise<Pairing> {
         this.logger.info(`INFO: attempting to send Pairing DTO`);
-        const playerAlias1: string = entrantPlayer1.player.spreadsheetAlias?.psAlias || entrantPlayer1.player.psUser;
-        const playerAlias2: string = entrantPlayer2.player.spreadsheetAlias?.psAlias || entrantPlayer2.player.psUser;
-        const winnerAlias: string | undefined = winner?.player.spreadsheetAlias?.psAlias || winner?.player.psUser;
+        const playerAlias1: string = entrantPlayer1.player.psUser;
+        const playerAlias2: string = entrantPlayer2.player.psUser;
+        const winnerAlias: string | undefined = winner?.player.psUser;
         const pairingDto: PairingDto = {
             round_id: round.id,
             entrant1_id: entrantPlayer1.id,
@@ -86,7 +86,7 @@ export default class PairingRepository extends Repository {
     }
 
     async getPairing(round: Round, player1: EntrantPlayer, player2: EntrantPlayer): Promise<Pairing | null> {
-        const username1: string = player1.player.spreadsheetAlias?.psAlias || player1.player.psUser;
+        const username1: string = player1.player.psUser;
         try {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${round.id}&player=${username1}`);
             const { id, round_id, entrant1_id, entrant2_id, time_scheduled, time_completed, winner_id } = response.data[0];
