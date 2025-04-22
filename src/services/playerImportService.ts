@@ -1,5 +1,5 @@
 import CsvLoader from "../utils/csvParser";
-import {cleanPsUsername, validateDiscordUsername} from "../utils/helpers";
+import {cleanPsUsername, makeEmptyFieldsNull, validateDiscordUsername} from "../utils/helpers";
 import PlayerRepository from "../repositories/playerRepository";
 import {
     EntrantPlayer,
@@ -33,6 +33,7 @@ export class PlayerImportService {
                 this.logger.info(`Alias ${cleanPsUser} already exists, skipping`);
                 continue;
             }
+            makeEmptyFieldsNull(record);
             const playerResponse: Player = await new PlayerRepository(this.config)
                 .createPlayer({
                     ps_user: cleanPsUser,
