@@ -27,11 +27,7 @@ export default class PlayerRepository extends Repository {
 
     async createPlayer(player: PlayerDto): Promise<Player> {
         try {
-            const response: AxiosResponse = await axios.post(this.playersUrl, {
-                ps_user: player.ps_user,
-                discord_user: player.discord_user,
-                discord_id: player.discord_id,
-            });
+            const response: AxiosResponse = await axios.post(this.playersUrl, player);
             const playerData: PlayerResponse = response.data;
             this.logger.info(`Player '${player.ps_user}' created with UUID ${playerData.id}`);
             return transformPlayerResponse(playerData);
@@ -47,7 +43,7 @@ export default class PlayerRepository extends Repository {
                         throw new AxiosError(msg404);
                     default:
                         this.logger.error(`FATAL on creating Player: ${error.message}`);
-                        throw new AxiosError(error.message);
+                        throw new AxiosError(error.response?.data);
                 }
             } else {
                 this.logger.error(`FATAL on creating Player: ${error.message}`);
@@ -72,7 +68,7 @@ export default class PlayerRepository extends Repository {
                     throw (error);
                 default:
                     this.logger.error(`FATAL on creating entrant player: ${error.message}`);
-                    throw new Error(error.message);
+                    throw new Error(error.response?.data || error.message);
             }
         }
     }
@@ -95,7 +91,7 @@ export default class PlayerRepository extends Repository {
                 }
             } else {
                 this.logger.error(`FATAL on findPlayer: ${error.message}`);
-                throw new Error(error.message);
+                throw new Error(error.response?.data || error.message);
             }
 
         }

@@ -23,11 +23,11 @@ export default class FormatRepository extends Repository {
                         return undefined;
                     default:
                         this.logger.error(`FATAL on creating Format: ${JSON.stringify(error.response?.data)}`);
-                        throw error;
+                        throw new Error(error.response?.data);
                 }
             } else {
                 this.logger.error(`FATAL on creating Format: ${error.message}`);
-                throw new Error(error.message);
+                throw new Error(error.response?.data || error.message);
             }
         }
     }

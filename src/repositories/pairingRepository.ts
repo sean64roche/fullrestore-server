@@ -76,11 +76,11 @@ export default class PairingRepository extends Repository {
                         }
                     default:
                         this.logger.error(`FATAL on creating pairing '${playerAlias1}' vs '${playerAlias2}': ${error.message}`);
-                        throw (error);
+                        throw new Error(error.response?.data);
                 }
             } else {
                 this.logger.error(`FATAL on creating pairing '${playerAlias1}' vs '${playerAlias2}': ${error.message}`);
-                throw new Error(error.message);
+                throw new Error(error.response?.data || error.message);
             }
         }
     }
@@ -102,7 +102,7 @@ export default class PairingRepository extends Repository {
             };
         } catch (error) {
             this.logger.error(`FATAL on getPairing: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.message);
+            throw new Error(error.response?.data || error.message);
         }
     }
 
@@ -112,7 +112,7 @@ export default class PairingRepository extends Repository {
             return response.data;
         } catch (error) {
             this.logger.error(`FATAL on deletePairing: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.message);
+            throw new Error(error.response?.data || error.message);
         }
     }
 
@@ -145,7 +145,7 @@ export default class PairingRepository extends Repository {
                     }
                 default:
                     this.logger.error(`FATAL on createReplay:\n${JSON.stringify(error.response?.data)}`);
-                    throw new Error(error.message);
+                    throw new Error(error.response?.data || error.message);
             }
         }
     }
@@ -156,7 +156,7 @@ export default class PairingRepository extends Repository {
             return transformReplayResponse(response.data[0]);
         } catch (error) {
             this.logger.error(`FATAL on getReplay: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.message);
+            throw new Error(error.response?.data || error.message);
         }
     }
 }

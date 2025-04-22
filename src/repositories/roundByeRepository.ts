@@ -34,7 +34,7 @@ export default class RoundByeRepository extends Repository {
                     return undefined;
                 default:
                     this.logger.error(`FATAL on creating RoundBye: ${error.message}`);
-                    throw new Error(error.message);
+                    throw new Error(error.response?.data || error.message);
             }
         }
     }

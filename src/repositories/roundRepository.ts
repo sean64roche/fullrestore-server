@@ -39,11 +39,11 @@ export default class RoundRepository extends Repository {
                         return existingRound;
                     default:
                         this.logger.error(`FATAL on RoundRepository.create: ${JSON.stringify(error.response?.data)}`);
-                        throw (error);
+                        throw new Error(error.response?.data);
                 }
             } else {
                 this.logger.error(`FATAL: on RoundRepository.create: ${error.message}`);
-                throw new Error(error.message);
+                throw new Error(error.response?.data || error.message);
             }
         }
     }
@@ -61,7 +61,7 @@ export default class RoundRepository extends Repository {
             };
         } catch (error) {
             this.logger.error(`FATAL on Round get: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.message);
+            throw new Error(error.response?.data || error.message);
         }
     }
 
