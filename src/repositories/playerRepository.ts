@@ -79,14 +79,14 @@ export default class PlayerRepository extends Repository {
 
     async findPlayerByAlias(alias: string): Promise<Player | null> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.playerAliasesUrl}/${alias}`);
+            const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${alias}`);
             const aliasData: PlayerAliasResponse = response.data;
             return transformPlayerResponse(aliasData.Player);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.response?.status) {
                     case 404:
-                        this.logger.info(`Player '${alias} not found`);
+                        this.logger.info(`Player '${alias}' not found`);
                         return null;
                     default:
                         const msg: string = `FATAL on findPlayer: ${JSON.stringify(error.response?.data)}`
