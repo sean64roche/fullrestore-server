@@ -41,7 +41,7 @@ export class PlayerImportService {
                     discord_id: record.discord_id,
             });
             players.add(playerResponse);
-            this.logger.info(`Player added as '${playerResponse.spreadsheetAlias!.psAlias}'`);
+            this.logger.info(`Player added as '${cleanPsUser}'`);
         }
         return players;
     }

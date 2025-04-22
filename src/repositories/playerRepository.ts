@@ -6,7 +6,6 @@ import {
     EntrantPlayerResponse,
     transformEntrantPlayerResponse,
     PlayerResponse,
-    PlayerAliasResponse,
     transformPlayerResponse,
 } from "../interfaces/player";
 import {Tournament} from "../interfaces/tournament";
@@ -30,7 +29,7 @@ export default class PlayerRepository extends Repository {
             const response: AxiosResponse = await axios.post(this.playersUrl, player);
             const playerData: PlayerResponse = response.data;
             this.logger.info(`Player '${player.ps_user}' created with UUID ${playerData.id}`);
-            return transformPlayerResponse(playerData);
+            return transformPlayerResponse(playerData, player.ps_user);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.status) {
@@ -59,7 +58,7 @@ export default class PlayerRepository extends Repository {
                 tournament_id: tournament.id
             });
             const entrantData: EntrantPlayerResponse = response.data;
-            return transformEntrantPlayerResponse(entrantData);
+            return transformEntrantPlayerResponse(entrantData, player.spreadsheetAlias.psAlias);
         } catch (error) {
             switch (error.status) {
                 case 409:
@@ -76,8 +75,7 @@ export default class PlayerRepository extends Repository {
     async findPlayerByAlias(alias: string): Promise<Player | null> {
         try {
             const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${alias}`);
-            const aliasData: PlayerAliasResponse = response.data;
-            return transformPlayerResponse(aliasData.Player);
+            return transformPlayerResponse(response.data, alias);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.response?.status) {
