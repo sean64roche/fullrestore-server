@@ -2,6 +2,7 @@ import test from 'node:test';
 import express from "express";
 import assert from "node:assert";
 import request from "supertest";
+import { format as formatDate } from "date-fns";
 import {globalSetup, globalTeardown} from "./dbSetup";
 import playerRoutes from "../routes/playerRoutes";
 import playerAliasRoutes from "../routes/playerAliasRoutes";
@@ -172,6 +173,7 @@ test.describe('POST /api/tournaments', () => {
         const tourName = 'Test Tournament';
         const tourSeason = 1;
         const tourFormat = 'gen3ou';
+        const tourStartDate = Date.now();
         const tourIndividualWinner = 'a8177b3c-e07a-4e03-8813-720e5aaff072';
         const tourTeamTour = false;
         const tourInfo = "Info about the Tournament, coming soon!";
@@ -180,6 +182,7 @@ test.describe('POST /api/tournaments', () => {
             name: tourName,
             season: tourSeason,
             format: tourFormat,
+            start_date: Date.now(),
             individual_winner: tourIndividualWinner,
             team_tour: tourTeamTour,
             info: tourInfo,
@@ -194,6 +197,8 @@ test.describe('POST /api/tournaments', () => {
             name,
             season,
             format,
+            start_date,
+            finish_date,
             current_round,
             prize_pool,
             individual_winner,
@@ -206,11 +211,13 @@ test.describe('POST /api/tournaments', () => {
         assert.equal(name, tourName);
         assert.equal(season, tourSeason);
         assert.equal(format, tourFormat);
+        assert.equal(start_date, formatDate(tourStartDate, "yyyy-MM-dd"));
         assert.equal(individual_winner, tourIndividualWinner);
         assert.equal(team_tour, tourTeamTour);
         assert.equal(info, tourInfo);
         assert.notEqual(cat, tourCat);
         assert.equal(current_round, 0);
+        assert.ok(!finish_date);
         assert.ok(!prize_pool);
         assert.ok(!team_winner);
         testTournamentId = id;
@@ -220,6 +227,7 @@ test.describe('POST /api/tournaments', () => {
         const tourName = 'ADV Revival';
         const tourSeason = 1;
         const tourFormat = 'gen3ou';
+        const tourStartDate = '2024-09-30';
         const tourIndividualWinner = '1b8ddbc4-a841-4252-8f28-f7300ee2a205';
         const tourTeamTour = false;
         const tourInfo = 'I updated the info';
@@ -227,6 +235,7 @@ test.describe('POST /api/tournaments', () => {
             name: tourName,
             season: tourSeason,
             format: tourFormat,
+            start_date: tourStartDate,
             individual_winner: tourIndividualWinner,
             team_tour: tourTeamTour,
             info: tourInfo,

@@ -12,6 +12,9 @@ export interface TournamentAttributes {
     individual_winner?: string;
     team_tour?: boolean;
     team_winner?: string;
+    info?: string;
+    start_date?: Date;
+    end_date?: Date;
 }
 
 interface GetTournamentParams {

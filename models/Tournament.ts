@@ -12,6 +12,8 @@ class Tournament extends Model {
     declare team_tour: boolean;
     declare team_winner?: string;
     declare info?: string;
+    declare start_date: string;
+    declare finish_date?: string;
 }
 
 function winnersAreOverloaded() {
@@ -77,7 +79,14 @@ Tournament.init({
     info: {
         type: DataTypes.TEXT,
     }
-
+    ,
+    start_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    finish_date: {
+        type: DataTypes.DATE
+    }
 }, {
     sequelize,
     modelName: 'Tournament',
