@@ -7,6 +7,8 @@ import { EntrantPlayerResponse, transformEntrantPlayerResponse } from "../../../
 
 const validPlayerId = '20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4';
 const validTournamentId = '17741f63-e1eb-4e30-9e16-aa11f658fd76';
+const startDate = "2025-01-01";
+const finishDate = "2025-02-01";
 const nonExistentPlayerId = '00000000-0000-0000-0000-000000000000';
 const nonExistentTournamentId = '00000000-0000-0000-0000-0000-000000000000';
 const invalidPlayerId = 'not-a-uuid';
@@ -36,6 +38,8 @@ const mockResponse: EntrantPlayerResponse[] = [
             name: 'Pokemon Tournament',
             season: '1',
             format: 'gen3ou',
+            start_date: startDate,
+            finish_date: finishDate,
             current_round: 1,
             prize_pool: null,
             individual_winner: '8473c391-d78c-4066-9acc-b5997a837db0',
