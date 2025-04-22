@@ -16,16 +16,19 @@ export default class TournamentRepository extends Repository {
     async create(tournament: TournamentDto): Promise<Tournament> {
         try {
             const response: AxiosResponse = await axios.post(this.tournamentsUrl, tournament);
-            const { id, name, season, format, current_round, prize_pool, individual_winner } = response.data;
+            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info } = response.data;
             this.logger.info(`Tournament created with UUID ${id}`);
             return {
                 id: id,
                 name: name,
                 season: season,
                 format: format,
+                startDate: start_date,
+                finishDate: finish_date,
                 currentRound: current_round,
                 prizePool: prize_pool,
                 individualWinner: individual_winner,
+                info: info,
             };
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -50,16 +53,19 @@ export default class TournamentRepository extends Repository {
     async getExistingTournament(existingName: string, existingSeason: number): Promise<Tournament> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?name=${existingName}&season=${existingSeason}`);
-            const { id, name, season, format, current_round, prize_pool, individual_winner } = response.data[0];
+            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info } = response.data[0];
             this.logger.info(`Tournament found with UUID ${id}`);
             return {
                 id: id,
                 name: name,
                 season: season,
                 format: format,
+                startDate: start_date,
+                finishDate: finish_date,
                 currentRound: current_round,
                 prizePool: prize_pool,
                 individualWinner: individual_winner,
+                info: info,
             };
         } catch (error) {
             this.logger.error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data)}`);
