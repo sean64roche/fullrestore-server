@@ -36,7 +36,7 @@ export class PairingImportService {
             const pairingPlayer2: EntrantPlayer | undefined = tournamentPlayers.find(player => player.player.psUser === player2);
 
             if (!pairingRound || !pairingPlayer1 || !pairingPlayer2) {
-                const msg = `FATAL: round ${pairing.round}: '${player1}' vs '${player2} has an invalid parameter`;
+                const msg = `FATAL: round ${pairing.round}: '${player1}' vs '${player2}' has an invalid parameter`;
                 this.logger.error(msg);
                 throw new Error(msg);
             }

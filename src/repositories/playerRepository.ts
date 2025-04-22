@@ -67,6 +67,7 @@ export default class PlayerRepository extends Repository {
             const entrantData: EntrantPlayerResponse = {
                 ...response.data,
                 Player: player,
+                Tournament: tournament,
             };
             return transformEntrantPlayerResponse(entrantData);
         } catch (error) {

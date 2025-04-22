@@ -27,7 +27,7 @@ export interface Player {
     psUser: string;
     discordUser?: string;
     discordId?: string;
-    Aliases?: PlayerAlias[];
+    Aliases: PlayerAlias[];
 }
 
 export function transformPlayerResponse(data: PlayerResponse): Player {
