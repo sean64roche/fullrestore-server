@@ -29,7 +29,7 @@ export default class PlayerRepository extends Repository {
             const response: AxiosResponse = await axios.post(this.playersUrl, player);
             const playerData: PlayerResponse = response.data;
             this.logger.info(`Player '${player.ps_user}' created with UUID ${playerData.id}`);
-            return transformPlayerResponse(playerData, player.ps_user);
+            return transformPlayerResponse(playerData);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.status) {
@@ -58,11 +58,11 @@ export default class PlayerRepository extends Repository {
                 tournament_id: tournament.id
             });
             const entrantData: EntrantPlayerResponse = response.data;
-            return transformEntrantPlayerResponse(entrantData, player.spreadsheetAlias.psAlias);
+            return transformEntrantPlayerResponse(entrantData);
         } catch (error) {
             switch (error.status) {
                 case 409:
-                    const username: string = player.spreadsheetAlias?.psAlias || player.psUser;
+                    const username: string = player.psUser;
                     this.logger.warn(`WARNING: player '${username}' already has entrant record`);
                     throw (error);
                 default:
@@ -75,7 +75,7 @@ export default class PlayerRepository extends Repository {
     async findPlayerByAlias(alias: string): Promise<Player | null> {
         try {
             const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${alias}`);
-            return transformPlayerResponse(response.data, alias);
+            return transformPlayerResponse(response.data);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.response?.status) {

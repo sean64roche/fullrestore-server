@@ -30,7 +30,11 @@ export class PlayerImportService {
                 .findPlayerByAlias(cleanPsUser);
             if (!!existingPlayer) {
                 players.add(existingPlayer);
-                this.logger.info(`Alias ${cleanPsUser} already exists, skipping`);
+                if (existingPlayer.psUser === cleanPsUser) {
+                    this.logger.info(`Alias ${cleanPsUser} found in database, skipping`);
+                } else {
+                    this.logger.warn(`Alias ${cleanPsUser} already exists as ${existingPlayer.psUser}, skipping`);
+                }
                 continue;
             }
             makeEmptyFieldsNull(record);
@@ -53,7 +57,7 @@ export class PlayerImportService {
                 const response: EntrantPlayer = await new PlayerRepository(this.config)
                     .createEntrantPlayer(player, tournament);
                 entrantPlayers.add(response);
-                this.logger.info(`Entrant '${player.spreadsheetAlias!.psAlias}' added with UUID ${response.id}`);
+                this.logger.info(`Entrant '${player.psUser}' added with UUID ${response.id}`);
             } catch (error) {
                 if (error.status === 409) {
                     const existingEntrantPlayer: EntrantPlayer | void = await new PlayerRepository(this.config)
