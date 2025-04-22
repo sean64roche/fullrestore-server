@@ -8,8 +8,8 @@ export type SheetTournament = {
     individual_winner: string;
     team_tour: boolean;
     team_winner: string;
-    start_date: Date;
-    finish_date: Date;
+    start_date: string;
+    finish_date: string;
     info: string;
 }
 
@@ -17,8 +17,8 @@ export type TournamentDto = {
     name: string;
     season: number;
     format: string;
-    start_date: Date;
-    finish_date?: Date;
+    start_date: string;
+    finish_date?: string;
     current_round?: number;
     prize_pool?: number;
     individual_winner?: string;
@@ -32,8 +32,8 @@ export interface Tournament {
     name: string;
     season: number | string;
     format: string;
-    startDate: Date;
-    finishDate?: Date;
+    startDate: string;
+    finishDate?: string;
     currentRound: number;
     prizePool: number | null;
     individualWinner?: Player;
@@ -45,8 +45,8 @@ export type TournamentResponse = {
     name: string;
     season: number | string;
     format: string;
-    start_date: Date;
-    finish_date?: Date;
+    start_date: string;
+    finish_date?: string;
     current_round: number;
     prize_pool: number | null;
     individual_winner: string | null;
