@@ -32,13 +32,9 @@ export interface Player {
 
 export function transformPlayerResponse(data: PlayerResponse): Player {
     const aliases: PlayerAlias[] = [];
-    if (!!data.Aliases) {
-        data.Aliases.forEach((alias: PlayerAliasResponse) => {
-            aliases.push(transformPlayerAliasResponse(alias));
-        });
-    } else {
-        aliases.push({psAlias: data.ps_user});
-    }
+    data.Aliases.forEach((alias: PlayerAliasResponse) => {
+        aliases.push(transformPlayerAliasResponse(alias));
+    });
     return {
         id: data.id,
         psUser: data.ps_user,

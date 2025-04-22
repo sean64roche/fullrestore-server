@@ -27,7 +27,14 @@ export default class PlayerRepository extends Repository {
     async createPlayer(player: PlayerDto): Promise<Player> {
         try {
             const response: AxiosResponse = await axios.post(this.playersUrl, player);
-            const playerData: PlayerResponse = response.data;
+            const playerData: PlayerResponse = {
+                ...response.data,
+                Aliases: [
+                    {
+                        ps_alias: player.ps_user
+                    }
+                ]
+            };
             this.logger.info(`Player '${player.ps_user}' created with UUID ${playerData.id}`);
             return transformPlayerResponse(playerData);
         } catch (error) {
@@ -57,7 +64,10 @@ export default class PlayerRepository extends Repository {
                 player_id: player.id,
                 tournament_id: tournament.id
             });
-            const entrantData: EntrantPlayerResponse = response.data;
+            const entrantData: EntrantPlayerResponse = {
+                ...response.data,
+                Player: player,
+            };
             return transformEntrantPlayerResponse(entrantData);
         } catch (error) {
             switch (error.status) {
