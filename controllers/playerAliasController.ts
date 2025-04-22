@@ -17,18 +17,6 @@ export async function createPlayerAlias(req: Request, res: Response) {
     }
 }
 
-export async function getPlayerAlias(req: Request, res: Response) {
-    try {
-        const alias: PlayerAlias = await playerAliasService.getPlayerAlias(req.params.ps_alias);
-        if (!alias) {
-            return res.status(404).json({ error: 'Player alias not found' });
-        }
-        return res.json(alias);
-    } catch (error: any) {
-        return res.status(500).json({ error: error.message });
-    }
-}
-
 export async function deletePlayerAlias(req: Request, res: Response) {
     try {
         const deleted = await playerAliasService.deletePlayerAlias(req.params.ps_alias);
