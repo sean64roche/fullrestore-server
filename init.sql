@@ -381,7 +381,7 @@ CREATE TABLE public.tournament (
     name character varying(255) NOT NULL,
     season text NOT NULL,
     format text NOT NULL,
-    start_date date,
+    start_date date NOT NULL,
     finish_date date,
     current_round integer DEFAULT 0,
     prize_pool numeric,
