@@ -381,14 +381,16 @@ CREATE TABLE public.tournament (
     name character varying(255) NOT NULL,
     season text NOT NULL,
     format text NOT NULL,
+    start_date date,
+    finish_date date,
     current_round integer DEFAULT 0,
     prize_pool numeric,
     individual_winner uuid,
     team_tour boolean NOT NULL,
     team_winner uuid,
+    info text,
     "createdAt" timestamp with time zone NOT NULL,
-    "updatedAt" timestamp with time zone NOT NULL,
-    info text
+    "updatedAt" timestamp with time zone NOT NULL
 );
 
 
@@ -617,6 +619,13 @@ ALTER TABLE ONLY public.round_entrant
 
 
 --
+-- Name: content_createdat_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX content_createdat_idx ON public.content USING btree ("createdAt" DESC);
+
+
+--
 -- Name: entrant_player_tournament_id_player_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -638,6 +647,20 @@ CREATE UNIQUE INDEX no_cross_duplicate_entrants_round_2 ON public.pairing USING 
 
 
 --
+-- Name: pairing_createdat_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX pairing_createdat_idx ON public.pairing USING btree ("createdAt" DESC);
+
+
+--
+-- Name: pairing_time_completed_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX pairing_time_completed_idx ON public.pairing USING btree (time_completed DESC);
+
+
+--
 -- Name: replay_pairing_id_match_number; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -652,10 +675,24 @@ CREATE UNIQUE INDEX round_bye_round_id_entrant_player_id ON public.round_bye USI
 
 
 --
+-- Name: round_createdat_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX round_createdat_idx ON public.round USING btree ("createdAt" DESC);
+
+
+--
 -- Name: round_tournament_id_round; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX round_tournament_id_round ON public.round USING btree (tournament_id, round);
+
+
+--
+-- Name: tournament_createdat_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX tournament_createdat_idx ON public.tournament USING btree ("createdAt" DESC);
 
 
 --
