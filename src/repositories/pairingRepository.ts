@@ -1,5 +1,13 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { Pairing, PairingDto, Replay, ReplayDto, ReplayResponse, transformReplayResponse } from "../interfaces/pairing";
+import {
+    Pairing,
+    PairingDto,
+    PairingResponse,
+    Replay,
+    ReplayDto,
+    ReplayResponse,
+    transformReplayResponse
+} from "../interfaces/pairing";
 import { EntrantPlayer } from "../interfaces/player";
 import { Round } from "../interfaces/tournament";
 import { ApiConfig } from "../config";
@@ -157,6 +165,16 @@ export default class PairingRepository extends Repository {
         } catch (error) {
             this.logger.error(`FATAL on getReplay: ${JSON.stringify(error.response?.data)}`);
             throw new Error(JSON.stringify(error.response?.data) || error.message);
+        }
+    }
+
+    async getByRoundId(roundId: string): Promise<PairingResponse[]> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${roundId}`);
+            return response.data;
+        } catch (error) {
+            this.logger.error(`FATAL on getByRoundId: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getByRoundId: ${JSON.stringify(error.response?.data)}`);
         }
     }
 }
