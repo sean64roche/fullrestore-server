@@ -16,9 +16,50 @@ export { RoundImportService } from "./services/roundImportService";
 export { TournamentImportService } from "./services/tournamentImportService";
 
 export type { SheetData } from './interfaces/import';
-export { SheetPairing, PairingDto, Pairing, PairingResponse, ReplayDto, Replay, ReplayResponse, SheetBye, RoundByeDto, RoundBye, RoundByeResponse } from './interfaces/pairing';
-export { SheetPlayer, PlayerDto, Player, PlayerAlias,  PlayerResponse, EntrantPlayer, EntrantPlayerDto, EntrantPlayerResponse } from './interfaces/player';
-export { SheetTournament, TournamentDto, Tournament, TournamentResponse, SheetRound, RoundDto, Round, RoundResponse } from './interfaces/tournament';
+
+export {
+    SheetPairing,
+    PairingDto,
+    Pairing,
+    PairingResponse,
+    transformPairingResponse,
+    ReplayDto,
+    Replay,
+    ReplayResponse,
+    transformReplayResponse,
+    SheetBye,
+    RoundByeDto,
+    RoundBye,
+    RoundByeResponse
+} from './interfaces/pairing';
+
+export {
+    SheetPlayer,
+    PlayerDto,
+    Player,
+    PlayerAlias,
+    PlayerResponse,
+    transformPlayerResponse,
+    transformPlayerAliasResponse,
+    EntrantPlayer,
+    EntrantPlayerDto,
+    EntrantPlayerResponse,
+    transformEntrantPlayerResponse
+} from './interfaces/player';
+
+export {
+    SheetTournament,
+    TournamentDto,
+    Tournament,
+    TournamentResponse,
+    transformTournamentResponse,
+    SheetRound,
+    RoundDto,
+    Round,
+    RoundResponse,
+    transformRoundResponse
+} from './interfaces/tournament';
+
 export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     return {
         ...DEFAULT_CONFIG,
