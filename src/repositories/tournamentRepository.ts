@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {Tournament, TournamentDto, TournamentResponse} from "../interfaces/tournament";
+import {TournamentEntity, TournamentDto, TournamentResponse} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -13,7 +13,7 @@ export default class TournamentRepository extends Repository {
         this.tournamentsUrl = config.baseUrl + config.tournamentsEndpoint;
     }
 
-    async create(tournament: TournamentDto): Promise<Tournament> {
+    async create(tournament: TournamentDto): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.tournamentsUrl, tournament);
             const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info } = response.data;
@@ -34,7 +34,7 @@ export default class TournamentRepository extends Repository {
             if (error instanceof AxiosError) {
                 switch (error.status) {
                     case 409: {
-                        const existingTournament: Tournament = await this.getExistingTournament(tournament.name, tournament.season);
+                        const existingTournament: TournamentEntity = await this.getExistingTournament(tournament.name, tournament.season);
                         this.logger.warn(`'${tournament.name}' already exists: tournament_id is ${existingTournament.id}`);
                         return existingTournament;
                     }
@@ -50,7 +50,7 @@ export default class TournamentRepository extends Repository {
             }
         }
     }
-    async getExistingTournament(existingName: string, existingSeason: number): Promise<Tournament> {
+    async getExistingTournament(existingName: string, existingSeason: number): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?name=${existingName}&season=${existingSeason}`);
             const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info } = response.data[0];

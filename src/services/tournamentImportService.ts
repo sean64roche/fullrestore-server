@@ -2,8 +2,8 @@ import CsvLoader from "../utils/csvParser";
 import FormatRepository from "../repositories/formatRepository";
 import PlayerRepository from "../repositories/playerRepository";
 import TournamentRepository from "../repositories/tournamentRepository";
-import {SheetTournament, Tournament, TournamentDto} from "../interfaces/tournament";
-import {Player} from "../interfaces/player";
+import {SheetTournament, TournamentEntity, TournamentDto} from "../interfaces/tournament";
+import {PlayerEntity} from "../interfaces/player";
 import {makeEmptyFieldsNull} from "../utils/helpers";
 import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
@@ -17,7 +17,7 @@ export class TournamentImportService {
         this.logger = logger;
     }
 
-    async importTournament(csvPath: string): Promise<Tournament> {
+    async importTournament(csvPath: string): Promise<TournamentEntity> {
         const tournamentData: SheetTournament[] = await new CsvLoader().load(csvPath, this.logger);
         if (tournamentData.length > 1) {
             this.logger.error(`No uploading more than 1 tournament at a time. It's rude.`);
@@ -25,7 +25,7 @@ export class TournamentImportService {
         }
         const tournament: TournamentDto = tournamentData[0];
         if (!!tournament.individual_winner) {
-            const winner: Player | null = await new PlayerRepository(this.config).findPlayerByAlias(tournament.individual_winner);
+            const winner: PlayerEntity | null = await new PlayerRepository(this.config).findPlayerByAlias(tournament.individual_winner);
             tournament.individual_winner = winner?.id;
         } else {
             this.logger.warn(`WARNING: tournament winner not matched to a player ID`);

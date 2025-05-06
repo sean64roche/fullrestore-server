@@ -1,6 +1,6 @@
 import RoundRepository from "../repositories/roundRepository";
 import CsvParser from "../utils/csvParser";
-import {Round, Tournament} from "../interfaces/tournament";
+import {RoundEntity, TournamentEntity} from "../interfaces/tournament";
 import {Logger} from "../utils/logger";
 import {ApiConfig} from "../config";
 
@@ -14,12 +14,12 @@ export class RoundImportService {
         this.logger = logger;
     }
 
-    async importRounds(csvPath: string, tournament: Tournament, name?: string, deadline?: string): Promise<Set<Round>> {
-        const rounds: Set<Round> = new Set();
+    async importRounds(csvPath: string, tournament: TournamentEntity, name?: string, deadline?: string): Promise<Set<RoundEntity>> {
+        const rounds: Set<RoundEntity> = new Set();
         const totalRounds: number = (await new CsvParser().load(csvPath, this.logger))[0].rounds;
         let roundNumber: number = 1;
         while (roundNumber <= totalRounds) {
-            const roundResponse: Round = await new RoundRepository(this.config)
+            const roundResponse: RoundEntity = await new RoundRepository(this.config)
                 .create(tournament, roundNumber, name, deadline);
             rounds.add(roundResponse);
             roundNumber++;

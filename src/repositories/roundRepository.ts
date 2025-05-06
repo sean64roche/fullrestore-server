@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {Round, RoundDto, RoundResponse, Tournament} from "../interfaces/tournament";
+import {RoundEntity, RoundDto, RoundResponse, TournamentEntity} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -12,7 +12,7 @@ export default class RoundRepository extends Repository {
         this.roundsUrl = config.baseUrl + config.roundsEndpoint;
     }
 
-    async create(reqTournament: Tournament, reqRoundNumber: number, reqName?: string, reqDeadline?: string): Promise<Round> {
+    async create(reqTournament: TournamentEntity, reqRoundNumber: number, reqName?: string, reqDeadline?: string): Promise<RoundEntity> {
         try {
             const roundDto: RoundDto = {
                 tournament_id: reqTournament.id,
@@ -34,7 +34,7 @@ export default class RoundRepository extends Repository {
             if (error instanceof AxiosError) {
                 switch (error.status) {
                     case 409:
-                        const existingRound: Round = await this.get(reqTournament, reqRoundNumber);
+                        const existingRound: RoundEntity = await this.get(reqTournament, reqRoundNumber);
                         this.logger.warn(`WARNING: Round ${existingRound.roundNumber} already exists`);
                         return existingRound;
                     default:
@@ -48,7 +48,7 @@ export default class RoundRepository extends Repository {
         }
     }
 
-    async get(tournament: Tournament, roundNumber: number): Promise<Round> {
+    async get(tournament: TournamentEntity, roundNumber: number): Promise<RoundEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_id=${tournament.id}&round=${roundNumber}`);
             const { id, tournament_id, round, name, deadline } = response.data[0];

@@ -20,28 +20,28 @@ export type { SheetData } from './interfaces/import';
 export {
     SheetPairing,
     PairingDto,
-    Pairing,
+    PairingEntity,
     PairingResponse,
     transformPairingResponse,
     ReplayDto,
-    Replay,
+    ReplayEntity,
     ReplayResponse,
     transformReplayResponse,
     SheetBye,
     RoundByeDto,
-    RoundBye,
+    RoundByeEntity,
     RoundByeResponse
 } from './interfaces/pairing';
 
 export {
     SheetPlayer,
     PlayerDto,
-    Player,
+    PlayerEntity,
     PlayerAlias,
     PlayerResponse,
     transformPlayerResponse,
     transformPlayerAliasResponse,
-    EntrantPlayer,
+    EntrantPlayerEntity,
     EntrantPlayerDto,
     EntrantPlayerResponse,
     transformEntrantPlayerResponse
@@ -50,12 +50,12 @@ export {
 export {
     SheetTournament,
     TournamentDto,
-    Tournament,
+    TournamentEntity,
     TournamentResponse,
     transformTournamentResponse,
     SheetRound,
     RoundDto,
-    Round,
+    RoundEntity,
     RoundResponse,
     transformRoundResponse
 } from './interfaces/tournament';

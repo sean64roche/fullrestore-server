@@ -1,4 +1,4 @@
-import { Tournament, TournamentResponse, transformTournamentResponse } from "./tournament";
+import { TournamentEntity, TournamentResponse, transformTournamentResponse } from "./tournament";
 
 export type SheetPlayer = {
     showdown_user: string;
@@ -22,7 +22,7 @@ export type PlayerResponse = {
     Aliases: PlayerAliasResponse[];
 }
 
-export interface Player {
+export interface PlayerEntity {
     id: string;
     psUser: string;
     discordUser?: string;
@@ -30,7 +30,7 @@ export interface Player {
     Aliases: PlayerAlias[];
 }
 
-export function transformPlayerResponse(data: PlayerResponse): Player {
+export function transformPlayerResponse(data: PlayerResponse): PlayerEntity {
     const aliases: PlayerAlias[] = [];
     data.Aliases.forEach((alias: PlayerAliasResponse) => {
         aliases.push(transformPlayerAliasResponse(alias));
@@ -60,10 +60,10 @@ export function transformPlayerAliasResponse(data: PlayerAliasResponse): PlayerA
     }
 }
 
-export interface EntrantPlayer {
+export interface EntrantPlayerEntity {
     id: string;
-    tournament: Tournament;
-    player: Player;
+    tournament: TournamentEntity;
+    player: PlayerEntity;
     entrantTeam?: string;
     active?: boolean;
     maxRound: number;
@@ -90,7 +90,7 @@ export type EntrantPlayerResponse = {
     Tournament: TournamentResponse;
 }
 
-export function transformEntrantPlayerResponse(data: EntrantPlayerResponse): EntrantPlayer {
+export function transformEntrantPlayerResponse(data: EntrantPlayerResponse): EntrantPlayerEntity {
     return {
         id: data.id,
         tournament: transformTournamentResponse(data.Tournament),

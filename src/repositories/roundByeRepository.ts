@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from "axios";
-import {RoundBye} from "../interfaces/pairing";
-import {EntrantPlayer} from "../interfaces/player";
-import {Round} from "../interfaces/tournament";
+import {RoundByeEntity} from "../interfaces/pairing";
+import {EntrantPlayerEntity} from "../interfaces/player";
+import {RoundEntity} from "../interfaces/tournament";
 import Repository from "./repository";
 import {ApiConfig} from "../config";
 
@@ -13,7 +13,7 @@ export default class RoundByeRepository extends Repository {
         this.roundByesUrl = config.baseUrl + config.roundByesEndpoint;
     }
 
-    async create(round: Round, entrantPlayer: EntrantPlayer): Promise<RoundBye | undefined> {
+    async create(round: RoundEntity, entrantPlayer: EntrantPlayerEntity): Promise<RoundByeEntity | undefined> {
         const username = entrantPlayer.player.psUser;
         try {
             const response: AxiosResponse = await axios.post(this.roundByesUrl, {

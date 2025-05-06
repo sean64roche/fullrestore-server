@@ -1,5 +1,5 @@
-import { EntrantPlayer, EntrantPlayerResponse, transformEntrantPlayerResponse } from "./player";
-import { Round, RoundResponse, transformRoundResponse } from "./tournament";
+import { EntrantPlayerEntity, EntrantPlayerResponse, transformEntrantPlayerResponse } from "./player";
+import { RoundEntity, RoundResponse, transformRoundResponse } from "./tournament";
 
 export type SheetPairing = {
     round: number;
@@ -18,15 +18,15 @@ export type PairingDto = {
     winner_id?: string;
 }
 
-export interface Pairing {
+export interface PairingEntity {
     id: string;
-    round: Round;
-    entrant1: EntrantPlayer;
-    entrant2: EntrantPlayer;
-    winner?: EntrantPlayer;
+    round: RoundEntity;
+    entrant1: EntrantPlayerEntity;
+    entrant2: EntrantPlayerEntity;
+    winner?: EntrantPlayerEntity;
     scheduledAt?: Date | string;
     completedAt?: Date | string;
-    replays?: Replay[] | null;
+    replays?: ReplayEntity[] | null;
 }
 
 export type PairingResponse = {
@@ -46,8 +46,8 @@ export type PairingResponse = {
     Replays: ReplayResponse[];
 }
 
-export function transformPairingResponse(pairing: PairingResponse): Pairing {
-    const replays: Replay[] = [];
+export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
+    const replays: ReplayEntity[] = [];
     pairing.Replays.forEach((replay: ReplayResponse) => {
         replays.push(transformReplayResponse(replay));
     });
@@ -69,7 +69,7 @@ export type ReplayDto = {
     match_number: number;
 }
 
-export interface Replay {
+export interface ReplayEntity {
     pairingId: string;
     url: string;
     matchNumber: number;
@@ -83,7 +83,7 @@ export type ReplayResponse = {
     updatedAt?: string;
 }
 
-export function transformReplayResponse(replay: ReplayResponse): Replay {
+export function transformReplayResponse(replay: ReplayResponse): ReplayEntity {
     return {
         pairingId: replay.pairing_id,
         url: replay.url,
@@ -101,10 +101,10 @@ export type RoundByeDto = {
     entrant_player_id: string;
 }
 
-export interface RoundBye {
+export interface RoundByeEntity {
     id: string;
-    round: Round;
-    entrantPlayer: EntrantPlayer;
+    round: RoundEntity;
+    entrantPlayer: EntrantPlayerEntity;
 }
 
 export type RoundByeResponse = {

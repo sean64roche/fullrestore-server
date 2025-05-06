@@ -1,14 +1,14 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import {
     PlayerDto,
-    Player,
-    EntrantPlayer,
+    PlayerEntity,
+    EntrantPlayerEntity,
     EntrantPlayerResponse,
     transformEntrantPlayerResponse,
     PlayerResponse,
     transformPlayerResponse,
 } from "../interfaces/player";
-import {Tournament} from "../interfaces/tournament";
+import {TournamentEntity} from "../interfaces/tournament";
 import {ApiConfig} from "../config";
 import Repository from "./repository";
 
@@ -24,7 +24,7 @@ export default class PlayerRepository extends Repository {
         this.entrantPlayersUrl = config.baseUrl + config.entrantPlayersEndpoint;
     }
 
-    async createPlayer(player: PlayerDto): Promise<Player> {
+    async createPlayer(player: PlayerDto): Promise<PlayerEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.playersUrl, player);
             const playerData: PlayerResponse = {
@@ -58,7 +58,7 @@ export default class PlayerRepository extends Repository {
         }
     }
 
-    async createEntrantPlayer(player: Player, tournament: Tournament): Promise<EntrantPlayer> {
+    async createEntrantPlayer(player: PlayerEntity, tournament: TournamentEntity): Promise<EntrantPlayerEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.entrantPlayersUrl, {
                 player_id: player.id,
@@ -83,7 +83,7 @@ export default class PlayerRepository extends Repository {
         }
     }
 
-    async findPlayerByAlias(alias: string): Promise<Player | null> {
+    async findPlayerByAlias(alias: string): Promise<PlayerEntity | null> {
         try {
             const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${alias}`);
             return transformPlayerResponse(response.data);
@@ -106,9 +106,9 @@ export default class PlayerRepository extends Repository {
         }
     }
 
-    async findEntrant(player: Player, tournament: Tournament): Promise<EntrantPlayer> {
+    async findEntrant(player: PlayerEntity, tournament: TournamentEntity): Promise<EntrantPlayerEntity> {
         try {
-            const entrant: EntrantPlayer = await this.findEntrantById(player.id, tournament.id);
+            const entrant: EntrantPlayerEntity = await this.findEntrantById(player.id, tournament.id);
             if (!entrant) {
                 throw new Error(`Entrant not found with UUID ${player.id}`);
             }
@@ -119,7 +119,7 @@ export default class PlayerRepository extends Repository {
         }
     }
 
-    async findEntrantById(playerId: string, tournamentId: string): Promise<EntrantPlayer> {
+    async findEntrantById(playerId: string, tournamentId: string): Promise<EntrantPlayerEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentId}`);
             const data: EntrantPlayerResponse = response.data[0];
