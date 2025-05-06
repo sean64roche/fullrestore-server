@@ -27,7 +27,7 @@ export type TournamentDto = {
     info?: string;
 }
 
-export interface TournamentEntity {
+export type TournamentEntity = {
     id: string;
     name: string;
     season: number | string;
