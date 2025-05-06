@@ -55,6 +55,7 @@ test.describe('POST /api/players', () => {
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
+        console.log(JSON.stringify(response.body, null, 2));
         assert.equal(response.status, 201);
         assert.ok(response.body.id);
         assert.equal(response.body.ps_user, postBody.ps_user);
@@ -103,12 +104,12 @@ test.describe('POST /api/playerAliases', () => {
     });
 
     const newAlias = 'Very Cool Gamer..!';
-    const aliasTransformed = 'verycoolgamer';
 
     test('new alias succeeds', { timeout: 10000 }, async () => {
         const postBody = {
             player_id: coolGamerPlayerId,
             ps_alias: newAlias,
+            primary: false,
         };
         const response = await request(app).post('/api/playerAliases')
             .send(postBody)
@@ -116,7 +117,8 @@ test.describe('POST /api/playerAliases', () => {
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 201);
         assert.equal(response.body.player_id, coolGamerPlayerId);
-        assert.equal(response.body.ps_alias, aliasTransformed);
+        assert.equal(response.body.ps_alias, newAlias);
+        assert.equal(response.body.primary, false);
     });
 
     test('alias cannot be assigned to more than one \'player\'', { timeout: 10000 }, async () => {
@@ -211,7 +213,7 @@ test.describe('POST /api/tournaments', () => {
         assert.equal(name, tourName);
         assert.equal(season, tourSeason);
         assert.equal(format, tourFormat);
-        assert.equal(start_date, formatDate(tourStartDate, "yyyy-MM-dd"));
+        assert.equal(formatDate(start_date, "yyyy-MM-dd"), formatDate(tourStartDate, "yyyy-MM-dd"));
         assert.equal(individual_winner, tourIndividualWinner);
         assert.equal(team_tour, tourTeamTour);
         assert.equal(info, tourInfo);

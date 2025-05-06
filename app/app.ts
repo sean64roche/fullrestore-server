@@ -38,7 +38,7 @@ async function initDatabase() {
     console.log('Database connection established successfully.');
     
     // Uncomment if you want to sync models (careful in production)
-    await sequelize.sync({ alter: true });
+    // await sequelize.sync({ alter: true });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
     process.exit(1);

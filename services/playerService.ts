@@ -27,7 +27,8 @@ class PlayerService {
             id: uuidv4(),
             ...newAttrs,
             PlayerAlias: {
-                ps_alias: newAttrs.ps_user,
+                ps_alias: attrs.ps_user,
+                primary: true,
             },
         }, {
             include: {

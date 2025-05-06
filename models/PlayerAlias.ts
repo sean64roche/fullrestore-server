@@ -4,6 +4,7 @@ import sequelize from '../config/database';
 class PlayerAlias extends Model {
     declare player_id: string;
     declare ps_alias: string;
+    declare primary: boolean;
 }
 
 PlayerAlias.init({
@@ -20,9 +21,12 @@ PlayerAlias.init({
         allowNull: false,
         validate: {
             notEmpty: true,
-            isAlphanumeric: true
         },
         primaryKey: true
+    },
+    primary: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }, {
     sequelize,

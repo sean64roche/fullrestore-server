@@ -1,11 +1,25 @@
 import { Request, Response } from 'express';
 import playerService from '../services/playerService';
 import Player from "../models/Player";
+import PlayerAliasService from "../services/playerAliasService";
 
 export async function createPlayer(req: Request, res: Response) {
     try {
         const { ps_user, discord_user, discord_id } = req.body;
         const newPlayer: Player = await playerService.createPlayer({ ps_user, discord_user, discord_id });
+        if (newPlayer.ps_user !== ps_user) {
+            await PlayerAliasService.createPlayerAlias({
+                player_id: newPlayer.id,
+                ps_alias: ps_user,
+                primary: true
+            });
+        } else {
+            await PlayerAliasService.updatePlayerAlias({
+                player_id: newPlayer.id,
+                ps_alias: ps_user,
+                primary: true,
+            })
+        }
         return res.status(201).json(newPlayer);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {

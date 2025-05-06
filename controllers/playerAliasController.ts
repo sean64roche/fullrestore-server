@@ -4,8 +4,8 @@ import PlayerAlias from "../models/PlayerAlias";
 
 export async function createPlayerAlias(req: Request, res: Response) {
     try {
-        const { player_id, ps_alias } = req.body;
-        const newPlayerAlias: PlayerAlias = await playerAliasService.createPlayerAlias({ player_id, ps_alias });
+        const { player_id, ps_alias, primary } = req.body;
+        const newPlayerAlias: PlayerAlias = await playerAliasService.createPlayerAlias({ player_id, ps_alias, primary });
         return res.status(201).json(newPlayerAlias);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -13,6 +13,23 @@ export async function createPlayerAlias(req: Request, res: Response) {
                 error: 'Alias record already exists',
             });
         }
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+export async function updatePlayerAlias(req: Request, res: Response) {
+    try {
+        const { player_id, ps_alias, primary } = req.body;
+        const updatedPlayerAlias = await playerAliasService.updatePlayerAlias({
+            player_id,
+            ps_alias,
+            primary,
+        });
+        if (!updatedPlayerAlias) {
+            return res.status(404).json({ error: 'Player alias not found' });
+        }
+        return res.json(updatedPlayerAlias);
+    } catch (error: any) {
         return res.status(400).json({ error: error.message });
     }
 }
