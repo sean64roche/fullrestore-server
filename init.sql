@@ -305,7 +305,8 @@ CREATE TABLE public.player (
 
 CREATE TABLE public.player_alias (
     player_id uuid NOT NULL,
-    ps_alias text NOT NULL
+    ps_alias text NOT NULL,
+    "primary" boolean DEFAULT false
 );
 
 
@@ -368,7 +369,8 @@ CREATE TABLE public.round_entrant (
 
 CREATE TABLE public.team (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
-    name text NOT NULL
+    name text NOT NULL,
+    slug text NOT NULL
 );
 
 
@@ -381,8 +383,8 @@ CREATE TABLE public.tournament (
     name character varying(255) NOT NULL,
     season text NOT NULL,
     format text NOT NULL,
-    start_date date NOT NULL,
-    finish_date date,
+    start_date timestamp with time zone NOT NULL,
+    finish_date timestamp with time zone,
     current_round integer DEFAULT 0,
     prize_pool numeric,
     individual_winner uuid,
