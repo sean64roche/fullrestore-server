@@ -1,4 +1,4 @@
-import { Player, PlayerResponse, transformPlayerResponse } from "./player";
+import { PlayerEntity, PlayerResponse, transformPlayerResponse } from "./player";
 
 export type SheetTournament = {
     name: string;
@@ -27,7 +27,7 @@ export type TournamentDto = {
     info?: string;
 }
 
-export interface Tournament {
+export interface TournamentEntity {
     id: string;
     name: string;
     season: number | string;
@@ -36,7 +36,7 @@ export interface Tournament {
     finishDate?: string;
     currentRound: number;
     prizePool: number | null;
-    individualWinner?: Player;
+    individualWinner?: PlayerEntity;
     info?: string;
 }
 
@@ -58,8 +58,8 @@ export type TournamentResponse = {
     updatedAt?: string;
 }
 
-export function transformTournamentResponse(data: TournamentResponse): Tournament {
-    const winnerPlayer: Player | undefined = !!data.Player ? transformPlayerResponse(data.Player) : undefined;
+export function transformTournamentResponse(data: TournamentResponse): TournamentEntity {
+    const winnerPlayer: PlayerEntity | undefined = !!data.Player ? transformPlayerResponse(data.Player) : undefined;
     return {
         id: data.id,
         name: data.name,
@@ -87,9 +87,9 @@ export type RoundDto = {
     deadline: string;
 }
 
-export interface Round {
+export interface RoundEntity {
     id: string;
-    tournament: Tournament;
+    tournament: TournamentEntity;
     roundNumber: number;
     name?: string;
     deadline?: string;
@@ -106,7 +106,7 @@ export type RoundResponse = {
     Tournament: TournamentResponse;
 }
 
-export function transformRoundResponse(data: RoundResponse): Round {
+export function transformRoundResponse(data: RoundResponse): RoundEntity {
     return {
         id: data.id,
         tournament: transformTournamentResponse(data.Tournament),
