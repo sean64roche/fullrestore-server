@@ -3,8 +3,3 @@ stages:
   - build
   - deploy
 
-include:
-  - local: packages/fullrestore-service/.gitlab-ci.yml
-  - local: packages/fullrestore-api/.gitlab-ci.yml
-  - local: packages/fullrestore-assistant/.gitlab-ci.yml
-  - local: packages/fullrestore-database/.gitlab-ci.yml
