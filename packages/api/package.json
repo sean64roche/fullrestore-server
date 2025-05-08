@@ -1,0 +1,33 @@
+{
+  "name": "fullrestore-api",
+  "version": "1.0.0",
+  "main": "app/app.ts",
+  "scripts": {
+    "test": "DB_NAME=fullrestore-integration-test DB_PORT=5433 NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1",
+    "test:ci": "DB_NAME=fullrestore-integration-test DB_PORT=5432 CI_ENV=true NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "sequelize": "^6.37.5",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.11",
+    "@types/supertest": "^6.0.2",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
