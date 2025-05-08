@@ -1,0 +1,15 @@
+{
+  "name": "fullrestore-server",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev --workspace=packages/fullrestore-api",
+    "dev:bot": "npm run dev --workspace=packages/fullrestore-assistant",
+    "dev:database": "npm run dev --workspace=packages/fullrestore-database",
+    "dev:service": "npm run dev --workspace=packages/fullrestore-service",
+    "build:all": "npm run build --workspaces",
+    "test:all": "npm run test --workspaces"
+  }
+}
