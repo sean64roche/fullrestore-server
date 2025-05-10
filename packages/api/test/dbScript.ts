@@ -107,8 +107,15 @@ export async function teardownDb() {
             round_entrant, 
             team, 
             tournament 
-            CASCADE`)
-    } catch {
+            CASCADE`);
+        await db.end();
+    } catch (error) {
+        console.error('Error during database teardown:', error);
+        try {
+            await db.end();
+        } catch (endError) {
+            console.error('Error closing database connection:', endError);
+        }
     }
 }
 

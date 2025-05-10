@@ -137,10 +137,8 @@ test.describe('GET /api/entrantPlayers', () => {
     });
     test('GET /api/entrantPlayers?player_id&tournament_id on non-existing entrant player has size zero response', { timeout: 10000 }, async () => {
         const req = '/api/entrantPlayers?player_id=00000000-0000-0000-0000-000000000000&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
-        await test(`GET ${req}`, async () => {
-            const response = await request(app).get(req);
-            assert.equal(response.body.length, 0);
-        });
+        const response = await request(app).get(req);
+        assert.equal(response.body.length, 0);
     });
 });
 
