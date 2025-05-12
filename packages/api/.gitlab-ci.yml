@@ -35,7 +35,7 @@ node-test:
     - npm ci
     - apt-get update && apt-get install -y netcat-openbsd
     - nc -zv postgres 5432
-    - npm run test:ci
+    - cd packages/api && npm run test:ci
   rules:
     - if: $CI_COMMIT_BRANCH
 
