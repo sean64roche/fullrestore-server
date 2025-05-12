@@ -1,5 +1,5 @@
 {
-  "name": "@fullrestore/fullrestore-service",
+  "name": "@fullrestore/service",
   "version": "0.4.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -35,10 +35,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/fullrestore/fullrestore-service.git"
+    "url": "git+https://gitlab.com/fullrestore/fullrestore-server.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/fullrestore/fullrestore-service/issues"
+    "url": "https://gitlab.com/fullrestore/fullrestore-server/issues"
   },
-  "homepage": "https://gitlab.com/fullrestore/fullrestore-service#readme"
+  "homepage": "https://gitlab.com/fullrestore/fullrestore-server#readme"
 }
