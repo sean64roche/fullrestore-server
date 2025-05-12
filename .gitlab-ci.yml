@@ -2,6 +2,15 @@ stages:
   - test
   - build
   - deploy
+  - publish
 
 include:
   - local: packages/api/.gitlab-ci.yml
+  - local: packages/service/.gitlab-ci.yml
+
+publish-packages:
+  stage: publish
+  script:
+    - echo "Coordinating package publishing"
+  only:
+    - tags
