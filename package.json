@@ -4,14 +4,12 @@
   "workspaces": [
     "packages/api",
     "packages/assistant",
-    "packages/database",
     "packages/service"
   ],
   "scripts": {
     "dev:api": "cd ./packages/api && npx tsx app/app.ts",
     "dev api-test": "cd ./packages/api && npm run test",
     "dev:bot": "npm run dev --workspace=packages/fullrestore-assistant",
-    "dev:database": "npm run dev --workspace=packages/fullrestore-database",
     "dev:service": "npm run dev --workspace=packages/fullrestore-service",
     "build:all": "npm run build --workspaces",
     "test:all": "npm run test --workspaces"
