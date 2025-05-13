@@ -39,5 +39,3 @@ export default class RoundByeRepository extends Repository {
         }
     }
 }
-
-exports.RoundByeRepository = RoundByeRepository;

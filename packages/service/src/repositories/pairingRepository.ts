@@ -178,5 +178,3 @@ export default class PairingRepository extends Repository {
         }
     }
 }
-
-exports.PairingRepository = PairingRepository;

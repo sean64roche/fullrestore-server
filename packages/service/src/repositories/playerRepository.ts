@@ -136,5 +136,3 @@ export default class PlayerRepository extends Repository {
         }
     }
 }
-
-exports.PlayerRepository = PlayerRepository;

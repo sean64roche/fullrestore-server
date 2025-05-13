@@ -41,5 +41,3 @@ export class RoundByeImportService {
         return roundByes;
     }
 }
-
-export default RoundByeImportService;

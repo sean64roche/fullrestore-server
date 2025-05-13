@@ -39,5 +39,3 @@ export class TournamentImportService {
         });
     }
 }
-
-export default TournamentImportService;

@@ -27,5 +27,3 @@ export class RoundImportService {
         return rounds;
     }
 }
-
-export default RoundImportService;

@@ -84,5 +84,3 @@ export default class TournamentRepository extends Repository {
         }
     }
 }
-
-exports.TournamentRepository = TournamentRepository;

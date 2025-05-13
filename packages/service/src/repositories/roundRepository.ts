@@ -75,5 +75,3 @@ export default class RoundRepository extends Repository {
         }
     }
 }
-
-exports.roundRepository = RoundRepository;

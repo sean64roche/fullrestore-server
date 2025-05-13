@@ -5,7 +5,7 @@ import {SheetData} from "../interfaces/import.js";
 import {makeEmptyFieldsNull} from "./helpers.js";
 import {Logger} from "./logger.js";
 
-class csvParser {
+export default class csvParser {
     async load(csvFile: PathLike, logger: Logger): Promise<any[]> {
         return new Promise((resolve, reject) => {
             const rows: SheetData[] = [];
@@ -28,5 +28,3 @@ class csvParser {
         });
     }
 }
-
-export default csvParser;

@@ -32,5 +32,3 @@ export default class FormatRepository extends Repository {
         }
     }
 }
-
-exports.formatRepository = FormatRepository;

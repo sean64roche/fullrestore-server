@@ -73,5 +73,3 @@ export class PlayerImportService {
         return entrantPlayers;
     }
 }
-
-export default PlayerImportService;
