@@ -6,7 +6,7 @@ import {
     ReplayEntity,
     ReplayDto,
     ReplayResponse,
-    transformReplayResponse
+    transformReplayResponse, transformPairingResponse
 } from "../interfaces/pairing.js";
 import { EntrantPlayerEntity } from "../interfaces/player.js";
 import { RoundEntity } from "../interfaces/tournament.js";
@@ -168,13 +168,30 @@ export default class PairingRepository extends Repository {
         }
     }
 
-    async getByRoundId(roundId: string): Promise<PairingResponse[]> {
+    async getByRoundId(roundId: string): Promise<PairingEntity[]> {
         try {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${roundId}`);
-            return response.data;
+            const pairings: PairingEntity[] = [];
+            response.data.forEach((pairing: PairingResponse) => {
+                pairings.push(transformPairingResponse(pairing));
+            });
+            return pairings;
         } catch (error) {
             this.logger.error(`FATAL on getByRoundId: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getByRoundId: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getByRoundId: ${error.response?.data}`);
         }
     }
+
+    async getReplaysById(pairingId: string): Promise<ReplayEntity[]> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.replaysUrl}?pairing_id=${pairingId}`);
+            const replays: ReplayEntity[] = [];
+            response.data.forEach((replay: ReplayResponse) => {
+                replays.push(transformReplayResponse(replay));
+            });
+            return replays;
+        } catch (error) {
+            this.logger.error(`FATAL on getReplaysById: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getReplaysById: ${JSON.stringify(error.response?.data)}`);
+        }    }
 }

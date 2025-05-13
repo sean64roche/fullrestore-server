@@ -3,7 +3,7 @@ import {
     TournamentEntity,
     TournamentDto,
     TournamentResponse,
-    transformTournamentResponse
+    transformTournamentResponse, RoundEntity, RoundResponse, transformRoundResponse
 } from "../interfaces/tournament.js";
 import {ApiConfig} from "../config.js";
 import Repository from "./repository.js";
@@ -88,13 +88,27 @@ export default class TournamentRepository extends Repository {
             throw new Error(`FATAL on fetchTournaments: ${JSON.stringify(error.response?.data)}`);
         }
     }
-    async getTournamentBySlug(slug: string): Promise<TournamentEntity> {
+
+    async getBySlug(slug: string): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?slug=${slug}`);
             return transformTournamentResponse(response.data[0]);
         } catch (error) {
-            this.logger.error(`FATAL on getTournamentBySlug: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getTournamentBySlug: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data)}`);
+        }    }
+
+    async getRoundsBySlug(slug: string): Promise<RoundEntity[]> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}/${slug}/rounds`);
+            const rounds: RoundEntity[] = [];
+            response.data.forEach((round: RoundResponse) => {
+                rounds.push(transformRoundResponse(round));
+            });
+            return rounds;
+        } catch (error) {
+            this.logger.error(`FATAL on getRoundsBySlug: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getRoundsBySlug: ${JSON.stringify(error.response?.data)}`);
         }
     }
 }
