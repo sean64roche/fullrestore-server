@@ -1,5 +1,10 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {TournamentEntity, TournamentDto, TournamentResponse} from "../interfaces/tournament.js";
+import {
+    TournamentEntity,
+    TournamentDto,
+    TournamentResponse,
+    transformTournamentResponse
+} from "../interfaces/tournament.js";
 import {ApiConfig} from "../config.js";
 import Repository from "./repository.js";
 
@@ -81,6 +86,15 @@ export default class TournamentRepository extends Repository {
         } catch (error) {
             this.logger.error(`FATAL on fetchTournaments: ${JSON.stringify(error.response?.data)}`);
             throw new Error(`FATAL on fetchTournaments: ${JSON.stringify(error.response?.data)}`);
+        }
+    }
+    async getTournamentBySlug(slug: string): Promise<TournamentEntity> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?slug=${slug}`);
+            return transformTournamentResponse(response.data[0]);
+        } catch (error) {
+            this.logger.error(`FATAL on getTournamentBySlug: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(`FATAL on getTournamentBySlug: ${JSON.stringify(error.response?.data)}`);
         }
     }
 }
