@@ -14,3 +14,4 @@ publish-package:
     - cd packages/service && npm publish --verbose
   only:
     - tags
+    - main
