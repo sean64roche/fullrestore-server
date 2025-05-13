@@ -2,9 +2,10 @@ image: node:latest
 
 stages:
   - build
+  - publish
 
 publish-package:
-  stage: build
+  stage: publish
   script:
     - npm install -y
     - npm config set -- //gitlab.com/api/v4/projects/66637031/packages/npm/:_authToken="${NPM_TOKEN}"
@@ -13,4 +14,3 @@ publish-package:
     - cd packages/service && npm publish --verbose
   only:
     - tags
-    - main
