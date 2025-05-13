@@ -1,21 +1,21 @@
-import {ApiConfig} from "./config";
-import PlayerRepository from "./repositories/playerRepository";
-import TournamentRepository from "./repositories/tournamentRepository";
-import RoundRepository from "./repositories/roundRepository";
-import FormatRepository from "./repositories/formatRepository";
-import RoundByeRepository from "./repositories/roundByeRepository";
-import PairingRepository from "./repositories/pairingRepository";
+import {ApiConfig} from "./config.js";
+import PlayerRepository from "./repositories/playerRepository.js";
+import TournamentRepository from "./repositories/tournamentRepository.js";
+import RoundRepository from "./repositories/roundRepository.js";
+import FormatRepository from "./repositories/formatRepository.js";
+import RoundByeRepository from "./repositories/roundByeRepository.js";
+import PairingRepository from "./repositories/pairingRepository.js";
 import log4js from "log4js";
 
 export { PlayerRepository, TournamentRepository, RoundRepository, FormatRepository, RoundByeRepository, PairingRepository };
 
-export { PairingImportService } from './services/pairingImportService';
-export { PlayerImportService } from "./services/playerImportService";
-export { RoundByeImportService } from "./services/roundByeImportService";
-export { RoundImportService } from "./services/roundImportService";
-export { TournamentImportService } from "./services/tournamentImportService";
+export { PairingImportService } from './services/pairingImportService.js';
+export { PlayerImportService } from "./services/playerImportService.js";
+export { RoundByeImportService } from "./services/roundByeImportService.js";
+export { RoundImportService } from "./services/roundImportService.js";
+export { TournamentImportService } from "./services/tournamentImportService.js";
 
-export type { SheetData } from './interfaces/import';
+export type { SheetData } from './interfaces/import.js';
 
 export {
     SheetPairing,
@@ -31,7 +31,7 @@ export {
     RoundByeDto,
     RoundByeEntity,
     RoundByeResponse
-} from './interfaces/pairing';
+} from './interfaces/pairing.js';
 
 export {
     SheetPlayer,
@@ -45,7 +45,7 @@ export {
     EntrantPlayerDto,
     EntrantPlayerResponse,
     transformEntrantPlayerResponse
-} from './interfaces/player';
+} from './interfaces/player.js';
 
 export {
     SheetTournament,
@@ -58,7 +58,7 @@ export {
     RoundEntity,
     RoundResponse,
     transformRoundResponse
-} from './interfaces/tournament';
+} from './interfaces/tournament.js';
 
 export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     return {

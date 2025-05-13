@@ -1,10 +1,10 @@
-import RoundByeRepository from "../repositories/roundByeRepository";
-import CsvParser from "../utils/csvParser";
-import {RoundEntity} from "../interfaces/tournament";
-import {EntrantPlayerEntity} from "../interfaces/player";
-import {RoundByeEntity, SheetBye} from "../interfaces/pairing";
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+import RoundByeRepository from "../repositories/roundByeRepository.js";
+import CsvParser from "../utils/csvParser.js";
+import {RoundEntity} from "../interfaces/tournament.js";
+import {EntrantPlayerEntity} from "../interfaces/player.js";
+import {RoundByeEntity, SheetBye} from "../interfaces/pairing.js";
+import {Logger} from "../utils/logger.js";
+import {ApiConfig} from "../config.js";
 
 export class RoundByeImportService {
 

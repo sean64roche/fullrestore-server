@@ -1,4 +1,4 @@
-import {Logger} from "./logger";
+import {Logger} from "./logger.js";
 
 export function cleanDiscordUsername(input: string): string {
     return input.replace(/[^a-zA-Z0-9._]/g, '');

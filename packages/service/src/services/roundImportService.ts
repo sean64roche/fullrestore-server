@@ -1,8 +1,8 @@
-import RoundRepository from "../repositories/roundRepository";
-import CsvParser from "../utils/csvParser";
-import {RoundEntity, TournamentEntity} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+import RoundRepository from "../repositories/roundRepository.js";
+import CsvParser from "../utils/csvParser.js";
+import {RoundEntity, TournamentEntity} from "../interfaces/tournament.js";
+import {Logger} from "../utils/logger.js";
+import {ApiConfig} from "../config.js";
 
 export class RoundImportService {
 

@@ -1,4 +1,4 @@
-import { PlayerEntity, PlayerResponse, transformPlayerResponse } from "./player";
+import { PlayerEntity, PlayerResponse, transformPlayerResponse } from "./player.js";
 
 export type SheetTournament = {
     name: string;

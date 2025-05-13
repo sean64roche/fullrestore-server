@@ -1,11 +1,11 @@
-import CsvParser from "../utils/csvParser";
-import {cleanPsUsername} from "../utils/helpers";
-import PairingRepository from "../repositories/pairingRepository";
-import {RoundEntity} from "../interfaces/tournament";
-import {EntrantPlayerEntity} from "../interfaces/player";
-import {PairingEntity, ReplayEntity, SheetPairing} from "../interfaces/pairing";
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+import CsvParser from "../utils/csvParser.js";
+import {cleanPsUsername} from "../utils/helpers.js";
+import PairingRepository from "../repositories/pairingRepository.js";
+import {RoundEntity} from "../interfaces/tournament.js";
+import {EntrantPlayerEntity} from "../interfaces/player.js";
+import {PairingEntity, ReplayEntity, SheetPairing} from "../interfaces/pairing.js";
+import {Logger} from "../utils/logger.js";
+import {ApiConfig} from "../config.js";
 
 export class PairingImportService {
 

@@ -1,4 +1,4 @@
-import { TournamentEntity, TournamentResponse, transformTournamentResponse } from "./tournament";
+import { TournamentEntity, TournamentResponse, transformTournamentResponse } from "./tournament.js";
 
 export type SheetPlayer = {
     showdown_user: string;

@@ -1,9 +1,9 @@
 import { PathLike } from "node:fs";
 import fs from "node:fs";
 import csv from "csv-parser";
-import {SheetData} from "../interfaces/import";
-import {makeEmptyFieldsNull} from "./helpers";
-import {Logger} from "./logger";
+import {SheetData} from "../interfaces/import.js";
+import {makeEmptyFieldsNull} from "./helpers.js";
+import {Logger} from "./logger.js";
 
 class csvParser {
     async load(csvFile: PathLike, logger: Logger): Promise<any[]> {

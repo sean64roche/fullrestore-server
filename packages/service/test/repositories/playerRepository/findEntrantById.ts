@@ -2,8 +2,8 @@ import PlayerRepository from "../../../src/repositories/playerRepository";
 import test from 'node:test';
 import axios, { AxiosError } from 'axios';
 import { DEFAULT_CONFIG } from "../../../src";
-import assert = require("node:assert");
-import { EntrantPlayerResponse, transformEntrantPlayerResponse } from "../../../src/interfaces/player";
+import * as assert from "node:assert";
+import { EntrantPlayerResponse, transformEntrantPlayerResponse } from "../../../src";
 
 const validPlayerId = '20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4';
 const validTournamentId = '17741f63-e1eb-4e30-9e16-aa11f658fd76';
@@ -46,7 +46,8 @@ const mockResponse: EntrantPlayerResponse[] = [
             team_tour: false,
             team_winner: null,
             createdAt: '2025-01-29T15:13:09.203Z',
-            updatedAt: '2025-01-29T15:13:09.203Z'
+            updatedAt: '2025-01-29T15:13:09.203Z',
+            slug: 'pokemon-tournament',
         },
     }
 ]

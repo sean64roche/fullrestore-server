@@ -1,5 +1,5 @@
-import { EntrantPlayerEntity, EntrantPlayerResponse, transformEntrantPlayerResponse } from "./player";
-import { RoundEntity, RoundResponse, transformRoundResponse } from "./tournament";
+import { EntrantPlayerEntity, EntrantPlayerResponse, transformEntrantPlayerResponse } from "./player.js";
+import { RoundEntity, RoundResponse, transformRoundResponse } from "./tournament.js";
 
 export type SheetPairing = {
     round: number;

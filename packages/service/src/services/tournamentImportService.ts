@@ -1,12 +1,12 @@
-import CsvLoader from "../utils/csvParser";
-import FormatRepository from "../repositories/formatRepository";
-import PlayerRepository from "../repositories/playerRepository";
-import TournamentRepository from "../repositories/tournamentRepository";
-import {SheetTournament, TournamentEntity, TournamentDto} from "../interfaces/tournament";
-import {PlayerEntity} from "../interfaces/player";
-import {makeEmptyFieldsNull} from "../utils/helpers";
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+import CsvLoader from "../utils/csvParser.js";
+import FormatRepository from "../repositories/formatRepository.js";
+import PlayerRepository from "../repositories/playerRepository.js";
+import TournamentRepository from "../repositories/tournamentRepository.js";
+import {SheetTournament, TournamentEntity, TournamentDto} from "../interfaces/tournament.js";
+import {PlayerEntity} from "../interfaces/player.js";
+import {makeEmptyFieldsNull} from "../utils/helpers.js";
+import {Logger} from "../utils/logger.js";
+import {ApiConfig} from "../config.js";
 
 export class TournamentImportService {
 

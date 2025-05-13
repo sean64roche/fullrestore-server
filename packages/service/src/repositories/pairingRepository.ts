@@ -7,11 +7,11 @@ import {
     ReplayDto,
     ReplayResponse,
     transformReplayResponse
-} from "../interfaces/pairing";
-import { EntrantPlayerEntity } from "../interfaces/player";
-import { RoundEntity } from "../interfaces/tournament";
-import { ApiConfig } from "../config";
-import Repository from "./repository";
+} from "../interfaces/pairing.js";
+import { EntrantPlayerEntity } from "../interfaces/player.js";
+import { RoundEntity } from "../interfaces/tournament.js";
+import { ApiConfig } from "../config.js";
+import Repository from "./repository.js";
 
 export default class PairingRepository extends Repository {
 

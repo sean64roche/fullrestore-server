@@ -1,5 +1,5 @@
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+import {Logger} from "../utils/logger.js";
+import {ApiConfig} from "../config.js";
 import axios from "axios";
 
 abstract class Repository {

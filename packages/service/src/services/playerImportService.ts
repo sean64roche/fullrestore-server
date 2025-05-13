@@ -1,14 +1,14 @@
-import CsvLoader from "../utils/csvParser";
-import {cleanPsUsername, makeEmptyFieldsNull, validateDiscordUsername} from "../utils/helpers";
-import PlayerRepository from "../repositories/playerRepository";
+import CsvLoader from "../utils/csvParser.js";
+import {cleanPsUsername, makeEmptyFieldsNull, validateDiscordUsername} from "../utils/helpers.js";
+import PlayerRepository from "../repositories/playerRepository.js";
 import {
     EntrantPlayerEntity,
     PlayerEntity,
     SheetPlayer,
-} from "../interfaces/player";
-import {TournamentEntity} from "../interfaces/tournament";
-import {Logger} from "../utils/logger";
-import {ApiConfig} from "../config";
+} from "../interfaces/player.js";
+import {TournamentEntity} from "../interfaces/tournament.js";
+import {Logger} from "../utils/logger.js";
+import {ApiConfig} from "../config.js";
 
 export class PlayerImportService {
 

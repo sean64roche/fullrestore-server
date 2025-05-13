@@ -1,6 +1,6 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {ApiConfig} from "../config";
-import Repository from "./repository";
+import {ApiConfig} from "../config.js";
+import Repository from "./repository.js";
 
 export default class FormatRepository extends Repository {
 

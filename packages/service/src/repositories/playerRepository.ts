@@ -7,10 +7,10 @@ import {
     transformEntrantPlayerResponse,
     PlayerResponse,
     transformPlayerResponse,
-} from "../interfaces/player";
-import {TournamentEntity} from "../interfaces/tournament";
-import {ApiConfig} from "../config";
-import Repository from "./repository";
+} from "../interfaces/player.js";
+import {TournamentEntity} from "../interfaces/tournament.js";
+import {ApiConfig} from "../config.js";
+import Repository from "./repository.js";
 
 export default class PlayerRepository extends Repository {
 

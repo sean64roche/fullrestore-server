@@ -1,9 +1,9 @@
 import axios, {AxiosResponse} from "axios";
-import {RoundByeEntity} from "../interfaces/pairing";
-import {EntrantPlayerEntity} from "../interfaces/player";
-import {RoundEntity} from "../interfaces/tournament";
-import Repository from "./repository";
-import {ApiConfig} from "../config";
+import {RoundByeEntity} from "../interfaces/pairing.js";
+import {EntrantPlayerEntity} from "../interfaces/player.js";
+import {RoundEntity} from "../interfaces/tournament.js";
+import Repository from "./repository.js";
+import {ApiConfig} from "../config.js";
 
 export default class RoundByeRepository extends Repository {
 

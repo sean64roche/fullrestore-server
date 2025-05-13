@@ -1,7 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {RoundEntity, RoundDto, RoundResponse, TournamentEntity} from "../interfaces/tournament";
-import {ApiConfig} from "../config";
-import Repository from "./repository";
+import {RoundEntity, RoundDto, RoundResponse, TournamentEntity} from "../interfaces/tournament.js";
+import {ApiConfig} from "../config.js";
+import Repository from "./repository.js";
 
 export default class RoundRepository extends Repository {
 

@@ -1,7 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {TournamentEntity, TournamentDto, TournamentResponse} from "../interfaces/tournament";
-import {ApiConfig} from "../config";
-import Repository from "./repository";
+import {TournamentEntity, TournamentDto, TournamentResponse} from "../interfaces/tournament.js";
+import {ApiConfig} from "../config.js";
+import Repository from "./repository.js";
 
 export default class TournamentRepository extends Repository {
 
