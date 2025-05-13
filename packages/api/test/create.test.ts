@@ -13,6 +13,7 @@ import roundByeRoutes from "../routes/roundByeRoutes";
 import entrantPlayerRoutes from "../routes/entrantPlayerRoutes";
 import pairingRoutes from "../routes/pairingRoutes";
 import replayRoutes from "../routes/replayRoutes";
+import {toSlug} from "../services/tournamentService";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
@@ -207,6 +208,7 @@ test.describe('POST /api/tournaments', () => {
             team_tour,
             team_winner,
             info,
+            slug,
             cat } = response.body;
         assert.equal(response.status, 201);
         assert.ok(id);
@@ -222,6 +224,7 @@ test.describe('POST /api/tournaments', () => {
         assert.ok(!finish_date);
         assert.ok(!prize_pool);
         assert.ok(!team_winner);
+        assert.equal(toSlug(name, season), slug);
         testTournamentId = id;
     });
 

@@ -354,22 +354,22 @@ async function insertFormats(db: Pool) {
 async function insertTournaments(db: Pool) {
     await db.query(`INSERT INTO public.tournament (id, "name", season, format, current_round, prize_pool,
                                                    individual_winner, team_tour, team_winner, "createdAt", "updatedAt",
-                                                   info, start_date, finish_date)
+                                                   info, start_date, finish_date, slug)
                     VALUES ('5c929e7f-129a-497b-9e43-fec20eea5a2f'::uuid, 'ADV Revival', '1', 'ADV OU', 1, NULL, NULL,
-                            false, NULL, '2024-12-24 09:17:22.688+00', '2024-12-24 09:17:22.688+00', NULL, '2024-09-30','2024-12-16'),
+                            false, NULL, '2024-12-24 09:17:22.688+00', '2024-12-24 09:17:22.688+00', NULL, '2024-09-30','2024-12-16', 'adv-revival'),
                            ('17741f63-e1eb-4e30-9e16-aa11f658fd76'::uuid, 'Old Money Open', '1', 'gen3ou', 0, NULL,
                             '8473c391-d78c-4066-9acc-b5997a837db0'::uuid, false, NULL, '2025-01-29 15:13:09.203+00',
-                            '2025-01-29 15:13:09.203+00', 'test','2023-09-02','2023-12-15'),
+                            '2025-01-29 15:13:09.203+00', 'test','2023-09-02','2023-12-15', 'old-money-open'),
                            ('f6b9ea5b-1da2-4634-b072-9e2ecfc4ae8b'::uuid, 'ADV Revival', '2', 'ADV OU', 1, NULL, NULL,
-                            false, NULL, '2024-12-28 11:40:38.428+00', '2024-12-28 11:40:38.428+00', NULL, '2020-01-01','2020-04-01'),
+                            false, NULL, '2024-12-28 11:40:38.428+00', '2024-12-28 11:40:38.428+00', NULL, '2020-01-01','2020-04-01', 'adv-revival-2'),
                            ('38cd7c4c-c831-4e8f-9525-da2e520145ef'::uuid, 'ADV Revival', '3', 'ADV OU', 1, 102.26, NULL,
-                            false, NULL, '2024-12-28 13:49:57.578+00', '2024-12-30 11:15:19.695+00', NULL, '2020-04-01','2020-07-01'),
+                            false, NULL, '2024-12-28 13:49:57.578+00', '2024-12-30 11:15:19.695+00', NULL, '2020-04-01','2020-07-01', 'adv-revival-3'),
                            ('37fa8ed4-32cf-46cd-ba8e-f355ba706552'::uuid, 'ADV Revival', '4', 'gen3ou', 1, NULL, NULL,
-                            false, NULL, '2025-02-20 13:00:34.413+00', '2025-02-20 13:00:34.413+00', NULL, '2025-06-01',NULL),
+                            false, NULL, '2025-02-20 13:00:34.413+00', '2025-02-20 13:00:34.413+00', NULL, '2025-06-01',NULL, 'adv-revival-4'),
                            ('6f0c626d-bff8-4832-87ec-0ae945700dab'::uuid, 'ADV Revival', '5', 'gen3ou', 1, NULL, NULL,
-                            false, NULL, '2025-02-20 13:08:16.034+00', '2025-02-20 13:08:16.034+00', NULL, '2025-11-01',NULL),
+                            false, NULL, '2025-02-20 13:08:16.034+00', '2025-02-20 13:08:16.034+00', NULL, '2025-11-01',NULL, 'adv-revival-5'),
                            ('ab190d09-287c-49cd-bf51-5e206ccb730a'::uuid, 'ADV Revival', 'five', 'gen3ou', 1, NULL,
-                            NULL, false, NULL, '2025-02-20 13:09:11.144+00', '2025-02-20 13:09:11.144+00', NULL, '2026-04-01',NULL);`);
+                            NULL, false, NULL, '2025-02-20 13:09:11.144+00', '2025-02-20 13:09:11.144+00', NULL, '2026-04-01',NULL, 'adv-revival-five');`);
     console.log('Tournaments successfully inserted.');
 
 }

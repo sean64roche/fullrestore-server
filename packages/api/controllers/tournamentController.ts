@@ -17,12 +17,13 @@ export async function createTournament(req: Request, res: Response) {
 
 export async function getTournaments(req: Request, res: Response) {
     try {
-        const { name, season, format, individual_winner, page, limit } = req.query;
+        const { name, season, format, individual_winner, slug, page, limit } = req.query;
         const tournaments = await tournamentService.getTournaments({
                 name: name as string,
                 season: season as unknown as number,
                 format: format as string,
                 individual_winner: individual_winner as string,
+                slug: slug as string,
                 page: page as unknown as number,
                 limit: limit as unknown as number,
         });

@@ -19,6 +19,7 @@ router.get('/', validateQueryParams([
     'season',
     'format',
     'individual_winner',
+    'slug',
     'page',
     'limit'
 ]), getTournaments);
