@@ -38,6 +38,7 @@ export type TournamentEntity = {
     prizePool: number | null;
     individualWinner?: PlayerEntity;
     info?: string;
+    slug: string;
 }
 
 export type TournamentResponse = {
@@ -56,6 +57,7 @@ export type TournamentResponse = {
     info?: string;
     createdAt?: string;
     updatedAt?: string;
+    slug: string;
 }
 
 export function transformTournamentResponse(data: TournamentResponse): TournamentEntity {
@@ -73,6 +75,7 @@ export function transformTournamentResponse(data: TournamentResponse): Tournamen
         info: data.info,
         // teamTour: data.team_tour,
         // teamWinner: data.team_winner,
+        slug: data.slug,
     }
 }
 

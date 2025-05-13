@@ -16,7 +16,7 @@ export default class TournamentRepository extends Repository {
     async create(tournament: TournamentDto): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.tournamentsUrl, tournament);
-            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info } = response.data;
+            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data;
             this.logger.info(`Tournament created with UUID ${id}`);
             return {
                 id: id,
@@ -29,6 +29,7 @@ export default class TournamentRepository extends Repository {
                 prizePool: prize_pool,
                 individualWinner: individual_winner,
                 info: info,
+                slug: slug,
             };
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -53,7 +54,7 @@ export default class TournamentRepository extends Repository {
     async getExistingTournament(existingName: string, existingSeason: number): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?name=${existingName}&season=${existingSeason}`);
-            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info } = response.data[0];
+            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data[0];
             this.logger.info(`Tournament found with UUID ${id}`);
             return {
                 id: id,
@@ -66,6 +67,7 @@ export default class TournamentRepository extends Repository {
                 prizePool: prize_pool,
                 individualWinner: individual_winner,
                 info: info,
+                slug: slug,
             };
         } catch (error) {
             this.logger.error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data)}`);
