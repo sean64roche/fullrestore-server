@@ -56,10 +56,10 @@ export async function getEntrantsByTournamentId(req: Request, res: Response) {
     }
 }
 
-export async function getRoundsByTournamentId(req: Request, res: Response) {
+export async function getRoundsByTournamentSlug(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const rounds = await tournamentService.getRoundsByTournamentId(id);
+        const { slug } = req.params;
+        const rounds = await tournamentService.getRoundsByTournamentSlug(slug);
         return res.json(rounds);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });

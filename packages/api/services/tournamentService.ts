@@ -79,6 +79,16 @@ class TournamentService {
         });
     }
 
+    async getRoundsByTournamentSlug(slug: string) {
+        const tournament = await Tournament.findOne({
+            where: {slug: slug},
+        });
+        return await Round.findAll({
+            where: {tournament_id: tournament.id},
+            order: [['round', 'ASC']],
+        });
+    }
+
     public async updateTournament(
         id: string,
         fieldsToUpdate: Partial<TournamentAttributes>

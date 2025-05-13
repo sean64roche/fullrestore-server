@@ -4,10 +4,10 @@ import {
     deleteTournament,
     getTournaments,
     getEntrantsByTournamentId,
-    getRoundsByTournamentId,
     getTournamentById,
     updateTournament,
-  } from '../controllers/tournamentController';
+    getRoundsByTournamentSlug,
+} from '../controllers/tournamentController';
 import {validateQueryParams} from "./validateQueryParams";
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router.get('/:id', getTournamentById);
 
 router.get('/:id/entrants', getEntrantsByTournamentId);
 
-router.get('/:id/rounds', getRoundsByTournamentId);
+router.get('/:slug/rounds', getRoundsByTournamentSlug);
 
 router.put('/:id', updateTournament);
 
