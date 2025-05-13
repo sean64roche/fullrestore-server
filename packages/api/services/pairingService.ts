@@ -95,6 +95,8 @@ class PairingService {
                                 as: 'Aliases',
                                 required: false
                             }]
+                        }, {
+                            model: Tournament,
                         }]
                     },
                     {
@@ -107,6 +109,8 @@ class PairingService {
                                 as: 'Aliases',
                                 required: false
                             }]
+                        }, {
+                            model: Tournament,
                         }]
                     },
                     {
@@ -119,6 +123,8 @@ class PairingService {
                                 as: 'Aliases',
                                 required: false
                             }]
+                        }, {
+                            model: Tournament,
                         }]
                     },
                     {
