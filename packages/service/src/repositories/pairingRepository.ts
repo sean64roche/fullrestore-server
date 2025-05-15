@@ -193,5 +193,15 @@ export default class PairingRepository extends Repository {
         } catch (error) {
             this.logger.error(`FATAL on getReplaysById: ${JSON.stringify(error.response?.data)}`);
             throw new Error(`FATAL on getReplaysById: ${JSON.stringify(error.response?.data)}`);
-        }    }
+        }
+    }
+    async get(pairingId: string): Promise<PairingEntity> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.pairingsUrl}/${pairingId}`);
+            return transformPairingResponse(response.data);
+        } catch (error) {
+            this.logger.error(`FATAL on get: ${JSON.stringify(error.response?.data || error.message)}`);
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
+        }
+    }
 }

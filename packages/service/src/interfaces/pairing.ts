@@ -54,9 +54,18 @@ export function transformPairingResponse(pairing: PairingResponse): PairingEntit
     return {
         id: pairing.id,
         round: transformRoundResponse(pairing.Round),
-        entrant1: transformEntrantPlayerResponse(pairing.Entrant1),
-        entrant2: transformEntrantPlayerResponse(pairing.Entrant2),
-        winner: transformEntrantPlayerResponse(pairing.Winner),
+        entrant1: transformEntrantPlayerResponse({
+            ...pairing.Entrant1,
+            Tournament: pairing.Round.Tournament, // hacky I know but I don't really care right now
+        }),
+        entrant2: transformEntrantPlayerResponse({
+            ...pairing.Entrant2,
+            Tournament: pairing.Round.Tournament,
+        }),
+        winner: transformEntrantPlayerResponse({
+            ...pairing.Winner,
+            Tournament: pairing.Round.Tournament,
+        }),
         scheduledAt: pairing.time_scheduled,
         completedAt: pairing.time_completed,
         replays: replays,
