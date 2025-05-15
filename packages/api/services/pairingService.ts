@@ -151,17 +151,38 @@ class PairingService {
                 {
                     model: EntrantPlayer,
                     as: 'Entrant1',
-                    include: [Player]
+                    include: [{
+                        model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                            required: false
+                        }]
+                    }]
                 },
                 {
                     model: EntrantPlayer,
                     as: 'Entrant2',
-                    include: [Player]
+                    include: [{
+                        model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                            required: false
+                        }]
+                    }]
                 },
                 {
                     model: EntrantPlayer,
                     as: 'Winner',
-                    include: [Player]
+                    include: [{
+                        model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                            required: false
+                        }]
+                    }]
                 },
                 {
                     model: Replay,
