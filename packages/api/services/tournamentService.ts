@@ -72,13 +72,6 @@ class TournamentService {
         });
     }
 
-    public async getRoundsByTournamentId(id: string) {
-        return await Round.findAll({
-            where: {tournament_id: id},
-            order: [['round', 'ASC']],
-        });
-    }
-
     async getRoundsByTournamentSlug(slug: string) {
         const tournament = await Tournament.findOne({
             where: {slug: slug},
@@ -86,6 +79,7 @@ class TournamentService {
         return await Round.findAll({
             where: {tournament_id: tournament.id},
             order: [['round', 'ASC']],
+            include: Tournament,
         });
     }
 

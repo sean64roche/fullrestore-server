@@ -61,7 +61,7 @@ export default class RoundRepository extends Repository {
             };
         } catch (error) {
             this.logger.error(`FATAL on Round get: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(error.response?.data || error.message);
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
 

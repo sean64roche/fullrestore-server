@@ -108,7 +108,7 @@ export default class TournamentRepository extends Repository {
             return rounds;
         } catch (error) {
             this.logger.error(`FATAL on getRoundsBySlug: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getRoundsBySlug: ${JSON.stringify(error.response?.data)}`);
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
 }
