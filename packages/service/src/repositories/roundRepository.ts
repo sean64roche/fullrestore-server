@@ -1,5 +1,11 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {RoundEntity, RoundDto, RoundResponse, TournamentEntity} from "../interfaces/tournament.js";
+import {
+    RoundEntity,
+    RoundDto,
+    RoundResponse,
+    TournamentEntity,
+    transformRoundResponse
+} from "../interfaces/tournament.js";
 import {ApiConfig} from "../config.js";
 import Repository from "./repository.js";
 
@@ -65,10 +71,14 @@ export default class RoundRepository extends Repository {
         }
     }
 
-    async getByTournamentId(tournamentId: string): Promise<RoundResponse[]> {
+    async getByTournamentId(tournamentId: string): Promise<RoundEntity[]> {
         try {
             const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_id=${tournamentId}`);
-            return response.data;
+            const rounds: RoundEntity[] = [];
+            response.data.forEach((round: RoundResponse) => {
+                rounds.push(transformRoundResponse(round));
+            })
+            return rounds;
         } catch (error) {
             this.logger.error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data)}`);
             throw new Error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data)}`);
