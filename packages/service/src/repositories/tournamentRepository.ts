@@ -96,7 +96,8 @@ export default class TournamentRepository extends Repository {
         } catch (error) {
             this.logger.error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data)}`);
             throw new Error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data)}`);
-        }    }
+        }
+    }
 
     async getRoundsBySlug(slug: string): Promise<RoundEntity[]> {
         try {
