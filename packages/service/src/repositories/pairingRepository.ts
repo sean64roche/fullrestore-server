@@ -204,4 +204,14 @@ export default class PairingRepository extends Repository {
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
+
+    async fetchPairing(roundId: string, playerPsUser: string): Promise<PairingEntity> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${roundId}&player=${playerPsUser}`);
+            return transformPairingResponse(response.data[0]);
+        }  catch (error) {
+            this.logger.error(`FATAL on fetchPairing: ${JSON.stringify(error.response?.data || error.message)}`);
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
+        }
+    }
 }

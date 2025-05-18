@@ -135,4 +135,14 @@ export default class PlayerRepository extends Repository {
             throw error;
         }
     }
+
+    async fetchPlayer(player: string):  Promise<PlayerEntity> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${player}`);
+            return transformPlayerResponse(response.data);
+        } catch (error) {
+            this.logger.error(`FATAL on fetchPlayer: ${error.message}`);
+            throw new Error(error.response?.data || error.message);
+        }
+    }
 }
