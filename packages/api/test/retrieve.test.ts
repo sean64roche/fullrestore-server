@@ -39,13 +39,13 @@ test.describe('GET /api/players', () => {
         assert.equal(response.body.discord_id, '208377004209209344');
         assert.ok(response.body.Aliases.some(
             (alias: {
-                ps_alias: string;
-            }) => alias.ps_alias === 'tryingfunstuff2day')
+                alias: string;
+            }) => alias.alias === 'tryingfunstuff2day')
         );
         assert.ok(response.body.Aliases.some(
             (alias: {
-                ps_alias: string;
-            }) => alias.ps_alias === 'rezzo64')
+                alias: string;
+            }) => alias.alias === 'rezzo64')
         );
     });
 
@@ -58,8 +58,8 @@ test.describe('GET /api/players', () => {
         assert.ok(response.body.Aliases.some(
             (alias: {
                 player_id: string,
-                ps_alias: string;
-            }) => alias.ps_alias === 'tryingfunstuff2day')
+                alias: string;
+            }) => alias.alias === 'tryingfunstuff2day')
         );
     })
 
@@ -131,8 +131,8 @@ test.describe('GET /api/entrantPlayers', () => {
         assert.ok(result.Player.Aliases.some(
             (alias: {
                 player_id: string,
-                ps_alias: string;
-            }) => alias.ps_alias === 'udm31')
+                alias: string;
+            }) => alias.alias === 'udm31')
         );
     });
     test('GET /api/entrantPlayers?player_id&tournament_id on non-existing entrant player has size zero response', { timeout: 10000 }, async () => {
@@ -223,14 +223,14 @@ test.describe('API GET /api/pairings', () => {
             Winner: {
                 Player: {
                     Aliases: [{
-                        ps_alias: string;
+                        alias: string;
                     }];
                 };
             };
         }) => pairing.Winner.Player.Aliases.some(
             (alias: {
-                ps_alias: string;
-            }) => alias.ps_alias === 'blaise2245')
+                alias: string;
+            }) => alias.alias === 'blaise2245')
         ));
     });
 

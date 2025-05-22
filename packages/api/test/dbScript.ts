@@ -265,7 +265,7 @@ async function insertPlayers(db: Pool) {
 }
 
 async function insertPlayerAliases(db: Pool) {
-    await db.query(`INSERT INTO public.player_alias (player_id, ps_alias)
+    await db.query(`INSERT INTO public.player_alias (player_id, alias)
                     VALUES ('63ea4052-e16a-4e62-b53f-fce765c2d747'::uuid, 'halbertsimpson'),
                            ('efc9d6c6-2aa8-4e82-8df9-6c4a7ec82cd9'::uuid, 't1w1b'),
                            ('2c53e1c3-a865-4910-aeca-0f08c4c018d4'::uuid, 'Lum Berry Cloyster'),
@@ -275,7 +275,7 @@ async function insertPlayerAliases(db: Pool) {
                            ('a8177b3c-e07a-4e03-8813-720e5aaff072'::uuid, 'tryingfunstuff2day'),
                            ('20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4'::uuid, 'buzzed27'),
                            ('25b3b075-f648-40cc-867e-ee2d322b56e7'::uuid, 'bored713');
-    INSERT INTO public.player_alias (player_id, ps_alias)
+    INSERT INTO public.player_alias (player_id, alias)
     VALUES ('442390bc-5923-49e0-89b7-bbc8e5eb4c55'::uuid, 'boards4chanorg'),
            ('046b2228-4ea2-41e7-82bb-8611411b8a49'::uuid, 'f0ntz'),
            ('1c15dba6-66cd-4c3b-9ed9-cf67186b913c'::uuid, 'zcorpswordsmelborp'),
@@ -286,7 +286,7 @@ async function insertPlayerAliases(db: Pool) {
            ('53e60be8-72d9-4116-9a56-69c9194e3792'::uuid, 'cristianj1588'),
            ('03d8db22-93fe-4de7-9486-51cb3b2de0b6'::uuid, 'awelcomeguest'),
            ('ced51941-4f2e-43e9-81c5-bdf3eec726c5'::uuid, 'goldmason');
-    INSERT INTO public.player_alias (player_id, ps_alias)
+    INSERT INTO public.player_alias (player_id, alias)
     VALUES ('f08aeca8-96ad-4cc6-9672-0a86097ecaf0'::uuid, 'unzipscrogre'),
            ('541ff1e7-35b1-4110-ae58-753a366b8682'::uuid, 'davo5'),
            ('1232fb22-9861-496a-858e-7ed08846c443'::uuid, 'amogusfan'),
@@ -297,7 +297,7 @@ async function insertPlayerAliases(db: Pool) {
            ('01d27e8e-7f42-4b4f-9e87-c4861ca583d5'::uuid, 'birthdayninja'),
            ('66679766-6520-4ab3-af1c-9d3b45a98000'::uuid, 'fastandsleepy'),
            ('16d8af3a-bf53-4189-9d3b-24c25548f753'::uuid, 'dontonionie');
-    INSERT INTO public.player_alias (player_id, ps_alias)
+    INSERT INTO public.player_alias (player_id, alias)
     VALUES ('d648944a-965c-4916-b4c0-011830a735ab'::uuid, 'adamc77777'),
            ('034abc58-0f14-4674-8827-d856dd5dde89'::uuid, 'goldthe1andonly'),
            ('5551d111-210b-46e0-b8ab-161c5f3366d6'::uuid, 'thebigno'),
@@ -308,7 +308,7 @@ async function insertPlayerAliases(db: Pool) {
            ('b21737c4-485b-4750-846d-7341239ea2c9'::uuid, 'dazey'),
            ('dde14d4f-de76-405a-a8cb-49b07ad09615'::uuid, 'adorluigi'),
            ('a0e069f8-3c2c-48c3-bd38-4f926b6355fa'::uuid, 'nal');
-    INSERT INTO public.player_alias (player_id, ps_alias)
+    INSERT INTO public.player_alias (player_id, alias)
     VALUES ('e2610b0a-e781-496d-b983-7855c74c7cea'::uuid, 'f1remaster'),
            ('03bb89a1-1fb0-46bd-8424-1802516a07a6'::uuid, 'hochi'),
            ('5d736400-85ca-4362-80b0-5d1c75541f0e'::uuid, 'thebongotime'),
@@ -319,7 +319,7 @@ async function insertPlayerAliases(db: Pool) {
            ('f9c57465-0fdd-40f4-a30d-4e49ada58291'::uuid, 'sheik95'),
            ('56a91fe3-1b59-4e76-a804-2b75c8a1db2a'::uuid, 'fj2k'),
            ('9b7730a0-07ce-4cb0-b173-582d8f66c21d'::uuid, 'mcjd931');
-    INSERT INTO public.player_alias (player_id, ps_alias)
+    INSERT INTO public.player_alias (player_id, alias)
     VALUES ('15dbd3fa-5d86-44b3-a250-3fede1a0620e'::uuid, 'bimechol'),
            ('1b164fb4-ad30-4fe6-b469-f6de7233defc'::uuid, 'shygon'),
            ('690081d5-e0f7-41f3-bea9-452acf3a6200'::uuid, 'figull400'),
@@ -330,7 +330,7 @@ async function insertPlayerAliases(db: Pool) {
            ('936f96ec-d2f2-4366-9fa5-1d5cda6e81fa'::uuid, 'bohrier'),
            ('be6794fc-049e-4306-96b7-ab724cc6a684'::uuid, 'rambode'),
            ('0d183652-cdc8-4912-bc84-f562fa5eb9d5'::uuid, 'sderde');
-    INSERT INTO public.player_alias (player_id, ps_alias)
+    INSERT INTO public.player_alias (player_id, alias)
     VALUES ('fdabead6-0346-4a87-b4be-4e8b81221c7c'::uuid, 'ottoeb'),
            ('bc17c4c4-a564-4e6c-a358-1b8fca1c3962'::uuid, '9one8'),
            ('37000613-273b-4920-9560-df06a3f241d6'::uuid, 'spfunkm'),

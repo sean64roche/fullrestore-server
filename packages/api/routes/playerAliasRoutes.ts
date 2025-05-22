@@ -7,7 +7,7 @@ import {
 const router = express.Router();
 
 router.post('/', createPlayerAlias);
-router.put('/:ps_alias', updatePlayerAlias);
-router.delete('/:ps_alias', deletePlayerAlias);
+router.put('/:alias', updatePlayerAlias);
+router.delete('/:alias', deletePlayerAlias);
 
 export default router;

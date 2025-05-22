@@ -27,7 +27,7 @@ class PlayerService {
             id: uuidv4(),
             ...newAttrs,
             PlayerAlias: {
-                ps_alias: attrs.ps_user,
+                alias: attrs.ps_user,
                 primary: true,
             },
         }, {
@@ -52,7 +52,7 @@ class PlayerService {
                 include: {
                     model: PlayerAlias,
                     as: 'Aliases',
-                    where: { ps_alias: toPSAlias(player) },
+                    where: { alias: toPSAlias(player) },
                     required: true
                 }
             });

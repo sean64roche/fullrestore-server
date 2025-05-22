@@ -58,9 +58,9 @@ class PairingService {
                         },{
                             '$Entrant2.Player.ps_user$': player
                         },{
-                            '$Entrant1.Player.Aliases.ps_alias$': player
+                            '$Entrant1.Player.Aliases.alias$': player
                         },{
-                            '$Entrant2.Player.Aliases.ps_alias$': player
+                            '$Entrant2.Player.Aliases.alias$': player
                         }]
                     }
                 ]
@@ -74,7 +74,7 @@ class PairingService {
             if (winner) {
                 whereClause[Op.or] = [
                     { '$Winner.Player.ps_user$': winner },
-                    { '$Winner.Player.Aliases.ps_alias$': winner }
+                    { '$Winner.Player.Aliases.alias$': winner }
                 ];
             }
             return await Pairing.findAll({

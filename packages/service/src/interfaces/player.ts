@@ -25,6 +25,7 @@ export type PlayerResponse = {
 export interface PlayerEntity {
     id: string;
     psUser: string;
+    username: string;
     discordUser?: string;
     discordId?: string;
     Aliases: PlayerAlias[];
@@ -32,12 +33,17 @@ export interface PlayerEntity {
 
 export function transformPlayerResponse(data: PlayerResponse): PlayerEntity {
     const aliases: PlayerAlias[] = [];
+    let primaryUsername: string | null = null;
     data.Aliases.forEach((alias: PlayerAliasResponse) => {
         aliases.push(transformPlayerAliasResponse(alias));
+        if (alias.primary) {
+            primaryUsername = alias.alias;
+        }
     });
     return {
         id: data.id,
         psUser: data.ps_user,
+        username: primaryUsername || data.ps_user,
         discordUser: data.discord_user,
         discordId: data.discord_id,
         Aliases: aliases,
@@ -45,18 +51,21 @@ export function transformPlayerResponse(data: PlayerResponse): PlayerEntity {
 }
 
 export interface PlayerAlias {
-    psAlias: string;
+    alias: string;
+    primary: boolean;
 }
 
 export type PlayerAliasResponse = {
     player_id: string;
-    ps_alias: string;
+    alias: string;
+    primary: boolean;
     Player: PlayerResponse;
 }
 
 export function transformPlayerAliasResponse(data: PlayerAliasResponse): PlayerAlias {
     return {
-        psAlias: data.ps_alias
+        alias: data.alias,
+        primary: data.primary,
     }
 }
 

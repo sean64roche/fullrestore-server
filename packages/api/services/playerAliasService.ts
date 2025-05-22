@@ -2,7 +2,7 @@ import PlayerAlias from "../models/PlayerAlias";
 
 interface PlayerAliasAttributes {
     player_id: string;
-    ps_alias: string;
+    alias: string;
     primary: boolean;
 }
 
@@ -10,26 +10,26 @@ class PlayerAliasService {
     public async createPlayerAlias(attrs: PlayerAliasAttributes) {
         return await PlayerAlias.create({
             ...attrs,
-            ps_alias: attrs.ps_alias,
+            alias: attrs.alias,
         });
     }
 
     public async updatePlayerAlias(attrs: PlayerAliasAttributes) {
         const [updated] = await PlayerAlias.update(
-            { player_id: attrs.player_id, ps_alias: attrs.ps_alias, primary: attrs.primary },
-            { where: { ps_alias: attrs.ps_alias } }
+            { player_id: attrs.player_id, alias: attrs.alias, primary: attrs.primary },
+            { where: { alias: attrs.alias } }
         );
 
         if (updated) {
-            return await PlayerAlias.findOne({ where: { ps_alias: attrs.ps_alias }});
+            return await PlayerAlias.findOne({ where: { alias: attrs.alias }});
         } else {
             return null;
         }
     }
 
-    public async deletePlayerAlias(ps_alias: string) {
+    public async deletePlayerAlias(alias: string) {
         return await PlayerAlias.destroy({
-            where: { ps_alias: ps_alias },
+            where: { alias: alias },
         });
     }
 

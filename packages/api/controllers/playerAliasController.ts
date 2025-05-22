@@ -4,8 +4,8 @@ import PlayerAlias from "../models/PlayerAlias";
 
 export async function createPlayerAlias(req: Request, res: Response) {
     try {
-        const { player_id, ps_alias, primary } = req.body;
-        const newPlayerAlias: PlayerAlias = await playerAliasService.createPlayerAlias({ player_id, ps_alias, primary });
+        const { player_id, alias, primary } = req.body;
+        const newPlayerAlias: PlayerAlias = await playerAliasService.createPlayerAlias({ player_id, alias: alias, primary });
         return res.status(201).json(newPlayerAlias);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
@@ -19,10 +19,10 @@ export async function createPlayerAlias(req: Request, res: Response) {
 
 export async function updatePlayerAlias(req: Request, res: Response) {
     try {
-        const { player_id, ps_alias, primary } = req.body;
+        const { player_id, alias, primary } = req.body;
         const updatedPlayerAlias = await playerAliasService.updatePlayerAlias({
             player_id,
-            ps_alias,
+            alias: alias,
             primary,
         });
         if (!updatedPlayerAlias) {
@@ -36,7 +36,7 @@ export async function updatePlayerAlias(req: Request, res: Response) {
 
 export async function deletePlayerAlias(req: Request, res: Response) {
     try {
-        const deleted = await playerAliasService.deletePlayerAlias(req.params.ps_alias);
+        const deleted = await playerAliasService.deletePlayerAlias(req.params.alias);
         if (deleted) {
             return res.sendStatus(204);
         }

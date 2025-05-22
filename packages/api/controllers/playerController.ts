@@ -10,13 +10,13 @@ export async function createPlayer(req: Request, res: Response) {
         if (newPlayer.ps_user !== ps_user) {
             await PlayerAliasService.createPlayerAlias({
                 player_id: newPlayer.id,
-                ps_alias: ps_user,
+                alias: ps_user,
                 primary: true
             });
         } else {
             await PlayerAliasService.updatePlayerAlias({
                 player_id: newPlayer.id,
-                ps_alias: ps_user,
+                alias: ps_user,
                 primary: true,
             })
         }

@@ -3,7 +3,7 @@ import sequelize from '../config/database';
 
 class PlayerAlias extends Model {
     declare player_id: string;
-    declare ps_alias: string;
+    declare alias: string;
     declare primary: boolean;
 }
 
@@ -16,7 +16,7 @@ PlayerAlias.init({
             key: 'id'
         }
     },
-    ps_alias: {
+    alias: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

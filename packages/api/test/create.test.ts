@@ -82,8 +82,8 @@ test.describe('POST /api/players', () => {
         assert.equal(response.status, 200);
         assert.ok(response.body.Aliases.some(
             (alias: {
-                ps_alias: string;
-            }) => alias.ps_alias === psUser2Transformed
+                alias: string;
+            }) => alias.alias === psUser2Transformed
         ));
     });
 
@@ -109,7 +109,7 @@ test.describe('POST /api/playerAliases', () => {
     test('new alias succeeds', { timeout: 10000 }, async () => {
         const postBody = {
             player_id: coolGamerPlayerId,
-            ps_alias: newAlias,
+            alias: newAlias,
             primary: false,
         };
         const response = await request(app).post('/api/playerAliases')
@@ -118,14 +118,14 @@ test.describe('POST /api/playerAliases', () => {
             .set('Content-Type', 'application/json');
         assert.equal(response.status, 201);
         assert.equal(response.body.player_id, coolGamerPlayerId);
-        assert.equal(response.body.ps_alias, newAlias);
+        assert.equal(response.body.alias, newAlias);
         assert.equal(response.body.primary, false);
     });
 
     test('alias cannot be assigned to more than one \'player\'', { timeout: 10000 }, async () => {
         const postBody2 = {
             player_id: testPlayer1Id,
-            ps_alias: newAlias,
+            alias: newAlias,
         };
         const response = await request(app).post('/api/playerAliases')
             .send(postBody2)
