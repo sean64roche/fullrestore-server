@@ -49,7 +49,7 @@ export type PairingResponse = {
 export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
     const replays: ReplayEntity[] = [];
     pairing.Replays.forEach((replay: ReplayResponse) => {
-        replays.push(transformReplayResponse(replay));
+        replays.push(transformReplayResponse(replay, pairing.id));
     });
     return {
         id: pairing.id,
@@ -92,9 +92,9 @@ export type ReplayResponse = {
     updatedAt?: string;
 }
 
-export function transformReplayResponse(replay: ReplayResponse): ReplayEntity {
+export function transformReplayResponse(replay: ReplayResponse, id: string = replay.pairing_id): ReplayEntity {
     return {
-        pairingId: replay.pairing_id,
+        pairingId: id,
         url: replay.url,
         matchNumber: replay.match_number
     }
