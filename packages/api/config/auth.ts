@@ -1,27 +1,28 @@
 import * as dotenv from 'dotenv';
-import { Request, Response, NextFunction } from 'express';
+import {NextFunction, Request, Response} from 'express';
 
 dotenv.config();
 
-const BOT_JWT_TOKEN = process.env.BOT_JWT_TOKEN;
-const ADMIN_JWT_TOKEN = process.env.ADMIN_JWT_TOKEN;
+export const authenticateKey = (req: Request, res: Response, next: NextFunction) => {
+    const apiKey = req.headers['x-api-key'];
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-    // Allow all GET requests to pass through
-    // if (req.method === 'GET') {
-    //     return next();
-    // }
+    const validKeys = {
+        client: process.env.CLIENT_API_KEY,
+        importer: process.env.IMPORTER_API_KEY,
+        discord: process.env.DISCORD_API_KEY,
+    };
 
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    // Check if provided key matches any valid key
+    const isValidKey = Object.values(validKeys).some(key => key && key === apiKey);
 
-    if (!token) {
-        return res.status(401).json({ error: 'Token required' });
-    }
-
-    if (token === BOT_JWT_TOKEN || token === ADMIN_JWT_TOKEN) {
-        next();
+    if (!isValidKey) {
+        return res.status(401).json({
+            error: 'Invalid or missing API key',
+            message: 'Include x-api-key header with valid key'
+        });
     } else {
-        return res.status(403).json({ error: 'Invalid token' });
+        next();
     }
 };
+
+module.exports = { authenticateKey };

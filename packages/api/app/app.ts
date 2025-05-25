@@ -9,7 +9,7 @@ import roundByeRoutes from '../routes/roundByeRoutes';
 import pairingRoutes from '../routes/pairingRoutes';
 import entrantPlayerRoutes from '../routes/entrantPlayerRoutes';
 import replayRoutes from '../routes/replayRoutes';
-import { authenticateToken } from '../config/auth.js';
+import { authenticateKey } from '../config/auth.js';
 import { initAssociations } from "../associations/initAssociations";
 
 const app = express();
@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(authenticateToken);
+app.use(authenticateKey);
 
 // Routes
 app.use('/api/players', playerRoutes)
@@ -38,7 +38,7 @@ async function initDatabase() {
     console.log('Database connection established successfully.');
     
     // Uncomment if you want to sync models (careful in production)
-    await sequelize.sync({ alter: true });
+    // await sequelize.sync({ alter: true });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
     process.exit(1);
