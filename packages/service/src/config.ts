@@ -2,7 +2,7 @@ import log4js from "log4js";
 
 export interface ApiConfig {
   baseUrl: string;
-  token?: string;
+  apiKey?: string;
   formatsEndpoint: string;
   playersEndpoint: string;
   playerAliasesEndpoint: string;
