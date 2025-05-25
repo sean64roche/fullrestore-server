@@ -62,8 +62,3 @@ docker-build:
   only:
     - tags
     - main
-  # Run this job in a branch where a Dockerfile exists
-  rules:
-    - if: $CI_COMMIT_BRANCH
-      exists:
-        - Dockerfile
