@@ -8,7 +8,7 @@ abstract class Repository {
     protected constructor(config: ApiConfig) {
         this.config = config;
         this.logger = config.logger;
-        axios.defaults.headers.common['X-Api-Token'] = config.apiKey;
+        axios.defaults.headers.common['x-api-key'] = `${config.apiKey}`;
     }
 }
 
