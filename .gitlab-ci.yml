@@ -1,7 +1,6 @@
 stages:
   - test
   - build
-  - deploy
   - publish
 
 include:
@@ -18,6 +17,6 @@ publish-packages:
 build-containers:
   stage: build
   script:
-    - echo "Coordinating api container publishing"
+    - echo "Coordinating api container building"
   only:
     - tags
