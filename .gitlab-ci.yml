@@ -14,3 +14,10 @@ publish-packages:
     - echo "Coordinating package publishing"
   only:
     - tags
+
+build-containers:
+  stage: build
+  script:
+    - echo "Coordinating api container publishing"
+  only:
+    - tags
