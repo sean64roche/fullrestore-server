@@ -66,7 +66,10 @@ export default class RoundRepository extends Repository {
                 deadline: deadline,
             };
         } catch (error) {
-            this.logger.error(`FATAL on Round get: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on Round get: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `Request: ${this.roundsUrl}?tournament_id=${tournament.id}&round=${roundNumber}`
+            );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }

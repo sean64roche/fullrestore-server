@@ -17,6 +17,37 @@ export { TournamentImportService } from "./services/tournamentImportService.js";
 
 export type { SheetData } from './interfaces/import.js';
 
+log4js.configure({
+    appenders: {
+        console: { type: 'console' },
+        app: {
+            type: 'file',
+            filename: './logs/app.log',
+            maxLogSize: 10485760,
+            backups: 5,
+            compress: true
+        },
+        error: {
+            type: 'file',
+            filename: './logs/error.log',
+            maxLogSize: 10485760,
+            backups: 5,
+            compress: true
+        },
+        errorFilter: {
+            type: 'logLevelFilter',
+            appender: 'error',
+            level: 'error'
+        }
+    },
+    categories: {
+        default: {
+            appenders: ['console', 'app', 'errorFilter'],
+            level: 'error'
+        }
+    }
+});
+
 export {
     SheetPairing,
     PairingDto,
@@ -66,37 +97,6 @@ export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
         ...overrides
     };
 };
-
-log4js.configure({
-    appenders: {
-        console: { type: 'console' },
-        app: {
-            type: 'file',
-            filename: './logs/app.log',
-            maxLogSize: 10485760, // 10MB
-            backups: 5,
-            compress: true
-        },
-        error: {
-            type: 'file',
-            filename: './logs/error.log',
-            maxLogSize: 10485760,
-            backups: 5,
-            compress: true
-        },
-        errorFilter: {
-            type: 'logLevelFilter',
-            appender: 'error',
-            level: 'error'
-        }
-    },
-    categories: {
-        default: {
-            appenders: ['console', 'app', 'errorFilter'],
-            level: 'info'
-        }
-    }
-});
 
 export type { ApiConfig };
 export const DEFAULT_CONFIG: ApiConfig = {
