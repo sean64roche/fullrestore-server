@@ -67,6 +67,37 @@ export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     };
 };
 
+log4js.configure({
+    appenders: {
+        console: { type: 'console' },
+        app: {
+            type: 'file',
+            filename: '/app/logs/app.log',
+            maxLogSize: 10485760, // 10MB
+            backups: 5,
+            compress: true
+        },
+        error: {
+            type: 'file',
+            filename: '/app/logs/error.log',
+            maxLogSize: 10485760,
+            backups: 5,
+            compress: true
+        },
+        errorFilter: {
+            type: 'logLevelFilter',
+            appender: 'error',
+            level: 'error'
+        }
+    },
+    categories: {
+        default: {
+            appenders: ['console', 'app', 'errorFilter'],
+            level: 'info'
+        }
+    }
+});
+
 export type { ApiConfig };
 export const DEFAULT_CONFIG: ApiConfig = {
     baseUrl: "http://localhost:3000",
@@ -80,5 +111,5 @@ export const DEFAULT_CONFIG: ApiConfig = {
     pairingsEndpoint: "/api/pairings",
     replaysEndpoint: "/api/replays",
     timeout: 10000,
-    logger: log4js.getLogger(),
+    logger: log4js.getLogger('api'),
 };
