@@ -68,7 +68,7 @@ export default class RoundRepository extends Repository {
         } catch (error) {
             this.logger.error(
                 `FATAL on Round get: ${JSON.stringify(error.response?.data) || error.message} ` +
-                `Request: ${this.roundsUrl}?tournament_id=${tournament.id}&round=${roundNumber}`
+                `| Request: ${this.roundsUrl}?tournament_id=${tournament.id}&round=${roundNumber}`
             );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
@@ -83,8 +83,11 @@ export default class RoundRepository extends Repository {
             })
             return rounds;
         } catch (error) {
-            this.logger.error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on getByTournamentId: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.roundsUrl}?tournament_id=${tournamentId}`
+            );
+            throw new Error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data) || error.message}`);
         }
     }
 }

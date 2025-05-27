@@ -22,8 +22,11 @@ export default class FormatRepository extends Repository {
                         this.logger.info(`'${format}' exists. Continuing...`);
                         return undefined;
                     default:
-                        this.logger.error(`FATAL on creating Format: ${JSON.stringify(error.response?.data)}`);
-                        throw new Error(error.response?.data);
+                        this.logger.error(
+                            `FATAL on creating Format: ${JSON.stringify(error.response?.data) || error.message} ` +
+                            `| Request: ${this.formatsUrl} | Body: { format: ${format} }`
+                        );
+                        throw new Error(error.response?.data || error.message);
                 }
             } else {
                 this.logger.error(`FATAL on creating Format: ${error.message}`);

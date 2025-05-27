@@ -77,7 +77,10 @@ export default class PlayerRepository extends Repository {
                     this.logger.warn(`WARNING: player '${username}' already has entrant record`);
                     throw (error);
                 default:
-                    this.logger.error(`FATAL on creating entrant player: ${error.message}`);
+                    this.logger.error(
+                        `FATAL on creating entrant player: ${JSON.stringify(error.response?.data) || error.message} ` +
+                        `| Request: ${this.entrantPlayersUrl} | Body: { playerId: ${player.id} tournament_id: ${tournament.id} }`
+                    );
                     throw new Error(error.response?.data || error.message);
             }
         }
@@ -94,12 +97,17 @@ export default class PlayerRepository extends Repository {
                         this.logger.info(`Player '${alias}' not found`);
                         return null;
                     default:
-                        const msg: string = `FATAL on findPlayer: ${JSON.stringify(error.response?.data)}`
-                        this.logger.error(msg);
-                        throw (error);
+                        this.logger.error(
+                            `FATAL on findPlayer: ${JSON.stringify(error.response?.data) || error.message} ` +
+                            `| Request: ${this.playersUrl}?player=${alias}`
+                        );
+                        throw new Error(error.response?.data || error.message);
                 }
             } else {
-                this.logger.error(`FATAL on findPlayer: ${error.message}`);
+                this.logger.error(
+                    `FATAL on findPlayer: ${JSON.stringify(error.response?.data) || error.message} ` +
+                    `| Request: ${this.playersUrl}?player=${alias}`
+                );
                 throw new Error(error.response?.data || error.message);
             }
 
@@ -110,11 +118,14 @@ export default class PlayerRepository extends Repository {
         try {
             const entrant: EntrantPlayerEntity = await this.findEntrantById(player.id, tournament.id);
             if (!entrant) {
+                this.logger.error(
+                    `ERROR on findEntrant: Entrant not found for '${player.psUser}' with UUID ${player.id} on tournament ${tournament.slug}`
+                );
                 throw new Error(`Entrant not found with UUID ${player.id}`);
             }
             return entrant;
         } catch (error) {
-            this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(`FATAL on getEntrantPlayer: ${JSON.stringify(error.response?.data) || error.message}`);
             throw error;
         }
     }
@@ -124,14 +135,14 @@ export default class PlayerRepository extends Repository {
             const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentId}`);
             const data: EntrantPlayerResponse = response.data[0];
             if (!data) {
-                const error = new Error(`ERROR: entrantPlayer not found with UUID ${playerId}`);
+                const error = new Error(`FATAL on findEntrantById: entrantPlayer not found with UUID ${playerId} on tournament UUID ${tournamentId}`);
                 this.logger.error(error.message);
                 throw error;
             }
             return transformEntrantPlayerResponse(data);
         }
         catch (error) {
-            this.logger.error(`FATAL on findEntrantPlayerById: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(`FATAL on findEntrantPlayerById: ${JSON.stringify(error.response?.data) || error.message}`);
             throw error;
         }
     }
@@ -141,7 +152,9 @@ export default class PlayerRepository extends Repository {
             const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${player}`);
             return transformPlayerResponse(response.data);
         } catch (error) {
-            this.logger.error(`FATAL on fetchPlayer: ${error.message}`);
+            this.logger.error(
+                `FATAL on fetchPlayer: ${error.response?.data || error.message} ` +
+                `| Request: ${this.playersUrl}?player=${player}`);
             throw new Error(error.response?.data || error.message);
         }
     }

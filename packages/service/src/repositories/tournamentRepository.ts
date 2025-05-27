@@ -75,8 +75,11 @@ export default class TournamentRepository extends Repository {
                 slug: slug,
             };
         } catch (error) {
-            this.logger.error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on getExistingTournament: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.tournamentsUrl}?name=${existingName}&season=${existingSeason}`
+            );
+            throw new Error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data) || error.message}`);
         }
     }
     async fetchTournaments(page: number = 1, limit: number = 10): Promise<TournamentEntity[]> {
@@ -88,7 +91,10 @@ export default class TournamentRepository extends Repository {
             })
             return tournaments;
         } catch (error) {
-            this.logger.error(`FATAL on fetchTournaments: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on fetchTournaments: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.tournamentsUrl}?page=${page}&limit=${limit}`
+            );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
@@ -98,8 +104,11 @@ export default class TournamentRepository extends Repository {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?slug=${slug}`);
             return transformTournamentResponse(response.data[0]);
         } catch (error) {
-            this.logger.error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on getBySlug: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.tournamentsUrl}?slug=${slug}`
+            );
+            throw new Error(`FATAL on getBySlug: ${JSON.stringify(error.response?.data) || error.message}`);
         }
     }
 
@@ -112,7 +121,10 @@ export default class TournamentRepository extends Repository {
             });
             return rounds;
         } catch (error) {
-            this.logger.error(`FATAL on getRoundsBySlug: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on getRoundsBySlug: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.tournamentsUrl}/${slug}/rounds`
+            );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }

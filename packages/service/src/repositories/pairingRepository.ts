@@ -109,7 +109,10 @@ export default class PairingRepository extends Repository {
                 completedAt: time_completed,
             };
         } catch (error) {
-            this.logger.error(`FATAL on getPairing: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on getPairing: ${JSON.stringify(error.response?.data  || error.message)} ` +
+                `| Request: ${this.pairingsUrl}?round_id=${round.id}&player=${username1}`
+            );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
@@ -119,7 +122,10 @@ export default class PairingRepository extends Repository {
             const response: AxiosResponse = await axios.delete(`${this.pairingsUrl}/${pairing_id}`);
             return response.data;
         } catch (error) {
-            this.logger.error(`FATAL on deletePairing: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on deletePairing: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.pairingsUrl}/${pairing_id}`
+            );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
@@ -152,7 +158,10 @@ export default class PairingRepository extends Repository {
                         throw (error);
                     }
                 default:
-                    this.logger.error(`FATAL on createReplay:\n${JSON.stringify(error.response?.data)}`);
+                    this.logger.error(
+                        `FATAL on createReplay: ${JSON.stringify(error.response?.data) || error.message} ` +
+                        `| Request: ${this.replaysUrl} | Body: ${JSON.stringify(replayDto)}`
+                    );
                     throw new Error(JSON.stringify(error.response?.data) || error.message);
             }
         }
@@ -177,8 +186,11 @@ export default class PairingRepository extends Repository {
             });
             return pairings;
         } catch (error) {
-            this.logger.error(`FATAL on getByRoundId: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getByRoundId: ${error.response?.data}`);
+            this.logger.error(
+                `FATAL on getByRoundId: ${JSON.stringify(error.response?.data) || error.message} ` +
+                ` | Request: ${this.pairingsUrl}?round_id=${roundId}`
+            );
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
 
@@ -191,8 +203,11 @@ export default class PairingRepository extends Repository {
             });
             return replays;
         } catch (error) {
-            this.logger.error(`FATAL on getReplaysById: ${JSON.stringify(error.response?.data)}`);
-            throw new Error(`FATAL on getReplaysById: ${JSON.stringify(error.response?.data)}`);
+            this.logger.error(
+                `FATAL on getReplaysById: ${JSON.stringify(error.response?.data) || error.message} ` +
+                `| Request: ${this.replaysUrl}?pairing_id=${pairingId}`
+            );
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
     async get(pairingId: string): Promise<PairingEntity> {
@@ -200,7 +215,9 @@ export default class PairingRepository extends Repository {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}/${pairingId}`);
             return transformPairingResponse(response.data);
         } catch (error) {
-            this.logger.error(`FATAL on get: ${JSON.stringify(error.response?.data || error.message)}`);
+            this.logger.error(
+                `FATAL on get: ${JSON.stringify(error.response?.data || error.message)} ` +
+                `| Request: ${this.pairingsUrl}/${pairingId}`);
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
@@ -210,7 +227,10 @@ export default class PairingRepository extends Repository {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${roundId}&player=${playerPsUser}`);
             return transformPairingResponse(response.data[0]);
         }  catch (error) {
-            this.logger.error(`FATAL on fetchPairing: ${JSON.stringify(error.response?.data || error.message)}`);
+            this.logger.error(
+                `FATAL on fetchPairing: ${JSON.stringify(error.response?.data || error.message)} ` +
+                `| Request: ${this.pairingsUrl}?round_id=${roundId}&player=${playerPsUser}`
+            );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
