@@ -72,14 +72,14 @@ log4js.configure({
         console: { type: 'console' },
         app: {
             type: 'file',
-            filename: '/app/logs/app.log',
+            filename: '/logs/app.log',
             maxLogSize: 10485760, // 10MB
             backups: 5,
             compress: true
         },
         error: {
             type: 'file',
-            filename: '/app/logs/error.log',
+            filename: '/logs/error.log',
             maxLogSize: 10485760,
             backups: 5,
             compress: true
