@@ -15,6 +15,18 @@ import { initAssociations } from "../associations/initAssociations";
 const app = express();
 const PORT = +process.env.PORT || 3000;
 
+app.get('/health', async (req, res) => {
+  try {
+    res.status(200).json({
+      status: 'healthy',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(503).json({ status: 'unhealthy', error: error.message });
+  }
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,8 +41,7 @@ app.use('/api/players', playerRoutes)
   .use('/api/rounds', roundRoutes)
   .use('/api/roundByes', roundByeRoutes)
   .use('/api/pairings', pairingRoutes)
-  .use('/api/replays', replayRoutes)
-  .use('/health', express.Router());
+  .use('/api/replays', replayRoutes);
 
 async function initDatabase() {
   try {
@@ -49,18 +60,6 @@ async function initDatabase() {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   initDatabase();
-});
-
-app.get('/health', async (req, res) => {
-  try {
-    res.status(200).json({
-      status: 'healthy',
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    res.status(503).json({ status: 'unhealthy', error: error.message });
-  }
 });
 
 export default app;
