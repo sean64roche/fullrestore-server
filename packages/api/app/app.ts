@@ -29,7 +29,8 @@ app.use('/api/players', playerRoutes)
   .use('/api/rounds', roundRoutes)
   .use('/api/roundByes', roundByeRoutes)
   .use('/api/pairings', pairingRoutes)
-  .use('/api/replays', replayRoutes);
+  .use('/api/replays', replayRoutes)
+  .use('/health', express.Router());
 
 async function initDatabase() {
   try {
