@@ -13,7 +13,7 @@ import { authenticateKey } from '../config/auth.js';
 import { initAssociations } from "../associations/initAssociations";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = +process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -45,9 +45,21 @@ async function initDatabase() {
   }
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   initDatabase();
+});
+
+app.get('/health', async (req, res) => {
+  try {
+    res.status(200).json({
+      status: 'healthy',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(503).json({ status: 'unhealthy', error: error.message });
+  }
 });
 
 export default app;
