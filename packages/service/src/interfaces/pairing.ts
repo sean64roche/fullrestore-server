@@ -6,6 +6,7 @@ export type SheetPairing = {
     player1: string;
     player2: string;
     winner: string | number;
+    content: string;
     [key: `replay${number}`]: string;
 }
 

@@ -31,7 +31,7 @@ export default class PlayerRepository extends Repository {
                 ...response.data,
                 Aliases: [
                     {
-                        alias: player.ps_user
+                        alias: player.ps_user,
                     }
                 ]
             };

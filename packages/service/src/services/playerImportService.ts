@@ -1,5 +1,5 @@
 import CsvLoader from "../utils/csvParser.js";
-import {cleanPsUsername, makeEmptyFieldsNull, validateDiscordUsername} from "../utils/helpers.js";
+import { makeEmptyFieldsNull, validateDiscordUsername } from "../utils/helpers.js";
 import PlayerRepository from "../repositories/playerRepository.js";
 import {
     EntrantPlayerEntity,
@@ -24,28 +24,27 @@ export class PlayerImportService {
         const records: SheetPlayer[] = await new CsvLoader().load(csvPath, this.logger);
 
         for (const record of records) {
-            const cleanPsUser: string = cleanPsUsername(record.showdown_user).toLowerCase();
             if (!!record.discord_user) validateDiscordUsername(record.discord_user, this.logger);
             const existingPlayer: PlayerEntity | null =  await new PlayerRepository(this.config)
-                .findPlayerByAlias(cleanPsUser);
+                .findPlayerByAlias(record.showdown_user);
             if (!!existingPlayer) {
                 players.add(existingPlayer);
-                if (existingPlayer.psUser === cleanPsUser) {
-                    this.logger.info(`Alias ${cleanPsUser} found in database, skipping`);
+                if (existingPlayer.psUser === record.showdown_user) {
+                    this.logger.info(`Alias ${record.showdown_user} found in database, skipping`);
                 } else {
-                    this.logger.warn(`Alias ${cleanPsUser} already exists as ${existingPlayer.psUser}, skipping`);
+                    this.logger.warn(`Alias ${record.showdown_user} already exists as ${existingPlayer.psUser}, skipping`);
                 }
                 continue;
             }
             makeEmptyFieldsNull(record);
             const playerResponse: PlayerEntity = await new PlayerRepository(this.config)
                 .createPlayer({
-                    ps_user: cleanPsUser,
+                    ps_user: record.showdown_user,
                     discord_user: record.discord_user?.toLowerCase(),
                     discord_id: record.discord_id,
             });
             players.add(playerResponse);
-            this.logger.info(`Player added as '${cleanPsUser}'`);
+            this.logger.info(`Player added as '${record.showdown_user}'`);
         }
         return players;
     }

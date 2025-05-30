@@ -4,6 +4,8 @@ export type SheetTournament = {
     name: string;
     season: number;
     format: string;
+    best_of: number;
+    current_round: number;
     prize_pool: number;
     individual_winner: string;
     team_tour: boolean;
