@@ -4,8 +4,9 @@ import Replay from '../models/Replay';
 
 interface ReplayAttributes {
     pairing_id: string;
-    url: string;
+    url?: string;
     match_number: number;
+    json?: object;
 }
 
 interface GetReplayParams {
@@ -14,14 +15,32 @@ interface GetReplayParams {
     match_number?: number;
 }
 
+type ReplayData = {
+    id: string;
+    format: string;
+    formatid: string;
+    [key: `${number}`]: string;
+    players: {
+        [key: `${number}`]: string;
+    };
+    log: string;
+    password: string | null;
+}
+
 class ReplayService {
     public async createReplay(attrs: ReplayAttributes) {
         try {
-            if (attrs.url.endsWith('?p2')) {
+            if (!!attrs.url && attrs.url.endsWith('?p2')) {
                 attrs.url = attrs.url.substring(0, attrs.url.length - 3);
             }
+            const replayResponse = !!attrs.url && await fetch(`${attrs.url}.json`);
+            if (!replayResponse.ok) {
+                throw new Error(`HTTP error on PS replay: ${replayResponse.status}`);
+            }
+            const replayData: ReplayData = await replayResponse.json();
             return await Replay.create({
-                ...attrs
+                ...attrs,
+                json: attrs.json || replayData,
             });
         } catch (error: any) {
             throw error;

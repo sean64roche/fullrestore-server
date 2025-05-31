@@ -5,6 +5,7 @@ class Replay extends Model {
     declare url: string;
     declare pairing_id: string;
     declare match_number: number;
+    declare json: string;
 }
 
 Replay.init({
@@ -34,6 +35,13 @@ Replay.init({
         allowNull: false,
         validate: {
             min: 1
+        }
+    },
+    json: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+        validate: {
+            notEmpty: true
         }
     }
 }, {

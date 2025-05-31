@@ -551,6 +551,134 @@ test.describe('POST /api/replays', async () => {
     test('new replay succeeds', { timeout: 10000 }, async () => {
         const replayUrl = 'https://replay.pokemonshowdown.com/gen3ou-733899573?p2';
         const replayUrlTransformed = 'https://replay.pokemonshowdown.com/gen3ou-733899573';
+        const jsonData = {
+            id: 'gen3ou-733899573',
+            formatid: 'gen3ou',
+            players: {
+                0: "CakeGamerOne",
+                1: "Bhol",
+            },
+            log: "|j|☆CakeGamerOne\n" +
+                "|j|☆Bhol\n" +
+                "|player|p1|CakeGamerOne|265\n" +
+                "|player|p2|Bhol|159\n" +
+                "|teamsize|p1|6\n" +
+                "|teamsize|p2|6\n" +
+                "|gametype|singles\n" +
+                "|gen|3\n" +
+                "|tier|[Gen 3] OU\n" +
+                "|rated|\n" +
+                "|rule|Sleep Clause Mod: Limit one foe put to sleep\n" +
+                "|rule|Switch Priority Clause Mod: Faster Pokémon switch first\n" +
+                "|rule|Species Clause: Limit one of each Pokémon\n" +
+                "|rule|OHKO Clause: OHKO moves are banned\n" +
+                "|rule|Moody Clause: Moody is banned\n" +
+                "|rule|Evasion Moves Clause: Evasion moves are banned\n" +
+                "|rule|Endless Battle Clause: Forcing endless battles is banned\n" +
+                "|rule|HP Percentage Mod: HP is shown in percentages\n" +
+                "|\n" +
+                "|start\n" +
+                "|switch|p1a: Metagross|Metagross|100/100\n" +
+                "|switch|p2a: Zapdos|Zapdos|100/100\n" +
+                "|turn|1\n" +
+                "|\n" +
+                "|move|p2a: Zapdos|Agility|p2a: Zapdos\n" +
+                "|-boost|p2a: Zapdos|spe|2\n" +
+                "|move|p1a: Metagross|Rock Slide|p2a: Zapdos\n" +
+                "|-supereffective|p2a: Zapdos\n" +
+                "|-damage|p2a: Zapdos|62/100\n" +
+                "|\n" +
+                "|-heal|p2a: Zapdos|69/100|[from] item: Leftovers\n" +
+                "|upkeep\n" +
+                "|turn|2\n" +
+                "|\n" +
+                "|move|p2a: Zapdos|Baton Pass|p2a: Zapdos\n" +
+                "|\n" +
+                "|switch|p2a: Marowak|Marowak, F|100/100\n" +
+                "|move|p1a: Metagross|Rock Slide|p2a: Marowak\n" +
+                "|-resisted|p2a: Marowak\n" +
+                "|-damage|p2a: Marowak|88/100\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|3\n" +
+                "|\n" +
+                "|switch|p1a: Milotic|Milotic, M|100/100\n" +
+                "|move|p2a: Marowak|Belly Drum|p2a: Marowak\n" +
+                "|-damage|p2a: Marowak|38/100\n" +
+                "|-setboost|p2a: Marowak|atk|6|[from] move: Belly Drum\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|4\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Earthquake|p1a: Milotic\n" +
+                "|-damage|p1a: Milotic|0 fnt\n" +
+                "|faint|p1a: Milotic\n" +
+                "|\n" +
+                "|switch|p1a: Skarmory|Skarmory, F|100/100\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|5\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Rock Slide|p1a: Skarmory\n" +
+                "|-damage|p1a: Skarmory|0 fnt\n" +
+                "|faint|p1a: Skarmory\n" +
+                "|\n" +
+                "|switch|p1a: Gengar|Gengar, F|100/100\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|6\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Rock Slide|p1a: Gengar|[miss]\n" +
+                "|-miss|p2a: Marowak|p1a: Gengar\n" +
+                "|move|p1a: Gengar|Shadow Ball|p2a: Marowak\n" +
+                "|-damage|p2a: Marowak|13/100\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|7\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Rock Slide|p1a: Gengar\n" +
+                "|-damage|p1a: Gengar|0 fnt\n" +
+                "|faint|p1a: Gengar\n" +
+                "|\n" +
+                "|switch|p1a: Metagross|Metagross|100/100\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|8\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Earthquake|p1a: Metagross\n" +
+                "|-supereffective|p1a: Metagross\n" +
+                "|-damage|p1a: Metagross|0 fnt\n" +
+                "|faint|p1a: Metagross\n" +
+                "|\n" +
+                "|switch|p1a: Jolteon|Jolteon, F|100/100\n" +
+                "|\n" +
+                "|upkeep\n" +
+                "|turn|9\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Earthquake|p1a: Jolteon\n" +
+                "|-supereffective|p1a: Jolteon\n" +
+                "|-damage|p1a: Jolteon|0 fnt\n" +
+                "|faint|p1a: Jolteon\n" +
+                "|\n" +
+                "|switch|p1a: Tyranitar|Tyranitar, F|100/100\n" +
+                "|-weather|Sandstorm|[from] ability: Sand Stream|[of] p1a: Tyranitar\n" +
+                "|\n" +
+                "|-weather|Sandstorm|[upkeep]\n" +
+                "|upkeep\n" +
+                "|turn|10\n" +
+                "|\n" +
+                "|move|p2a: Marowak|Earthquake|p1a: Tyranitar\n" +
+                "|-supereffective|p1a: Tyranitar\n" +
+                "|-damage|p1a: Tyranitar|0 fnt\n" +
+                "|faint|p1a: Tyranitar\n" +
+                "|\n" +
+                "|win|Bhol\n" +
+                "|raw|CakeGamerOne's rating: 1000 &rarr; <strong>1000</strong><br />(+0 for losing)\n" +
+                "|raw|Bhol's rating: 1269 &rarr; <strong>1278</strong><br />(+9 for winning)\n" +
+                "|l|☆CakeGamerOne\n" +
+                "|l|☆Bhol\n" +
+                "|j|☆Bhol\n",
+        };
         const postBody = {
             pairing_id: testPairingId,
             url: replayUrl,
@@ -560,10 +688,17 @@ test.describe('POST /api/replays', async () => {
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
+        console.log(`Replay Status: ${response.status}`);
+        console.log(`Replay Body:`, JSON.stringify(response.body, null, 2));
         assert.equal(response.status, 201);
         assert.equal(response.body.url, replayUrlTransformed);
         assert.equal(response.body.pairing_id, testPairingId);
         assert.equal(response.body.match_number, 1);
+        assert.equal(response.body.json.id, jsonData.id);
+        assert.equal(response.body.json.formatid, jsonData.formatid);
+        assert.equal(response.body.json.players[0], jsonData.players[0]);
+        assert.equal(response.body.json.players[1], jsonData.players[1]);
+        assert.equal(response.body.json.log, jsonData.log);
     });
 
     test('duplicate replay fails', { timeout: 10000 }, async () => {

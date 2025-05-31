@@ -5,8 +5,11 @@ import replayService from '../services/replayService';
 
 export async function createReplay(req: Request, res: Response) {
     try {
-        const { pairing_id, url, match_number } = req.body;
-        const replay = await replayService.createReplay({ pairing_id, url, match_number });
+        const { pairing_id, url, match_number, json } = req.body;
+        if (!url && !json) {
+            return res.status(400).json({ error: 'request missing either url or json' });
+        }
+        const replay = await replayService.createReplay({ pairing_id, url, match_number, json });
         return res.status(201).json(replay);
     } catch (error: any) {
         if (error.name === 'SequelizeUniqueConstraintError') {
