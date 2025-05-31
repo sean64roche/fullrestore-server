@@ -6,7 +6,7 @@ import * as assert from "node:assert";
 import { EntrantPlayerResponse, transformEntrantPlayerResponse } from "../../../src";
 
 const validPlayerId = '20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4';
-const validTournamentId = '17741f63-e1eb-4e30-9e16-aa11f658fd76';
+const validTournamentSlug = 'pokemon-tournament';
 const startDate = "2025-01-01";
 const finishDate = "2025-02-01";
 const nonExistentPlayerId = '00000000-0000-0000-0000-000000000000';
@@ -18,11 +18,9 @@ const mockResponse: EntrantPlayerResponse[] = [
     {
         id: '827efa43-ac65-4780-9d94-e9a61e270d2d',
         player_id: '20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4',
-        tournament_id: '17741f63-e1eb-4e30-9e16-aa11f658fd76',
+        tournament_slug: 'pokemon-tournament',
         entrant_team_id: null,
         active: true,
-        wins: 0,
-        losses: 0,
         max_round: 0,
         seed: null,
         createdAt: '2025-01-29T15:13:09.472Z',
@@ -34,7 +32,7 @@ const mockResponse: EntrantPlayerResponse[] = [
             Aliases: []
         },
         Tournament: {
-            id: '17741f63-e1eb-4e30-9e16-aa11f658fd76',
+            slug: 'pokemon-tournament',
             name: 'Pokemon Tournament',
             season: '1',
             format: 'gen3ou',
@@ -47,7 +45,6 @@ const mockResponse: EntrantPlayerResponse[] = [
             team_winner: null,
             createdAt: '2025-01-29T15:13:09.203Z',
             updatedAt: '2025-01-29T15:13:09.203Z',
-            slug: 'pokemon-tournament',
         },
     }
 ]
@@ -56,13 +53,13 @@ const pr = new PlayerRepository(DEFAULT_CONFIG);
 
 test('successfully fetches entrant player data with valid UUID', async (t) => {
     t.mock.method(axios, 'get', async (url: string) => {
-        assert.match(url, new RegExp(`/api/entrantPlayers\\?player_id=${validPlayerId}&tournament_id=${validTournamentId}`));
+        assert.match(url, new RegExp(`/api/entrantPlayers\\?player_id=${validPlayerId}&tournament_id=${validTournamentSlug}`));
         return {
             status: 200,
             data: mockResponse
         };
     });
-    const result = await pr.findEntrantById(validPlayerId, validTournamentId);
+    const result = await pr.findEntrantById(validPlayerId, validTournamentSlug);
     assert.deepStrictEqual(result, transformEntrantPlayerResponse(mockResponse[0]));
 });
 
@@ -85,7 +82,7 @@ test('throws error when API request fails', async (t) => {
         throw error;
     });
     await assert.rejects(
-        () => pr.findEntrantById(validPlayerId, validTournamentId),
+        () => pr.findEntrantById(validPlayerId, validTournamentSlug),
         {
             message: 'Failed to fetch entrant player data'
         }
@@ -114,7 +111,7 @@ test('handles network errors gracefully', async (t) => {
     });
 
     await assert.rejects(
-        () => pr.findEntrantById(validPlayerId, validTournamentId),
+        () => pr.findEntrantById(validPlayerId, validTournamentSlug),
         {
             message: 'Network Error'
         }
