@@ -21,10 +21,10 @@ export default class TournamentRepository extends Repository {
     async create(tournament: TournamentDto): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.tournamentsUrl, tournament);
-            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data;
-            this.logger.info(`Tournament created with UUID ${id}`);
+            const { name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data;
+            this.logger.info(`Tournament created with slug ${slug}`);
             return {
-                id: id,
+                slug: slug,
                 name: name,
                 season: season,
                 format: format,
@@ -34,14 +34,13 @@ export default class TournamentRepository extends Repository {
                 prizePool: prize_pool,
                 individualWinner: individual_winner,
                 info: info,
-                slug: slug,
             };
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.status) {
                     case 409: {
                         const existingTournament: TournamentEntity = await this.getExistingTournament(tournament.name, tournament.season);
-                        this.logger.warn(`'${tournament.name}' already exists: tournament_id is ${existingTournament.id}`);
+                        this.logger.warn(`'${tournament.name}' already exists: slug is ${existingTournament.slug}`);
                         return existingTournament;
                     }
                     case 404:
@@ -59,10 +58,10 @@ export default class TournamentRepository extends Repository {
     async getExistingTournament(existingName: string, existingSeason: number): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?name=${existingName}&season=${existingSeason}`);
-            const { id, name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data[0];
-            this.logger.info(`Tournament found with UUID ${id}`);
+            const { name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data[0];
+            this.logger.info(`Tournament found with slug ${slug}`);
             return {
-                id: id,
+                slug: slug,
                 name: name,
                 season: season,
                 format: format,
@@ -72,7 +71,6 @@ export default class TournamentRepository extends Repository {
                 prizePool: prize_pool,
                 individualWinner: individual_winner,
                 info: info,
-                slug: slug,
             };
         } catch (error) {
             this.logger.error(

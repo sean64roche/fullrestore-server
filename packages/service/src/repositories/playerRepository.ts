@@ -62,7 +62,7 @@ export default class PlayerRepository extends Repository {
         try {
             const response: AxiosResponse = await axios.post(this.entrantPlayersUrl, {
                 player_id: player.id,
-                tournament_id: tournament.id
+                tournament_slug: tournament.slug
             });
             const entrantData: EntrantPlayerResponse = {
                 ...response.data,
@@ -79,7 +79,7 @@ export default class PlayerRepository extends Repository {
                 default:
                     this.logger.error(
                         `FATAL on creating entrant player: ${JSON.stringify(error.response?.data) || error.message} ` +
-                        `| Request: ${this.entrantPlayersUrl} | Body: { playerId: ${player.id} tournament_id: ${tournament.id} }`
+                        `| Request: ${this.entrantPlayersUrl} | Body: { playerId: ${player.id} tournamentSlug: ${tournament.slug} }`
                     );
                     throw new Error(error.response?.data || error.message);
             }
@@ -116,7 +116,7 @@ export default class PlayerRepository extends Repository {
 
     async findEntrant(player: PlayerEntity, tournament: TournamentEntity): Promise<EntrantPlayerEntity> {
         try {
-            const entrant: EntrantPlayerEntity = await this.findEntrantById(player.id, tournament.id);
+            const entrant: EntrantPlayerEntity = await this.findEntrantById(player.id, tournament.slug);
             if (!entrant) {
                 this.logger.error(
                     `ERROR on findEntrant: Entrant not found for '${player.psUser}' with UUID ${player.id} on tournament ${tournament.slug}`
@@ -130,12 +130,12 @@ export default class PlayerRepository extends Repository {
         }
     }
 
-    async findEntrantById(playerId: string, tournamentId: string): Promise<EntrantPlayerEntity> {
+    async findEntrantById(playerId: string, tournamentSlug: string): Promise<EntrantPlayerEntity> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentId}`);
+            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentSlug}`);
             const data: EntrantPlayerResponse = response.data[0];
             if (!data) {
-                const error = new Error(`FATAL on findEntrantById: entrantPlayer not found with UUID ${playerId} on tournament UUID ${tournamentId}`);
+                const error = new Error(`FATAL on findEntrantById: entrantPlayer not found with UUID ${playerId} on tournament UUID ${tournamentSlug}`);
                 this.logger.error(error.message);
                 throw error;
             }

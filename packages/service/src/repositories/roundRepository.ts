@@ -21,7 +21,7 @@ export default class RoundRepository extends Repository {
     async create(reqTournament: TournamentEntity, reqRoundNumber: number, reqName?: string, reqDeadline?: string): Promise<RoundEntity> {
         try {
             const roundDto: RoundDto = {
-                tournament_id: reqTournament.id,
+                tournament_slug: reqTournament.slug,
                 round: reqRoundNumber,
                 name: reqName,
                 deadline: reqDeadline || this.fillerTimestamp,
@@ -56,7 +56,7 @@ export default class RoundRepository extends Repository {
 
     async get(tournament: TournamentEntity, roundNumber: number): Promise<RoundEntity> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_id=${tournament.id}&round=${roundNumber}`);
+            const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_slug=${tournament.slug}&round=${roundNumber}`);
             const { id, tournament_id, round, name, deadline } = response.data[0];
             return {
                 id: id,
@@ -68,7 +68,7 @@ export default class RoundRepository extends Repository {
         } catch (error) {
             this.logger.error(
                 `FATAL on Round get: ${JSON.stringify(error.response?.data) || error.message} ` +
-                `| Request: ${this.roundsUrl}?tournament_id=${tournament.id}&round=${roundNumber}`
+                `| Request: ${this.roundsUrl}?tournament_slug=${tournament.slug}&round=${roundNumber}`
             );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }

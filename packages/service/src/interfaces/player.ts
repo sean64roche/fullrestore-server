@@ -86,11 +86,9 @@ export type EntrantPlayerDto = {
 export type EntrantPlayerResponse = {
     id: string;
     player_id: string;
-    tournament_id: string;
+    tournament_slug: string;
     entrant_team_id: string | null;
     active: boolean;
-    wins: number;
-    losses: number;
     max_round: number;
     seed: number | null;
     createdAt?: string;

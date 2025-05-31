@@ -30,7 +30,7 @@ export type TournamentDto = {
 }
 
 export type TournamentEntity = {
-    id: string;
+    slug: string;
     name: string;
     season: number | string;
     format: string;
@@ -40,11 +40,10 @@ export type TournamentEntity = {
     prizePool: number | null;
     individualWinner?: PlayerEntity;
     info?: string;
-    slug: string;
 }
 
 export type TournamentResponse = {
-    id: string;
+    slug: string;
     name: string;
     season: number | string;
     format: string;
@@ -59,13 +58,12 @@ export type TournamentResponse = {
     info?: string;
     createdAt?: string;
     updatedAt?: string;
-    slug: string;
 }
 
 export function transformTournamentResponse(data: TournamentResponse): TournamentEntity {
     const winnerPlayer: PlayerEntity | undefined = !!data.Player ? transformPlayerResponse(data.Player) : undefined;
     return {
-        id: data.id,
+        slug: data.slug,
         name: data.name,
         season: data.season,
         format: data.format,
@@ -77,7 +75,6 @@ export function transformTournamentResponse(data: TournamentResponse): Tournamen
         info: data.info,
         // teamTour: data.team_tour,
         // teamWinner: data.team_winner,
-        slug: data.slug,
     }
 }
 
@@ -86,7 +83,7 @@ export type SheetRound = {
 }
 
 export type RoundDto = {
-    tournament_id: string;
+    tournament_slug: string;
     round: number;
     name?: string;
     deadline: string;
@@ -102,7 +99,7 @@ export interface RoundEntity {
 
 export type RoundResponse = {
     id: string;
-    tournament_id: string;
+    tournament_slug: string;
     round: number;
     name?: string;
     deadline?: string;
