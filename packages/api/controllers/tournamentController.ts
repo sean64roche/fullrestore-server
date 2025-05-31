@@ -35,8 +35,8 @@ export async function getTournaments(req: Request, res: Response) {
 
 export async function getTournamentById(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const tournament = await tournamentService.getTournamentById(id);
+        const { slug } = req.params;
+        const tournament = await tournamentService.getTournamentById(slug);
         if (!tournament) {
             return res.status(404).json({ error: 'Tournament not found' });
         }
@@ -48,8 +48,8 @@ export async function getTournamentById(req: Request, res: Response) {
 
 export async function getEntrantsByTournamentId(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const entrants = await tournamentService.getEntrantsByTournamentId(id);
+        const { slug } = req.params;
+        const entrants = await tournamentService.getEntrantsByTournamentId(slug);
         return res.json(entrants);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
@@ -68,9 +68,9 @@ export async function getRoundsByTournamentSlug(req: Request, res: Response) {
 
 export async function updateTournament(req: Request, res: Response) {
     try {
-        const { id } = req.params;
+        const { slug } = req.params;
         const { current_round, prize_pool, individual_winner, team_winner } = req.body;
-        const updatedTournament = await tournamentService.updateTournament(id, {
+        const updatedTournament = await tournamentService.updateTournament(slug, {
             current_round,
             prize_pool,
             individual_winner,
@@ -87,8 +87,8 @@ export async function updateTournament(req: Request, res: Response) {
 
 export async function deleteTournament(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const deleted = await tournamentService.deleteTournament(id);
+        const { slug } = req.params;
+        const deleted = await tournamentService.deleteTournament(slug);
         if (deleted) {
             return res.sendStatus(204);
         }

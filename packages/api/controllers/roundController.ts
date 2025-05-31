@@ -17,9 +17,9 @@ export async function createRound(req: Request, res: Response) {
 
 export async function getRounds(req: Request, res: Response) {
     try {
-        const { tournament_id, round, name } = req.query;
+        const { tournament_slug, round, name } = req.query;
         const rounds = await roundService.getRounds({
-            tournament_id: tournament_id as string,
+            tournament_slug: tournament_slug as string,
             round: round as unknown as number,
             name: name as string,
         });

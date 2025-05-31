@@ -17,10 +17,10 @@ export async function createEntrantPlayer(req: Request, res: Response) {
 
 export async function getEntrantPlayer(req: Request, res: Response) {
     try {
-        const { player_id, tournament_id, active } = req.query;
+        const { player_id, tournament_slug, active } = req.query;
         const entrantPlayer = await entrantPlayerService.getEntrantPlayer({
             player_id: player_id as string,
-            tournament_id: tournament_id as string,
+            tournament_slug: tournament_slug as string,
             active: active as unknown as boolean,
         });
         return res.json(entrantPlayer);

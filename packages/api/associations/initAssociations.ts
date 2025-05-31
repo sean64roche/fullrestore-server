@@ -24,10 +24,10 @@ export function initAssociations() {
     Pairing.belongsTo(EntrantPlayer, { as: 'Winner', foreignKey: 'winner_id' });
     RoundBye.belongsTo(EntrantPlayer, { foreignKey: 'entrant_player_id' });
 
-    Tournament.hasMany(EntrantPlayer, { foreignKey: 'tournament_id', onDelete: 'CASCADE' });
-    Tournament.hasMany(Round, { foreignKey: 'tournament_id', onDelete: 'CASCADE' });
-    EntrantPlayer.belongsTo(Tournament, { foreignKey: 'tournament_id' });
-    Round.belongsTo(Tournament, { foreignKey: 'tournament_id' });
+    Tournament.hasMany(EntrantPlayer, { foreignKey: 'tournament_slug', onDelete: 'CASCADE' });
+    Tournament.hasMany(Round, { foreignKey: 'tournament_slug', onDelete: 'CASCADE' });
+    EntrantPlayer.belongsTo(Tournament, { foreignKey: 'tournament_slug' });
+    Round.belongsTo(Tournament, { foreignKey: 'tournament_slug' });
 
     Format.hasMany(Tournament, { foreignKey: 'format' });
 

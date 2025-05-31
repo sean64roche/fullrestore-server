@@ -123,8 +123,8 @@ test.describe('GET /api/entrantPlayers', () => {
         app.use(express.json())
             .use('/api/entrantPlayers', entrantPlayerRoutes);
     });
-    test('GET /api/entrantPlayers?player_id&tournament_id returns entrant player data', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76');
+    test('GET /api/entrantPlayers?player_id&tournament_slug returns entrant player data', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/entrantPlayers?player_id=38699ed8-e20a-4367-9c43-a5539a85238f&tournament_slug=old-money-open');
         const result = response.body[0];
         assert.equal(response.status, 200);
         assert.equal(result.Player.ps_user, 'player13');
@@ -135,8 +135,8 @@ test.describe('GET /api/entrantPlayers', () => {
             }) => alias.alias === 'udm31')
         );
     });
-    test('GET /api/entrantPlayers?player_id&tournament_id on non-existing entrant player has size zero response', { timeout: 10000 }, async () => {
-        const req = '/api/entrantPlayers?player_id=00000000-0000-0000-0000-000000000000&tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76';
+    test('GET /api/entrantPlayers?player_id&tournament_slug on non-existing entrant player has size zero response', { timeout: 10000 }, async () => {
+        const req = '/api/entrantPlayers?player_id=00000000-0000-0000-0000-000000000000&tournament_slug=old-money-open';
         const response = await request(app).get(req);
         assert.equal(response.body.length, 0);
     });
@@ -149,15 +149,15 @@ test.describe('GET /api/rounds', () => {
         app.use(express.json())
             .use('/api/rounds', roundRoutes);
     });
-    test('GET /api/rounds?tournament_id&round returns round data', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/rounds?tournament_id=17741f63-e1eb-4e30-9e16-aa11f658fd76&round=3');
+    test('GET /api/rounds?tournament_slug&round returns round data', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/rounds?tournament_slug=old-money-open&round=3');
         const result = response.body[0];
         assert.equal(response.status, 200);
         assert.equal(result.round, 3);
         assert.equal(result.Tournament.name, 'Old Money Open');
     });
-    test('GET /api/rounds?tournament_id&round on non-existing round has size zero response', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/rounds?tournament_id=00000000-0000-0000-0000-000000000000&round=1');
+    test('GET /api/rounds?tournament_slug&round on non-existing round has size zero response', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/rounds?tournament_slug=00000000-0000-0000-0000-000000000000&round=1');
         assert.equal(response.body.length, 0);
     });
 });

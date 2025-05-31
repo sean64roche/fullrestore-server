@@ -4,7 +4,7 @@ import sequelize from '../config/database';
 class EntrantTeam extends Model {
     declare id: string;
     declare team_id: string;
-    declare tournament_id: string;
+    declare tournament_slug: string;
     declare active: boolean;
     declare wins: number;
     declare losses: number;
@@ -25,11 +25,11 @@ EntrantTeam.init({
         },
         allowNull: false
     },
-    tournament_id: {
-        type: DataTypes.UUID,
+    tournament_slug: {
+        type: DataTypes.TEXT,
         references: {
             model: 'tournament',
-            key: 'id'
+            key: 'slug'
         },
         allowNull: false
     },
@@ -56,7 +56,7 @@ EntrantTeam.init({
     indexes: [
         {
             unique: true,
-            fields: ['team_id', 'tournament_id']
+            fields: ['team_id', 'tournament_slug']
         }
     ]
 });

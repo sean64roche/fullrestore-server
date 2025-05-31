@@ -5,14 +5,14 @@ import RoundBye from '../models/RoundBye';
 import Tournament from "../models/Tournament";
 
 export interface RoundAttributes {
-    tournament_id: string;
+    tournament_slug: string;
     round: string;
     name?: string;
     deadline: string;
 }
 
 interface GetRoundParams {
-    tournament_id: string;
+    tournament_slug: string;
     round: number;
     name?: string;
 }
@@ -30,9 +30,9 @@ class RoundService {
     }
 
     async getRounds(params: GetRoundParams) {
-        const { tournament_id, round, name } = params;
+        const { tournament_slug, round, name } = params;
         const whereClause: any = {};
-        if (tournament_id) whereClause.tournament_id = tournament_id;
+        if (tournament_slug) whereClause.tournament_slug = tournament_slug;
         if (round) whereClause.round = round;
         if (name) whereClause.name = name;
         return await Round.findAll({

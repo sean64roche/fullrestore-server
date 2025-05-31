@@ -17,7 +17,7 @@ import {toSlug} from "../services/tournamentService";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
-let testTournamentId: string;
+let testTournamentSlug: string;
 let testRoundId: string;
 let testEntrantId1: string;
 let testPairingId: string;
@@ -176,6 +176,7 @@ test.describe('POST /api/tournaments', () => {
         const tourName = 'Test Tournament';
         const tourSeason = 1;
         const tourFormat = 'gen3ou';
+        const tourWinnerFirstTo = 3;
         const tourStartDate = Date.now();
         const tourIndividualWinner = 'a8177b3c-e07a-4e03-8813-720e5aaff072';
         const tourTeamTour = false;
@@ -185,6 +186,7 @@ test.describe('POST /api/tournaments', () => {
             name: tourName,
             season: tourSeason,
             format: tourFormat,
+            winner_first_to: tourWinnerFirstTo,
             start_date: Date.now(),
             individual_winner: tourIndividualWinner,
             team_tour: tourTeamTour,
@@ -196,10 +198,10 @@ test.describe('POST /api/tournaments', () => {
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
         const {
-            id,
             name,
             season,
             format,
+            winner_first_to,
             start_date,
             finish_date,
             current_round,
@@ -211,10 +213,10 @@ test.describe('POST /api/tournaments', () => {
             slug,
             cat } = response.body;
         assert.equal(response.status, 201);
-        assert.ok(id);
         assert.equal(name, tourName);
         assert.equal(season, tourSeason);
         assert.equal(format, tourFormat);
+        assert.equal(winner_first_to, tourWinnerFirstTo);
         assert.equal(formatDate(start_date, "yyyy-MM-dd"), formatDate(tourStartDate, "yyyy-MM-dd"));
         assert.equal(individual_winner, tourIndividualWinner);
         assert.equal(team_tour, tourTeamTour);
@@ -225,7 +227,7 @@ test.describe('POST /api/tournaments', () => {
         assert.ok(!prize_pool);
         assert.ok(!team_winner);
         assert.equal(toSlug(name, season), slug);
-        testTournamentId = id;
+        testTournamentSlug = slug;
     });
 
     test('duplicate tournament name and season fails', { timeout: 10000 }, async () => {
@@ -265,7 +267,7 @@ test.describe('POST /api/rounds', () => {
         const newRound = 1;
         const newDeadline = '2025-01-06T04:59:00.688Z';
         const postBody = {
-            tournament_id: testTournamentId,
+            tournament_slug: testTournamentSlug,
             round: newRound,
             deadline: newDeadline,
         };
@@ -275,24 +277,24 @@ test.describe('POST /api/rounds', () => {
             .set('Content-Type', 'application/json');
         const {
             id,
-            tournament_id,
+            tournament_slug,
             round,
             deadline
         } = response.body;
         assert.equal(response.status, 201);
         assert.ok(id);
-        assert.equal(testTournamentId, tournament_id);
+        assert.equal(testTournamentSlug, tournament_slug);
         assert.equal(newRound, round);
         assert.equal(newDeadline, deadline);
         testRoundId = id;
     });
 
     test('duplicate round fails', { timeout: 10000 }, async () => {
-        const tournamentId = '5c929e7f-129a-497b-9e43-fec20eea5a2f';
+        const tournamentSlug = 'old-money-open';
         const newRound = 1;
         const newDeadline = '2025-01-06T04:59:00.688Z';
         const postBody = {
-            tournament_id: tournamentId,
+            tournament_slug: tournamentSlug,
             round: newRound,
             deadline: newDeadline,
         };
@@ -316,17 +318,18 @@ test.describe('POST /api/entrantPlayers', () => {
         const newSeed = 64;
         const postBody = {
             player_id: testPlayer1Id,
-            tournament_id: testTournamentId,
+            tournament_slug: testTournamentSlug,
             seed: newSeed,
         };
         const response = await request(app).post('/api/entrantPlayers')
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
+        console.log(`POST Entrant Player response: `, response.body);
         assert.equal(response.status, 201);
         assert.ok(response.body.id);
         assert.equal(testPlayer1Id, response.body.player_id);
-        assert.equal(testTournamentId, response.body.tournament_id);
+        assert.equal(testTournamentSlug, response.body.tournament_slug);
         assert.equal(newSeed, response.body.seed);
         testEntrantId1 = response.body.id;
     });
@@ -335,7 +338,7 @@ test.describe('POST /api/entrantPlayers', () => {
         const newSeed = 3;
         const postBody = {
             player_id: '7500feb1-e261-42bb-87fb-55509612e14c',
-            tournament_id: '17741f63-e1eb-4e30-9e16-aa11f658fd76',
+            tournament_slug: 'old-money-open',
             seed: newSeed,
         };
         const response = await request(app).post('/api/entrantPlayers')
@@ -394,7 +397,7 @@ test.describe('POST /api/pairings', async () => {
         const response = await request(app).post('/api/entrantPlayers')
             .send({
                 player_id: '2c53e1c3-a865-4910-aeca-0f08c4c018d4', // zacpz
-                tournament_id: testTournamentId,
+                tournament_slug: testTournamentSlug,
                 seed: 1,
             })
             .set('Accept', 'application/json')
@@ -402,7 +405,7 @@ test.describe('POST /api/pairings', async () => {
         const otherResponse = await request(app).post('/api/entrantPlayers')
             .send({
                 player_id: '20eb1f5f-a858-4f60-b9c9-b7467dd9b3a4', // buzzed
-                tournament_id: testTournamentId,
+                tournament_slug: testTournamentSlug,
                 seed: 2,
             })
             .set('Accept', 'application/json')
@@ -410,7 +413,7 @@ test.describe('POST /api/pairings', async () => {
         const anotherResponse = await request(app).post('/api/entrantPlayers')
             .send({
                 player_id: '034abc58-0f14-4674-8827-d856dd5dde89', // player28
-                tournament_id: testTournamentId,
+                tournament_slug: testTournamentSlug,
                 seed: 4,
             })
             .set('Accept', 'application/json')

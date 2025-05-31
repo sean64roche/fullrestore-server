@@ -3,7 +3,7 @@ import sequelize from '../config/database';
 
 class Round extends Model {
     declare id: string;
-    declare tournament_id: string;
+    declare tournament_slug: string;
     declare round: number;
     declare name?: string;
     declare deadline: string;
@@ -15,12 +15,12 @@ Round.init({
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
-    tournament_id: {
-        type: DataTypes.UUID,
+    tournament_slug: {
+        type: DataTypes.TEXT,
         allowNull: false,
         references: {
             model: 'tournament',
-            key: 'id'
+            key: 'slug'
         }
     },
     round: {
@@ -41,7 +41,7 @@ Round.init({
     indexes: [
         {
             unique: true,
-            fields: ['tournament_id', 'round']
+            fields: ['tournament_slug', 'round']
         }
     ]
 });

@@ -8,7 +8,7 @@ import PlayerAlias from "../models/PlayerAlias";
 
 interface EntrantPlayerAttributes {
     player_id: string;
-    tournament_id: string;
+    tournament_slug: string;
     entrant_team_id?: string;
     active?: boolean;
     wins?: number;
@@ -19,7 +19,7 @@ interface EntrantPlayerAttributes {
 
 interface GetEntrantPlayerParams {
     player_id?: string;
-    tournament_id?: string;
+    tournament_slug?: string;
     active?: boolean;
 }
 
@@ -36,13 +36,13 @@ class EntrantPlayerService {
     }
 
     async getEntrantPlayer(params: GetEntrantPlayerParams) {
-        const { player_id, tournament_id, active } = params;
+        const { player_id, tournament_slug, active } = params;
         const whereClause: any = {};
         if (player_id) {
             whereClause.player_id = player_id;
         }
-        if (tournament_id) {
-            whereClause.tournament_id = tournament_id;
+        if (tournament_slug) {
+            whereClause.tournament_slug = tournament_slug;
         }
         if (active) {
             whereClause.active = active;

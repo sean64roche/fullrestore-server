@@ -7,6 +7,7 @@ export interface TournamentAttributes {
     name: string;
     season: string | number;
     format: string;
+    winner_first_to: string;
     current_round?: number;
     prize_pool?: number;
     individual_winner?: string;
@@ -32,7 +33,6 @@ class TournamentService {
         try {
             const slug = toSlug(attrs.name, attrs.season);
             return await Tournament.create({
-                id: uuidv4(),
                 slug: slug,
                 ...attrs,
             });
@@ -61,13 +61,13 @@ class TournamentService {
     }
 
 
-    public async getTournamentById(id: string) {
-        return await Tournament.findByPk(id);
+    public async getTournamentById(slug: string) {
+        return await Tournament.findByPk(slug);
     }
 
-    public async getEntrantsByTournamentId(id: string) {
+    public async getEntrantsByTournamentId(slug: string) {
         return await EntrantPlayer.findAll({
-            where: {tournament_id: id},
+            where: {tournament_slug: slug},
             order: [['seed', 'ASC']],
         });
     }
@@ -77,28 +77,28 @@ class TournamentService {
             where: {slug: slug},
         });
         return await Round.findAll({
-            where: {tournament_id: tournament.id},
+            where: {tournament_slug: tournament.slug},
             order: [['round', 'ASC']],
             include: Tournament,
         });
     }
 
     public async updateTournament(
-        id: string,
+        slug: string,
         fieldsToUpdate: Partial<TournamentAttributes>
     ) {
         const [updated] = await Tournament.update(fieldsToUpdate, {
-            where: { id },
+            where: { slug: slug },
         });
         if (updated) {
-            return await Tournament.findByPk(id);
+            return await Tournament.findByPk(slug);
         }
         return null;
     }
 
-    public async deleteTournament(id: string) {
+    public async deleteTournament(slug: string) {
         return await Tournament.destroy({
-            where: {id},
+            where: {slug: slug},
         });
     }
 }

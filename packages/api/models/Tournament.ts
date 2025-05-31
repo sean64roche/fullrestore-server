@@ -2,10 +2,11 @@ import { DataTypes, Model, ValidationError } from 'sequelize';
 import sequelize from '../config/database';
 
 class Tournament extends Model {
-    declare id: string;
+    declare slug: string;
     declare name: string;
     declare season: string;
     declare format: string;
+    declare winner_first_to?: number;
     declare current_round?: number;
     declare prize_pool?: number;
     declare individual_winner?: string;
@@ -14,7 +15,6 @@ class Tournament extends Model {
     declare info?: string;
     declare start_date: string;
     declare finish_date?: string;
-    declare slug: string;
 }
 
 function winnersAreOverloaded() {
@@ -26,9 +26,8 @@ function correctWinnerType() {
 }
 
 Tournament.init({
-    id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+    slug: {
+        type: DataTypes.STRING,
         primaryKey: true
     },
     name: {
@@ -51,6 +50,10 @@ Tournament.init({
         validate: {
             notEmpty: true
         }
+    },
+    winner_first_to: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
     },
     current_round: {
         type: DataTypes.INTEGER,
@@ -88,10 +91,6 @@ Tournament.init({
     finish_date: {
         type: DataTypes.DATE
     },
-    slug: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    }
 }, {
     sequelize,
     modelName: 'Tournament',

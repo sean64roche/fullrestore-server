@@ -4,11 +4,9 @@ import sequelize from '../config/database';
 class EntrantPlayer extends Model {
     declare id: string;
     declare player_id: string;
-    declare tournament_id: string;
+    declare tournament_slug: string;
     declare entrant_team_id? :string;
     declare active: boolean;
-    declare wins: number;
-    declare losses: number;
     declare max_round: number;
     declare seed?: number;
 }
@@ -27,11 +25,11 @@ EntrantPlayer.init({
         },
         allowNull: false
     },
-    tournament_id: {
-        type: DataTypes.UUID,
+    tournament_slug: {
+        type: DataTypes.TEXT,
         references: {
             model: 'tournament',
-            key: 'id'
+            key: 'slug'
         },
         allowNull: false
     },
@@ -45,14 +43,6 @@ EntrantPlayer.init({
     active: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
-    },
-    wins: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
-    },
-    losses: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
     },
     max_round: {
         type: DataTypes.INTEGER,
@@ -69,7 +59,7 @@ EntrantPlayer.init({
     indexes: [
         {
             unique: true,
-            fields: ['tournament_id', 'player_id']
+            fields: ['tournament_slug', 'player_id']
         },
     ]
 });
