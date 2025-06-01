@@ -74,9 +74,9 @@ export default class RoundRepository extends Repository {
         }
     }
 
-    async getByTournamentId(tournamentId: string): Promise<RoundEntity[]> {
+    async getByTournamentSlug(tournamentSlug: string): Promise<RoundEntity[]> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_id=${tournamentId}`);
+            const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_slug=${tournamentSlug}`);
             const rounds: RoundEntity[] = [];
             response.data.forEach((round: RoundResponse) => {
                 rounds.push(transformRoundResponse(round));
@@ -85,7 +85,7 @@ export default class RoundRepository extends Repository {
         } catch (error) {
             this.logger.error(
                 `FATAL on getByTournamentId: ${JSON.stringify(error.response?.data) || error.message} ` +
-                `| Request: ${this.roundsUrl}?tournament_id=${tournamentId}`
+                `| Request: ${this.roundsUrl}?tournament_slug=${tournamentSlug}`
             );
             throw new Error(`FATAL on getByTournamentId: ${JSON.stringify(error.response?.data) || error.message}`);
         }

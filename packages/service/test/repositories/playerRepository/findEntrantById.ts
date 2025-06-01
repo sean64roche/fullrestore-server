@@ -51,9 +51,9 @@ const mockResponse: EntrantPlayerResponse[] = [
 
 const pr = new PlayerRepository(DEFAULT_CONFIG);
 
-test('successfully fetches entrant player data with valid UUID', async (t) => {
+test('successfully fetches entrant player data with valid slug', async (t) => {
     t.mock.method(axios, 'get', async (url: string) => {
-        assert.match(url, new RegExp(`/api/entrantPlayers\\?player_id=${validPlayerId}&tournament_id=${validTournamentSlug}`));
+        assert.match(url, new RegExp(`/api/entrantPlayers\\?player_id=${validPlayerId}&tournament_slug=${validTournamentSlug}`));
         return {
             status: 200,
             data: mockResponse

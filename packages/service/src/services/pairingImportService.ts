@@ -63,18 +63,19 @@ export class PairingImportService {
                     })
                 .map(key => {
                     return pairing[key] as string;
-                })
+                });
             const pairingResponse: PairingEntity = await new PairingRepository(this.config)
                 .createPairing(pairingRound, pairingPlayer1, pairingPlayer2, pairingWinner);
             for (const replay of replays) {
+                this.logger.info(`Processing replay: ${replay}`);
                 if (!!pairingResponse && !!replay) {
                     let replayResponse: ReplayEntity | undefined ;
                     if (isUrl(replay)) {
                         replayResponse = await new PairingRepository(this.config)
-                            .createReplay(pairingResponse, replays.indexOf(replay) + 1, replay);
+                            .createReplay(pairingResponse, (replays.indexOf(replay) + 1), replay);
                     } else {
                         replayResponse = await new PairingRepository(this.config)
-                            .createReplay(pairingResponse, replays.indexOf(replay) + 1, undefined, { log: replay });
+                            .createReplay(pairingResponse, (replays.indexOf(replay) + 1), undefined, { log: replay });
                     }
                     if (!!replayResponse) replaysData.add(replayResponse);
                 }

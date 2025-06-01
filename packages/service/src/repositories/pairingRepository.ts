@@ -149,7 +149,7 @@ export default class PairingRepository extends Repository {
         try {
             const response: AxiosResponse = await axios.post(this.replaysUrl, replayDto);
             const replay: ReplayResponse = response.data;
-            if (replay.url) this.logger.info(`Replay created, URL is ${replay.url}`);
+            if (!!replay.url) this.logger.info(`Replay created, URL is ${replay.url}`);
             else this.logger.info(`Replay created using a battle log`);
             return transformReplayResponse(replay);
         } catch (error) {

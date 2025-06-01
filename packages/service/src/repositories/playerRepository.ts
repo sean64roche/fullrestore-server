@@ -132,7 +132,7 @@ export default class PlayerRepository extends Repository {
 
     async findEntrantById(playerId: string, tournamentSlug: string): Promise<EntrantPlayerEntity> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_id=${tournamentSlug}`);
+            const response: AxiosResponse = await axios.get(`${this.entrantPlayersUrl}?player_id=${playerId}&tournament_slug=${tournamentSlug}`);
             const data: EntrantPlayerResponse = response.data[0];
             if (!data) {
                 const error = new Error(`FATAL on findEntrantById: entrantPlayer not found with UUID ${playerId} on tournament UUID ${tournamentSlug}`);
