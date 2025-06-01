@@ -27,8 +27,8 @@ export interface PairingEntity {
     winner?: EntrantPlayerEntity;
     scheduledAt?: Date | string;
     completedAt?: Date | string;
-    replays?: ReplayEntity[] | null;
-    content? :ContentEntity[] | null;
+    replays?: ReplayEntity[];
+    content? :ContentEntity[];
 }
 
 export type PairingResponse = {
