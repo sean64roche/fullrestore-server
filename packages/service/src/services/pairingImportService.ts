@@ -66,10 +66,16 @@ export class PairingImportService {
                 })
             const pairingResponse: PairingEntity = await new PairingRepository(this.config)
                 .createPairing(pairingRound, pairingPlayer1, pairingPlayer2, pairingWinner);
-            for (const url of replays) {
-                if (!!pairingResponse && !!url) {
-                    const replayResponse: ReplayEntity | undefined = await new PairingRepository(this.config)
-                        .createReplay(pairingResponse, url, replays.indexOf(url) + 1);
+            for (const replay of replays) {
+                if (!!pairingResponse && !!replay) {
+                    let replayResponse: ReplayEntity | undefined ;
+                    if (isUrl(replay)) {
+                        replayResponse = await new PairingRepository(this.config)
+                            .createReplay(pairingResponse, replays.indexOf(replay) + 1, replay);
+                    } else {
+                        replayResponse = await new PairingRepository(this.config)
+                            .createReplay(pairingResponse, replays.indexOf(replay) + 1, undefined, { log: replay });
+                    }
                     if (!!replayResponse) replaysData.add(replayResponse);
                 }
             }
@@ -79,3 +85,13 @@ export class PairingImportService {
     }
 }
 
+function isUrl(string: string) {
+    return () => {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+}

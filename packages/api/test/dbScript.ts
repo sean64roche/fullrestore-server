@@ -2056,4 +2056,11 @@ async function insertReplays(db: Pool) {
             '2db7133e-a0a5-473c-a279-c1cbcdbb9892'::uuid, 3, '2025-01-29 15:13:10.407+00',
             '2025-01-29 15:13:10.407+00');`);
     console.log('Replays successfully inserted.');
+
+    await db.query(`INSERT INTO public.content (url, pairing_id, "createdAt", "updatedAt")
+        VALUES ('https://www.youtube.com/embed/UGcCU6vR1OQ', '59041b89-d85d-48cf-a9ef-1227b3850cd6', 
+                '2025-01-29 15:13:09.478+00', '2025-01-29 15:13:09.478+00');
+    `);
+    console.log('Content successfully inserted.');
+
 }

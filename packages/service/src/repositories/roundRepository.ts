@@ -27,7 +27,7 @@ export default class RoundRepository extends Repository {
                 deadline: reqDeadline || this.fillerTimestamp,
             }
             const response: AxiosResponse = await axios.post(this.roundsUrl, roundDto);
-            const { id, tournament_id, round, name, deadline } = response.data;
+            const { id, tournament_slug, round, name, deadline } = response.data;
             this.logger.info(`Round ${round} created with UUID ${id}`);
             return {
                 id: id,
@@ -57,7 +57,7 @@ export default class RoundRepository extends Repository {
     async get(tournament: TournamentEntity, roundNumber: number): Promise<RoundEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.roundsUrl}?tournament_slug=${tournament.slug}&round=${roundNumber}`);
-            const { id, tournament_id, round, name, deadline } = response.data[0];
+            const { id, tournament_slug, round, name, deadline } = response.data[0];
             return {
                 id: id,
                 tournament: tournament,

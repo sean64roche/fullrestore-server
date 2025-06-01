@@ -1,7 +1,6 @@
 import Tournament from '../models/Tournament';
 import Round from '../models/Round';
 import EntrantPlayer from '../models/EntrantPlayer';
-import {v4 as uuidv4} from 'uuid';
 
 export interface TournamentAttributes {
     name: string;

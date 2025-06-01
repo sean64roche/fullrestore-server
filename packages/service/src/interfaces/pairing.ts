@@ -28,6 +28,7 @@ export interface PairingEntity {
     scheduledAt?: Date | string;
     completedAt?: Date | string;
     replays?: ReplayEntity[] | null;
+    content? :ContentEntity[] | null;
 }
 
 export type PairingResponse = {
@@ -75,29 +76,51 @@ export function transformPairingResponse(pairing: PairingResponse): PairingEntit
 
 export type ReplayDto = {
     pairing_id: string;
-    url: string;
     match_number: number;
+    url?: string;
+    json?: ReplayJson;
 }
 
 export interface ReplayEntity {
     pairingId: string;
-    url: string;
     matchNumber: number;
+    url?: string;
+    json?: ReplayJson;
 }
 
 export type ReplayResponse = {
-    url: string;
     pairing_id: string;
     match_number: number;
+    url?: string;
+    json?: ReplayJson;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export type ReplayJson = PSJson | LogJson;
+
+export type PSJson = {
+    id: string;
+    formatid: string;
+    format: string;
+    players: {
+        [key: number]: string;
+    };
+    log: string;
+    private: number;
+    password?: string;
+}
+
+export type LogJson = {
+    log: string;
 }
 
 export function transformReplayResponse(replay: ReplayResponse, id: string = replay.pairing_id): ReplayEntity {
     return {
         pairingId: id,
+        matchNumber: replay.match_number,
         url: replay.url,
-        matchNumber: replay.match_number
+        json: replay.json,
     }
 }
 
@@ -125,4 +148,26 @@ export type RoundByeResponse = {
     updatedAt?: string;
     Round?: RoundResponse;
     EntrantPlayer?: EntrantPlayerResponse;
+}
+
+export type ContentDto = {
+    pairing_id: string;
+    content: string;
+}
+
+export interface ContentEntity {
+    pairingId: string;
+    content: string;
+}
+
+export type ContentResponse = {
+    pairing_id: string;
+    content: string;
+}
+
+export function transformContentResponse(content: ContentResponse, id: string = content.pairing_id): ContentEntity {
+    return {
+        pairingId: id,
+        content: content.content,
+    }
 }

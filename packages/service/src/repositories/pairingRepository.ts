@@ -6,7 +6,14 @@ import {
     ReplayEntity,
     ReplayDto,
     ReplayResponse,
-    transformReplayResponse, transformPairingResponse
+    transformReplayResponse,
+    transformPairingResponse,
+    ReplayJson,
+    PSJson,
+    LogJson,
+    ContentResponse,
+    ContentEntity,
+    ContentDto, transformContentResponse,
 } from "../interfaces/pairing.js";
 import { EntrantPlayerEntity } from "../interfaces/player.js";
 import { RoundEntity } from "../interfaces/tournament.js";
@@ -18,10 +25,12 @@ export default class PairingRepository extends Repository {
     private readonly fillerTimestamp: string = "1970-01-01T00:00:00.000Z";
     readonly pairingsUrl: string;
     readonly replaysUrl: string;
+    readonly contentUrl: string;
     constructor(config: ApiConfig) {
         super(config);
         this.pairingsUrl = config.baseUrl + config.pairingsEndpoint;
         this.replaysUrl = config.baseUrl + config.replaysEndpoint;
+        this.contentUrl = config.baseUrl + config.contentEndpoint;
     }
 
     async createPairing(
@@ -130,31 +139,42 @@ export default class PairingRepository extends Repository {
         }
     }
 
-    async createReplay(pairing: PairingEntity, sheetUrl: string, sheetMatchNumber: number): Promise<ReplayEntity | undefined> {
+    async createReplay(pairing: PairingEntity, sheetMatchNumber: number, sheetUrl?: string, sheetLog?: ReplayJson): Promise<ReplayEntity | undefined> {
         const replayDto: ReplayDto = {
             pairing_id: pairing.id,
-            url: sheetUrl,
             match_number: sheetMatchNumber,
+            url: sheetUrl,
+            json: sheetLog,
         }
         try {
             const response: AxiosResponse = await axios.post(this.replaysUrl, replayDto);
             const replay: ReplayResponse = response.data;
-            this.logger.info(`Replay created, URL is ${replay.url}`);
+            if (replay.url) this.logger.info(`Replay created, URL is ${replay.url}`);
+            else this.logger.info(`Replay created using a battle log`);
             return transformReplayResponse(replay);
         } catch (error) {
             switch (error.status) {
                 case 409:
-                    const existingReplay: ReplayEntity = await this.getReplay(pairing, sheetUrl, sheetMatchNumber);
+                    const existingReplay: ReplayEntity = await this.getReplay(pairing, sheetMatchNumber, sheetUrl, sheetLog);
+                    this.logger.warn(
+                        `WARNING: Replay ${existingReplay.pairingId},`
+                    )
                     this.logger.info(`Existing UUID: ${existingReplay.pairingId},
                         request UUID: ${pairing.id},
                         existing match number: ${existingReplay.matchNumber},
                         request match number: ${sheetMatchNumber}
                     `);
                     if (existingReplay.pairingId === pairing.id && existingReplay.matchNumber === sheetMatchNumber) {
-                        this.logger.info(`Replay already found, URL is ${sheetUrl}`);
+                        const message: string = !!sheetUrl ? `Replay already found, URL is ${sheetUrl}` : `Replay already found, key is { id: ${existingReplay.pairingId}, match_number: ${existingReplay.matchNumber} }`;
+                        this.logger.info(message);
                         break;
                     } else {
-                        this.logger.error(`FATAL: replay ${sheetUrl} already exists with different parameters: ${JSON.stringify(error.response.data)}`);
+                        const message: string = !!sheetUrl
+                            ?
+                            `FATAL: replay ${sheetUrl} already exists with different parameters: ${JSON.stringify(error.response.data)}`
+                            :
+                            `FATAL: replay already exists, key is { id: ${existingReplay.pairingId}, match_number: ${existingReplay.matchNumber} }`
+                        this.logger.error(message);
                         throw (error);
                     }
                 default:
@@ -167,7 +187,7 @@ export default class PairingRepository extends Repository {
         }
     }
 
-    async getReplay(pairing: PairingEntity, sheetUrl: string, sheetMatchNumber?: number): Promise<ReplayEntity> {
+    async getReplay(pairing: PairingEntity, sheetMatchNumber?: number, sheetUrl?: string, sheetLog?: LogJson): Promise<ReplayEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.replaysUrl}?url=${sheetUrl}`);
             return transformReplayResponse(response.data[0]);
@@ -232,6 +252,33 @@ export default class PairingRepository extends Repository {
                 `| Request: ${this.pairingsUrl}?round_id=${roundId}&player=${playerPsUser}`
             );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
+        }
+    }
+
+    async createContent(pairing: PairingEntity, url: string): Promise<ContentEntity> {
+        const contentDto: ContentDto = {
+            pairing_id: pairing.id,
+            content: url,
+        }
+        try {
+            const response: AxiosResponse = await axios.post(this.contentUrl, contentDto);
+            const content: ContentResponse = response.data;
+            this.logger.info(`
+            Content ${content.content} added for 
+            ${pairing.entrant1.player.username} vs. ${pairing.entrant2.player.username}, 
+            round ${pairing.round.roundNumber}
+            `);
+            return transformContentResponse(content);
+        } catch (error) {
+            switch (error.status) {
+                case 409:
+                    const message: string = `FATAL: content ${url} already exists on another pairing`;
+                    this.logger.error(message);
+                    throw new Error(message);
+                default:
+                    this.logger.error(`FATAL on createContent: ${JSON.stringify(error.response?.data) || error.message}`);
+                    throw new Error(JSON.stringify(error.response?.data) || error.message);
+            }
         }
     }
 }

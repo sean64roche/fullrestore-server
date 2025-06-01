@@ -12,6 +12,7 @@ export interface ApiConfig {
   entrantPlayersEndpoint: string;
   pairingsEndpoint: string;
   replaysEndpoint: string;
+  contentEndpoint: string;
   timeout: number;
   logger: log4js.Logger;
 }

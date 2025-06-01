@@ -1,5 +1,3 @@
-// src/controllers/replayController.ts
-
 import { Request, Response } from 'express';
 import replayService from '../services/replayService';
 

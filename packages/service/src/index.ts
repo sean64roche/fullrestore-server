@@ -110,6 +110,7 @@ export const DEFAULT_CONFIG: ApiConfig = {
     entrantPlayersEndpoint: "/api/entrantPlayers",
     pairingsEndpoint: "/api/pairings",
     replaysEndpoint: "/api/replays",
+    contentEndpoint: "/api/content",
     timeout: 10000,
     logger: log4js.getLogger('api'),
 };

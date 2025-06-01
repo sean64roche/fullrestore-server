@@ -14,6 +14,7 @@ import entrantPlayerRoutes from "../routes/entrantPlayerRoutes";
 import pairingRoutes from "../routes/pairingRoutes";
 import replayRoutes from "../routes/replayRoutes";
 import {toSlug} from "../services/tournamentService";
+import contentRoutes from "../routes/contentRoutes";
 
 let testPlayer1Id: string;
 let coolGamerPlayerId: string;
@@ -740,6 +741,58 @@ test.describe('POST /api/replays', async () => {
             match_number: 3,
         };
         const response = await request(app).post('/api/replays')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 400);
+    });
+});
+
+test.describe('POST /api/content', async () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/content', contentRoutes);
+    });
+
+    test('new content succeeds', { timeout: 10000 }, async () => {
+        const contentUrl = 'https://www.youtube.com/watch?v=nszWlBS3Ns8';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: contentUrl,
+        };
+        const response = await request(app).post('/api/content')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        console.log(`Content Status: ${response.status}`);
+        console.log(`Content Body:`, JSON.stringify(response.body, null, 2));
+        assert.equal(response.status, 201);
+        assert.equal(response.body.url, contentUrl);
+        assert.equal(response.body.pairing_id, testPairingId);
+    });
+
+    test('duplicate content fails', { timeout: 10000 }, async () => {
+        const contentUrl = 'https://www.youtube.com/embed/UGcCU6vR1OQ';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: contentUrl,
+        };
+        const response = await request(app).post('/api/content')
+            .send(postBody)
+            .set('Accept', 'application/json')
+            .set('Content-Type', 'application/json');
+        assert.equal(response.status, 409);
+    });
+
+    test('content must be a url', { timeout: 10000 }, async () => {
+        const contentUrl = 'notAUrl';
+        const postBody = {
+            pairing_id: testPairingId,
+            url: contentUrl,
+        };
+        const response = await request(app).post('/api/content')
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');

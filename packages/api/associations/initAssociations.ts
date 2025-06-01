@@ -7,6 +7,7 @@ import Round from "../models/Round";
 import Tournament from "../models/Tournament";
 import Replay from "../models/Replay";
 import Format from "../models/Format";
+import Content from "../models/Content";
 
 export function initAssociations() {
 
@@ -37,6 +38,8 @@ export function initAssociations() {
     RoundBye.belongsTo(Round, { foreignKey: 'round_id' });
 
     Pairing.hasMany(Replay, { foreignKey: 'pairing_id' });
+    Pairing.hasMany(Content, { foreignKey: 'pairing_id' });
     Replay.belongsTo(Pairing, { foreignKey: 'pairing_id' });
+    Content.belongsTo(Pairing, { foreignKey: 'pairing_id' });
 
 }

@@ -12,6 +12,7 @@ import roundByeRoutes from "../routes/roundByeRoutes";
 import pairingRoutes from "../routes/pairingRoutes";
 import replayRoutes from "../routes/replayRoutes";
 import {globalSetup, globalTeardown} from "./dbSetup";
+import contentRoutes from "../routes/contentRoutes";
 
 test.before(async () => {
     const setupSuccess = await globalSetup();
@@ -277,6 +278,26 @@ test.describe('GET /api/replays', () => {
     });
     test('GET /api/replays?url on non-existing replay has empty response body', { timeout: 10000 }, async () => {
         const response = await request(app).get('/api/replays?url=https://replay.pokemonshowdown.com/notarealreplay');
+        assert.equal(response.body.length, 0);
+    });
+});
+
+test.describe('GET /api/content', () => {
+    let app: express.Application;
+    test.beforeEach(async () => {
+        app = express();
+        app.use(express.json())
+            .use('/api/content', contentRoutes);
+    });
+    test('GET /api/content?url returns single content data', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/content?url=https://www.youtube.com/embed/UGcCU6vR1OQ');
+        const result = response.body[0];
+        assert.equal(response.status, 200);
+        assert.equal(response.body.length, 1);
+        assert.equal(result.pairing_id, '59041b89-d85d-48cf-a9ef-1227b3850cd6');
+    });
+    test('GET /api/content?url on non-existing content has empty response body', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/content?url=https://www.youtube.com/embed/nothing');
         assert.equal(response.body.length, 0);
     });
 });
