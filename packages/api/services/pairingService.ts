@@ -129,7 +129,7 @@ class PairingService {
                     },
                     {
                         model: Replay,
-                        attributes: ['match_number', 'url'],
+                        attributes: ['match_number', 'url', 'json'],
                         order: [['match_number', 'ASC']],
                     },
                 ],
