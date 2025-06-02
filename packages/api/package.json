@@ -4,9 +4,7 @@
   "main": "app/app.ts",
   "scripts": {
     "test": "DB_NAME=fullrestore-integration-test DB_PORT=5433 NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1",
-    "test:ci": "DB_NAME=fullrestore-integration-test DB_PORT=5432 CI_ENV=true NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1",
-    "migrate": "sequelize-cli db:migrate",
-    "migrate:undo": "sequelize-cli db:migrate:undo"
+    "test:ci": "DB_NAME=fullrestore-integration-test DB_PORT=5432 CI_ENV=true NODE_ENV=test npx tsx --test test/**/*.test.ts --test-concurrency=1"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +26,6 @@
     "@types/pg": "^8.11.11",
     "@types/supertest": "^6.0.2",
     "nodemon": "^3.1.9",
-    "sequelize-cli": "^6.6.3",
     "supertest": "^7.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"

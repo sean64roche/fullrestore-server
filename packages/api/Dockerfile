@@ -13,8 +13,6 @@ WORKDIR /usr/src/
 COPY package*.json ./
 COPY . .
 RUN npm install
-RUN npm install --save-dev sequelize-cli
-
 
 EXPOSE 3000
 
