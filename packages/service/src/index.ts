@@ -61,7 +61,10 @@ export {
     SheetBye,
     RoundByeDto,
     RoundByeEntity,
-    RoundByeResponse
+    RoundByeResponse,
+    ContentDto,
+    ContentEntity,
+    ContentResponse,
 } from './interfaces/pairing.js';
 
 export {

@@ -7,6 +7,7 @@ import Player from "../models/Player";
 import Tournament from "../models/Tournament";
 import { Op } from 'sequelize';
 import PlayerAlias from "../models/PlayerAlias";
+import Content from "../models/Content";
 
 interface PairingAttributes {
     round_id?: string;
@@ -132,6 +133,10 @@ class PairingService {
                         attributes: ['match_number', 'url', 'json'],
                         order: [['match_number', 'ASC']],
                     },
+                    {
+                        model: Content,
+                        attributes: ['content'],
+                    }
                 ],
                 where: {
                     ...whereClause
@@ -189,6 +194,10 @@ class PairingService {
                     attributes: ['match_number', 'url'],
                     order: [['match_number', 'ASC']],
                 },
+                {
+                    model: Content,
+                    attributes: ['content'],
+                }
             ],
         });
     }
