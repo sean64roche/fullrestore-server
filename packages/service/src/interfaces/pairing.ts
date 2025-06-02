@@ -46,6 +46,7 @@ export type PairingResponse = {
     Entrant2: EntrantPlayerResponse;
     Winner: EntrantPlayerResponse;
     Replays: ReplayResponse[];
+    Content: ContentResponse[];
 }
 
 export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
