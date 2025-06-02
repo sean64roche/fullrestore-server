@@ -38,7 +38,7 @@ export function initAssociations() {
     RoundBye.belongsTo(Round, { foreignKey: 'round_id' });
 
     Pairing.hasMany(Replay, { foreignKey: 'pairing_id' });
-    Pairing.hasMany(Content, { foreignKey: 'pairing_id' });
+    Pairing.hasMany(Content, { as: 'Content', foreignKey: 'pairing_id' });
     Replay.belongsTo(Pairing, { foreignKey: 'pairing_id' });
     Content.belongsTo(Pairing, { foreignKey: 'pairing_id' });
 

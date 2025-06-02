@@ -135,7 +135,8 @@ class PairingService {
                     },
                     {
                         model: Content,
-                        attributes: ['content'],
+                        as: 'Content',
+                        attributes: ['url'],
                     }
                 ],
                 where: {
@@ -196,7 +197,8 @@ class PairingService {
                 },
                 {
                     model: Content,
-                    attributes: ['content'],
+                    as: 'Content',
+                    attributes: ['url'],
                 }
             ],
         });
