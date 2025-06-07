@@ -8,6 +8,10 @@ RUN --mount=type=bind,source=./api/package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
+COPY package*.json ./
+COPY api ./
+COPY migration ./
+
 WORKDIR /usr/src/migration
 RUN npm ci
 RUN ls -a
