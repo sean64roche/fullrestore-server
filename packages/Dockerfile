@@ -11,5 +11,6 @@ RUN npm ci
 
 WORKDIR /usr/src/api
 RUN npm ci
+RUN npm install pg --save
 EXPOSE 3000
 CMD ["npx", "tsx", "app/app.ts"]
