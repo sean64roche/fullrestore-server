@@ -6,6 +6,7 @@ stages:
 include:
   - local: packages/api/.gitlab-ci.yml
   - local: packages/service/.gitlab-ci.yml
+  - local: packages/migration/.gitlab-ci.yml
 
 publish-packages:
   stage: publish
