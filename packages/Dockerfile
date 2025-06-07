@@ -9,8 +9,8 @@ RUN --mount=type=bind,source=./api/package.json,target=package.json \
     npm ci --omit=dev
 
 COPY package*.json ./
-COPY packages/api ./
-COPY packages/migration ./
+COPY api ./
+COPY migration ./
 
 WORKDIR /usr/src/migration
 RUN npm ci
