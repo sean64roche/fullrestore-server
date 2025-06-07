@@ -8,8 +8,10 @@ COPY . .
 
 WORKDIR /usr/src/migration
 RUN ls -a
+RUN npm ci
 RUN npx sequelize-cli db:migrate --debug
 
 WORKDIR /usr/src/api
+RUN npm ci
 EXPOSE 3000
 CMD ["npx", "tsx", "app/app.ts"]
