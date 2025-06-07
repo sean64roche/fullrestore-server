@@ -11,8 +11,10 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 WORKDIR /usr/src/
 
 COPY package*.json ./
-COPY . .
+COPY api ./
+COPY migration ./
 RUN npm install
+RUN npx sequelize-cli db:migrate
 
 EXPOSE 3000
 
