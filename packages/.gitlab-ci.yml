@@ -36,7 +36,7 @@ node-test:
     - apt-get update && apt-get install -y netcat-openbsd
     - nc -zv postgres 5432
     - cd packages/migration && npx sequelize-cli db:migrate
-    - cd packages/api && npm run test:ci
+    - cd ../api && npm run test:ci
   rules:
     - if: $CI_COMMIT_BRANCH
 
@@ -64,4 +64,3 @@ docker-build:
   only:
     - tags
     - main
-

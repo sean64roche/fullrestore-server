@@ -5,6 +5,7 @@ stages:
 
 include:
   - local: packages/.gitlab-ci.yml
+  - local: packages/service/.gitlab-ci.yml
 
 publish-packages:
   stage: publish
@@ -12,6 +13,9 @@ publish-packages:
     - echo "Coordinating package publishing"
   only:
     - tags
+    - main
+  when:
+    manual
 
 build-containers:
   stage: build
