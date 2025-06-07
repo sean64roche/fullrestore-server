@@ -15,3 +15,5 @@ publish-package:
   only:
     - tags
     - main
+  when:
+    manual
