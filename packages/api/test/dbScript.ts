@@ -20,14 +20,14 @@ export async function setupLocalDb() {
         const fullImagePath = `${GITLAB_REGISTRY}/${POSTGRES_IMAGE_NAME}:${POSTGRES_IMAGE_TAG}`;
         await execAsync(`docker pull ${fullImagePath}`);
         try {
-            await execAsync('docker stop fullrestore-integration-test');
-            await execAsync('docker rm fullrestore-integration-test');
+            await execAsync(`docker stop ${process.env.DB_NAME}`);
+            await execAsync(`docker rm ${process.env.DB_NAME}`);
         } catch {
         }
 
         await execAsync(`docker run -d \
-          --name fullrestore-integration-test \
-          -e POSTGRES_DB=fullrestore-integration-test \
+          --name ${process.env.DB_NAME} \
+          -e POSTGRES_DB=${process.env.DB_NAME} \
           -e POSTGRES_PASSWORD=password \
           -p 5433:5432 \
           ${fullImagePath}`);
@@ -41,7 +41,7 @@ export async function setupLocalDb() {
 export async function connectDb(
     host: string = 'localhost',
     port: number = 5433,
-    database: string = 'fullrestore-integration-test',
+    database: string = process.env.DB_NAME,
     user: string = 'postgres',
     password: string = 'password',
     connectionTimeoutMillis: number = 5000
