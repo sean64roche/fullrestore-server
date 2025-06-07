@@ -12,8 +12,7 @@ node-test:
     POSTGRES_DB: fullrestore-migration-test
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: password
-    POSTGRES_HOST: 0.0.0.0
-    DB_HOST: postgres
+    POSTGRES_HOST: postgres
     DB_PORT: 5432
     DB_USER: postgres
     DB_PASSWORD: password
