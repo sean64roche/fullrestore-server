@@ -1,12 +1,7 @@
-ARG NODE_VERSION=23
+ARG NODE_VERSION=23.4.0
 FROM node:${NODE_VERSION}-alpine
 
 WORKDIR /usr/src/
-
-RUN --mount=type=bind,source=./api/package.json,target=package.json \
-    --mount=type=bind,source=./api/package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
 
 COPY package*.json ./
 
