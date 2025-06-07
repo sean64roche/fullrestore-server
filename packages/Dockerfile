@@ -14,7 +14,7 @@ COPY migration ./
 
 WORKDIR /usr/src/migration
 RUN npm ci
-RUN npx sequelize-cli db:migrate
+RUN npx sequelize-cli db:migrate --debug
 
 WORKDIR /usr/src/api
 RUN npm ci
