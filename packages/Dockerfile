@@ -9,16 +9,11 @@ RUN --mount=type=bind,source=./api/package.json,target=package.json \
     npm ci --omit=dev
 
 COPY package*.json ./
-COPY api ./
-COPY migration ./
 
-WORKDIR /usr/src/migration
-RUN npm ci
+WORKDIR /usr/src/packages/migration
 RUN ls -a
 RUN npx sequelize-cli db:migrate --debug
 
-WORKDIR /usr/src/api
-RUN npm ci
-
+WORKDIR /usr/src/packages/api
 EXPOSE 3000
 CMD ["npx", "tsx", "app/app.ts"]
