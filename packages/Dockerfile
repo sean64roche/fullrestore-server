@@ -8,6 +8,7 @@ COPY . .
 
 WORKDIR /usr/src/migration
 RUN npm ci
+RUN ls -a
 
 WORKDIR /usr/src/api
 RUN npm ci
