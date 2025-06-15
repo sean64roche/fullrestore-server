@@ -23,6 +23,8 @@ node-test:
       alias: postgres
   variables:
     POSTGRES_DB: fullrestore-test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: password
     DB_HOST: postgres
     DB_PORT: 5432
     DB_USER: postgres
