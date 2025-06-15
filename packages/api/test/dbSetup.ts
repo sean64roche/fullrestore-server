@@ -8,12 +8,13 @@ export async function globalSetup() {
     if (!isSetup && !isRunning) {
         isRunning = true;
         if (!!process.env.CI_ENV) {
+            // Pipeline handles db setup and migrations
             await connectDb('postgres', 5432);
         } else {
             await setupLocalDb();
             await connectDb();
+            child_process.execSync(`npx sequelize-cli db:migrate --env test --config config/config.js`, { cwd: '../migration', stdio: 'inherit' });
         }
-        child_process.execSync(`npx sequelize-cli db:migrate --env test --config config/config.js`, { cwd: '../migration', stdio: 'inherit' });
         isSetup = true;
         isRunning = false;
     }
