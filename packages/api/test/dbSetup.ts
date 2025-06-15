@@ -1,4 +1,5 @@
 import {connectDb, setupLocalDb, teardownDb} from "./dbScript";
+import child_process from "node:child_process";
 
 let isSetup = false;
 let isRunning = false;
@@ -12,6 +13,7 @@ export async function globalSetup() {
             await setupLocalDb();
             await connectDb();
         }
+        child_process.execSync(`npx sequelize-cli db:migrate --env test --config config/config.js`, { cwd: '../migration', stdio: 'inherit' });
         isSetup = true;
         isRunning = false;
     }

@@ -8,6 +8,7 @@ import Tournament from "../models/Tournament";
 import { Op } from 'sequelize';
 import PlayerAlias from "../models/PlayerAlias";
 import Content from "../models/Content";
+import sequelize from "../config/database";
 
 interface PairingAttributes {
     round_id?: string;
@@ -30,10 +31,12 @@ interface GetPairingParams {
 class PairingService {
         public async createPairing(attrs: PairingAttributes) {
             try {
-                return await Pairing.create({
-                id: uuidv4(),
-                ...attrs
-            });
+                const result = await Pairing.create({
+                    id: uuidv4(),
+                    ...attrs
+                });
+                await sequelize.query(`REFRESH MATERIALIZED VIEW round_entrant_wins;`);
+                return result;
         } catch (error: any) {
             throw error;
         }
@@ -213,7 +216,9 @@ class PairingService {
         );
 
         if (updated) {
-            return await Pairing.findByPk(id);
+            const result = await Pairing.findByPk(id);
+            await sequelize.query(`REFRESH MATERIALIZED VIEW round_entrant_wins;`);
+            return result;
         }
         return null;
     }

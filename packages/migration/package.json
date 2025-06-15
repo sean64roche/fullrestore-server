@@ -7,9 +7,11 @@
   "type": "commonjs",
   "main": "model/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "migrate": "npx sequelize-cli db:migrate",
+    "down": "npx sequelize-cli db:migrate:undo"
   },
   "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.46",
     "dotenv": "^16.5.0",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",

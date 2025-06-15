@@ -15,6 +15,7 @@ const execAsync = promisify(exec);
 let db: Pool;
 
 export async function setupLocalDb() {
+
     try {
         await execAsync(`docker login ${GITLAB_REGISTRY} -u ${GITLAB_USERNAME} -p ${GITLAB_TOKEN}`);
         const fullImagePath = `${GITLAB_REGISTRY}/${POSTGRES_IMAGE_NAME}:${POSTGRES_IMAGE_TAG}`;
@@ -2055,7 +2056,7 @@ async function insertReplays(db: Pool) {
            ('https://replay.pokemonshowdown.com/gen3ou-2156289765-bpgioa2bo0wregcnbahbhutcxfiwgy8pw',
             '2db7133e-a0a5-473c-a279-c1cbcdbb9892'::uuid, 3, '2025-01-29 15:13:10.407+00',
             '2025-01-29 15:13:10.407+00');`);
-    console.log('Replays successfully inserted.');
+    console.log(`Replays successfully inserted.`);
 
     await db.query(`INSERT INTO public.content (url, pairing_id, "createdAt", "updatedAt")
         VALUES ('https://www.youtube.com/embed/UGcCU6vR1OQ', '59041b89-d85d-48cf-a9ef-1227b3850cd6', 

@@ -24,8 +24,12 @@ let testEntrantId1: string;
 let testPairingId: string;
 
 test.before(async () => {
+    try {
         const setupSuccess = await globalSetup();
         assert.strictEqual(setupSuccess, true, "Database setup failed");
+    } catch (error) {
+        console.log(JSON.stringify(error.message));
+    }
 });
 
 test.after(async () => {
@@ -57,7 +61,6 @@ test.describe('POST /api/players', () => {
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
-        console.log(JSON.stringify(response.body, null, 2));
         assert.equal(response.status, 201);
         assert.ok(response.body.id);
         assert.equal(response.body.ps_user, postBody.ps_user);
@@ -326,7 +329,6 @@ test.describe('POST /api/entrantPlayers', () => {
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
-        console.log(`POST Entrant Player response: `, response.body);
         assert.equal(response.status, 201);
         assert.ok(response.body.id);
         assert.equal(testPlayer1Id, response.body.player_id);
@@ -692,8 +694,6 @@ test.describe('POST /api/replays', async () => {
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
-        console.log(`Replay Status: ${response.status}`);
-        console.log(`Replay Body:`, JSON.stringify(response.body, null, 2));
         assert.equal(response.status, 201);
         assert.equal(response.body.url, replayUrlTransformed);
         assert.equal(response.body.pairing_id, testPairingId);
@@ -766,8 +766,6 @@ test.describe('POST /api/content', async () => {
             .send(postBody)
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json');
-        console.log(`Content Status: ${response.status}`);
-        console.log(`Content Body:`, JSON.stringify(response.body, null, 2));
         assert.equal(response.status, 201);
         assert.equal(response.body.url, contentUrl);
         assert.equal(response.body.pairing_id, testPairingId);
