@@ -49,7 +49,8 @@ docker-build:
     DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - cp package-lock.json packages/package-lock.json
+    - cp package-lock.json packages/api/package-lock.json
+    - package-lock.json packages/migration/package-lock.json
   # All branches are tagged with $DOCKER_IMAGE_NAME (defaults to commit ref slug)
   # Default branch is also tagged with `latest`
   script:
