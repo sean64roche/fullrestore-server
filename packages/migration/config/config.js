@@ -16,7 +16,7 @@ module.exports = {
     "port": process.env.TEST_DB_PORT,
     "dialect": "postgres"
   },
-  "integration-test": {
+  "pipeline-test": {
     "username": process.env.DB_USER,
     "password": process.env.DB_PASSWORD,
     "database": process.env.POSTGRES_DB,

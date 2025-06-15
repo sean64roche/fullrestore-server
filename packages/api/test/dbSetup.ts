@@ -9,7 +9,7 @@ export async function globalSetup() {
         isRunning = true;
         if (!!process.env.CI_ENV) {
             await connectDb('postgres', 5432);
-            child_process.execSync(`npx sequelize-cli db:migrate --env integration-test --config config/config.js`, { cwd: '../migration', stdio: 'inherit' });
+            child_process.execSync(`npx sequelize-cli db:migrate --env pipeline-test --config config/config.js`, { cwd: '../migration', stdio: 'inherit' });
         } else {
             await setupLocalDb();
             await connectDb();
