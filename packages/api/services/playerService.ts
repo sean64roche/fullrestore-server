@@ -1,4 +1,4 @@
-import {v4 as uuidv4} from 'uuid';
+import {v7 as uuidv7} from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
 import PlayerAlias from "../models/PlayerAlias";
@@ -24,7 +24,7 @@ class PlayerService {
             discord_user: toDiscordAlias(attrs.discord_user),
         }
         return await Player.create({
-            id: uuidv4(),
+            id: uuidv7(),
             ...newAttrs,
             PlayerAlias: {
                 alias: attrs.ps_user,

@@ -1,6 +1,6 @@
 // src/services/entrantPlayerService.ts
 
-import {v4 as uuidv4} from 'uuid';
+import {v7 as uuidv7} from 'uuid';
 import EntrantPlayer from '../models/EntrantPlayer';
 import Player from "../models/Player";
 import Tournament from "../models/Tournament";
@@ -27,7 +27,7 @@ class EntrantPlayerService {
     public async createEntrantPlayer(attrs: EntrantPlayerAttributes) {
         try {
             return await EntrantPlayer.create({
-                id: uuidv4(),
+                id: uuidv7(),
                 ...attrs
             });
         } catch (error: any) {

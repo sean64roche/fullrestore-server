@@ -1,5 +1,5 @@
 import RoundBye from "../models/RoundBye";
-import {v4 as uuidv4} from 'uuid';
+import {v7 as uuidv7} from 'uuid';
 import Round from "../models/Round";
 import EntrantPlayer from "../models/EntrantPlayer";
 import Player from "../models/Player";
@@ -13,7 +13,7 @@ class RoundByeService {
     public async createRoundBye(attrs: RoundByeAttributes) {
         try {
             return RoundBye.create({
-                id: uuidv4(),
+                id: uuidv7(),
                 ...attrs
             });
         } catch (error: any) {

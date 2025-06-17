@@ -1,4 +1,4 @@
-import {v4 as uuidv4} from 'uuid';
+import {v7 as uuidv7} from 'uuid';
 import Pairing from '../models/Pairing';
 import Replay from '../models/Replay';
 import Round from "../models/Round";
@@ -32,7 +32,7 @@ class PairingService {
         public async createPairing(attrs: PairingAttributes) {
             try {
                 const result = await Pairing.create({
-                    id: uuidv4(),
+                    id: uuidv7(),
                     ...attrs
                 });
                 await sequelize.query(`REFRESH MATERIALIZED VIEW round_entrant_wins;`);

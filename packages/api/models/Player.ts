@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database';
+import {v7 as uuidv7} from "uuid";
 
 class Player extends Model {
   declare id: string;
@@ -11,7 +12,9 @@ class Player extends Model {
 Player.init({
   id: {
     type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    defaultValue() {
+      return uuidv7();
+    },
     primaryKey: true
   },
   ps_user: {

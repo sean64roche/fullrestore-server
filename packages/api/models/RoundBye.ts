@@ -1,5 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from '../config/database';
+import {v7 as uuidv7} from "uuid";
 
 class RoundBye extends Model {
     declare id: string;
@@ -10,7 +11,9 @@ class RoundBye extends Model {
 RoundBye.init({
     id: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue() {
+            return uuidv7();
+        },
         primaryKey: true
     },
     round_id: {

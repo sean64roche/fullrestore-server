@@ -1,6 +1,6 @@
 import Round from '../models/Round';
 import Pairing from '../models/Pairing';
-import {v4 as uuidv4} from 'uuid';
+import {v7 as uuidv7} from 'uuid';
 import RoundBye from '../models/RoundBye';
 import Tournament from "../models/Tournament";
 
@@ -21,7 +21,7 @@ class RoundService {
     public async createRound(attrs: RoundAttributes) {
         try {
             return Round.create({
-                id: uuidv4(),
+                id: uuidv7(),
                 ...attrs
             });
         } catch (error: any) {
