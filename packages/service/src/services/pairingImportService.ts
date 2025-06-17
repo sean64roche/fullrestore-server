@@ -3,7 +3,7 @@ import {cleanPsUsername} from "../utils/helpers.js";
 import PairingRepository from "../repositories/pairingRepository.js";
 import {RoundEntity} from "../interfaces/tournament.js";
 import {EntrantPlayerEntity} from "../interfaces/player.js";
-import {PairingEntity, ReplayEntity, SheetPairing} from "../interfaces/pairing.js";
+import {ContentEntity, PairingEntity, ReplayEntity, SheetPairing} from "../interfaces/pairing.js";
 import {Logger} from "../utils/logger.js";
 import {ApiConfig} from "../config.js";
 
@@ -22,12 +22,13 @@ export class PairingImportService {
         const tournamentRounds: RoundEntity[] = Array.from(rounds);
         const tournamentPlayers: EntrantPlayerEntity[] = Array.from(entrantPlayers);
         const pairings: Set<PairingEntity> = new Set();
-        const replaysData: Set<ReplayEntity> = new Set();
         const pairingsData: SheetPairing[] = await new CsvParser().load(csvPath, this.logger);
+        const replaysData: Set<ReplayEntity> = new Set();
+        const contentData: Set<ContentEntity> = new Set();
 
         // Sorry
         for (const pairing of pairingsData) {
-            let { round, player1, player2, winner } = pairing;
+            let { round, player1, player2, winner, content } = pairing;
             player1 = cleanPsUsername(player1).toLowerCase();
             player2 = cleanPsUsername(player2).toLowerCase();
             if (typeof winner === "string") winner = cleanPsUsername(winner).toLowerCase();
@@ -79,6 +80,15 @@ export class PairingImportService {
                     }
                     if (!!replayResponse) replaysData.add(replayResponse);
                 }
+            }
+            if (!!pairingResponse && !!content) {
+                this.logger.info(`Processing content: ${content}`);
+                let contentResponse: ContentEntity | undefined ;
+                if (isUrl(content)) {
+                    contentResponse = await new PairingRepository(this.config)
+                        .createContent(pairingResponse, content);
+                }
+                if (!!contentResponse) contentData.add(contentResponse);
             }
             pairings.add(pairingResponse);
         }
