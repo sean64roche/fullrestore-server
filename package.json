@@ -14,5 +14,8 @@
     "dev:service": "npm run dev --workspace=packages/fullrestore-service",
     "build:all": "npm run build --workspaces",
     "test:all": "npm run test --workspaces"
+  },
+  "dependencies": {
+    "log4js": "^6.9.1"
   }
 }
