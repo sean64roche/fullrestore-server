@@ -51,8 +51,12 @@ export type PairingResponse = {
 
 export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
     const replays: ReplayEntity[] = [];
+    const content: ContentEntity[] = [];
     pairing.Replays.forEach((replay: ReplayResponse) => {
         replays.push(transformReplayResponse(replay, pairing.id));
+    });
+    pairing.Content.forEach((c: ContentResponse) => {
+        content.push(transformContentResponse(c, pairing.id));
     });
     return {
         id: pairing.id,
@@ -72,6 +76,7 @@ export function transformPairingResponse(pairing: PairingResponse): PairingEntit
         scheduledAt: pairing.time_scheduled,
         completedAt: pairing.time_completed,
         replays: replays,
+        content: content,
     }
 }
 
