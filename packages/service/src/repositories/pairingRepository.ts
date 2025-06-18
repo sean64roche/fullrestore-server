@@ -39,7 +39,7 @@ export default class PairingRepository extends Repository {
         entrantPlayer2: EntrantPlayerEntity,
         winner?: EntrantPlayerEntity
     ): Promise<PairingEntity> {
-        this.logger.info(`INFO: attempting to send Pairing DTO`);
+        this.logger.debug(`Attempting to send Pairing DTO`);
         const playerAlias1: string = entrantPlayer1.player.psUser;
         const playerAlias2: string = entrantPlayer2.player.psUser;
         const winnerAlias: string | undefined = winner?.player.psUser;
@@ -157,13 +157,12 @@ export default class PairingRepository extends Repository {
                 case 409:
                     const existingReplay: ReplayEntity = await this.getReplay(pairing, sheetMatchNumber, sheetUrl, sheetLog);
                     this.logger.warn(
-                        `WARNING: Replay ${existingReplay.pairingId},`
+                        `WARNING: Attempted replay duplication for ${pairing.entrant1.player.username} vs ${pairing.entrant2.player.username}, game ${sheetMatchNumber} - skipping...,`
                     )
-                    this.logger.info(`Existing UUID: ${existingReplay.pairingId},
-                        request UUID: ${pairing.id},
-                        existing match number: ${existingReplay.matchNumber},
-                        request match number: ${sheetMatchNumber}
-                    `);
+                    this.logger.info(`Existing UUID: ${existingReplay.pairingId},`);
+                    this.logger.info(`request UUID: ${pairing.id},`);
+                    this.logger.info(`existing match number: ${existingReplay.matchNumber},`);
+                    this.logger.info(`request match number: ${sheetMatchNumber}`);
                     if (existingReplay.pairingId === pairing.id && existingReplay.matchNumber === sheetMatchNumber) {
                         const message: string = !!sheetUrl ? `Replay already found, URL is ${sheetUrl}` : `Replay already found, key is { id: ${existingReplay.pairingId}, match_number: ${existingReplay.matchNumber} }`;
                         this.logger.info(message);
@@ -258,27 +257,36 @@ export default class PairingRepository extends Repository {
     async createContent(pairing: PairingEntity, url: string): Promise<ContentEntity> {
         const contentDto: ContentDto = {
             pairing_id: pairing.id,
-            content: url,
+            url: url,
         }
         try {
             const response: AxiosResponse = await axios.post(this.contentUrl, contentDto);
             const content: ContentResponse = response.data;
-            this.logger.info(`
-            Content ${content.content} added for 
-            ${pairing.entrant1.player.username} vs. ${pairing.entrant2.player.username}, 
-            round ${pairing.round.roundNumber}
-            `);
+            this.logger.info(`Content ${content.url} added for ${pairing.entrant1.player.username} vs. ${pairing.entrant2.player.username}, round ${pairing.round.roundNumber}`);
             return transformContentResponse(content);
         } catch (error) {
             switch (error.status) {
                 case 409:
-                    const message: string = `FATAL: content ${url} already exists on another pairing`;
-                    this.logger.error(message);
-                    throw new Error(message);
+                    const message = `WARN: content ${url} already exists on another pairing - not added`;
+                    this.logger.warn(message);
+                    return this.fetchContent(url);
                 default:
                     this.logger.error(`FATAL on createContent: ${JSON.stringify(error.response?.data) || error.message}`);
                     throw new Error(JSON.stringify(error.response?.data) || error.message);
             }
+        }
+    }
+
+    async fetchContent(url: string): Promise<ContentEntity> {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.contentUrl}?url=${url}`);
+            return transformContentResponse(response.data[0]);
+        } catch (error) {
+            this.logger.error(
+                    `FATAL on fetchContent: ${JSON.stringify(error.response?.data || error.message)} ` +
+                    `| Request: ${this.contentUrl}?url=${url}`
+            );
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
     }
 }

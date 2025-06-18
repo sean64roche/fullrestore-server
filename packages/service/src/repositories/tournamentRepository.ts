@@ -21,20 +21,9 @@ export default class TournamentRepository extends Repository {
     async create(tournament: TournamentDto): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.tournamentsUrl, tournament);
-            const { name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data;
-            this.logger.info(`Tournament created with slug ${slug}`);
-            return {
-                slug: slug,
-                name: name,
-                season: season,
-                format: format,
-                startDate: start_date,
-                finishDate: finish_date,
-                currentRound: current_round,
-                prizePool: prize_pool,
-                individualWinner: individual_winner,
-                info: info,
-            };
+            const tournamentData: TournamentResponse = response.data;
+            this.logger.info(`Tournament created with slug ${tournamentData.slug}`);
+            return transformTournamentResponse(tournamentData);
         } catch (error) {
             if (error instanceof AxiosError) {
                 switch (error.status) {
@@ -58,20 +47,9 @@ export default class TournamentRepository extends Repository {
     async getExistingTournament(existingName: string, existingSeason: number): Promise<TournamentEntity> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?name=${existingName}&season=${existingSeason}`);
-            const { name, season, format, start_date, finish_date, current_round, prize_pool, individual_winner, info, slug } = response.data[0];
-            this.logger.info(`Tournament found with slug ${slug}`);
-            return {
-                slug: slug,
-                name: name,
-                season: season,
-                format: format,
-                startDate: start_date,
-                finishDate: finish_date,
-                currentRound: current_round,
-                prizePool: prize_pool,
-                individualWinner: individual_winner,
-                info: info,
-            };
+            const tournamentData: TournamentResponse = response.data[0];
+            this.logger.info(`Tournament found with slug ${tournamentData.slug}`);
+            return transformTournamentResponse(tournamentData);
         } catch (error) {
             this.logger.error(
                 `FATAL on getExistingTournament: ${JSON.stringify(error.response?.data) || error.message} ` +

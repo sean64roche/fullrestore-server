@@ -38,7 +38,10 @@ export class PairingImportService {
 
             if (!pairingRound || !pairingPlayer1 || !pairingPlayer2) {
                 const msg = `FATAL: round ${round}: '${player1}' vs '${player2}' has an invalid parameter`;
-                this.logger.error(msg);
+                this.logger.info(`round parameter provided: ${JSON.stringify(pairingRound)}`);
+                this.logger.info(`player1 parameter provided: ${pairingPlayer1}`);
+                this.logger.info(`player2 parameter provided: ${pairingPlayer2}`);
+                this.logger.info(msg);
                 throw new Error(msg);
             }
 
@@ -68,7 +71,7 @@ export class PairingImportService {
             const pairingResponse: PairingEntity = await new PairingRepository(this.config)
                 .createPairing(pairingRound, pairingPlayer1, pairingPlayer2, pairingWinner);
             for (const replay of replays) {
-                this.logger.info(`Processing replay: ${replay}`);
+                this.logger.debug(`Processing replay: ${replay}`);
                 if (!!pairingResponse && !!replay) {
                     let replayResponse: ReplayEntity | undefined ;
                     if (isUrl(replay)) {
@@ -82,7 +85,7 @@ export class PairingImportService {
                 }
             }
             if (!!pairingResponse && !!content) {
-                this.logger.info(`Processing content: ${content}`);
+                this.logger.debug(`Processing content: ${content}`);
                 let contentResponse: ContentEntity | undefined ;
                 if (isUrl(content)) {
                     contentResponse = await new PairingRepository(this.config)

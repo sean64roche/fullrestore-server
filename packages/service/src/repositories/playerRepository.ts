@@ -29,9 +29,15 @@ export default class PlayerRepository extends Repository {
             const response: AxiosResponse = await axios.post(this.playersUrl, player);
             const playerData: PlayerResponse = {
                 ...response.data,
+                // this is very ugly, but the potential duplication doesn't matter since this just temporarily stows in memory
                 Aliases: [
                     {
+                        alias: response.data.ps_user,
+                        primary: false,
+                    },
+                    {
                         alias: player.ps_user,
+                        primary: true,
                     }
                 ]
             };
@@ -65,11 +71,9 @@ export default class PlayerRepository extends Repository {
                 tournament_slug: tournament.slug
             });
             const entrantData: EntrantPlayerResponse = {
-                ...response.data,
-                Player: player,
-                Tournament: tournament,
+                ...response.data
             };
-            return transformEntrantPlayerResponse(entrantData);
+            return transformEntrantPlayerResponse(entrantData, tournament, player);
         } catch (error) {
             switch (error.status) {
                 case 409:
@@ -94,7 +98,7 @@ export default class PlayerRepository extends Repository {
             if (error instanceof AxiosError) {
                 switch (error.response?.status) {
                     case 404:
-                        this.logger.info(`Player '${alias}' not found`);
+                        this.logger.info(`Entrant Player '${alias}' not found.`);
                         return null;
                     default:
                         this.logger.error(

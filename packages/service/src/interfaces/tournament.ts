@@ -5,6 +5,7 @@ export type SheetTournament = {
     season: number;
     format: string;
     best_of: number;
+    elimination: number;
     current_round: number;
     prize_pool: number;
     individual_winner: string;
@@ -27,6 +28,10 @@ export type TournamentDto = {
     team_tour: boolean;
     team_winner?: string;
     info?: string;
+    winner_first_to?: number;
+    elimination?: number;
+    signup_start_date?: string;
+    signup_finish_date?: string;
 }
 
 export type TournamentEntity = {
@@ -40,6 +45,10 @@ export type TournamentEntity = {
     prizePool: number | null;
     individualWinner?: PlayerEntity;
     info?: string;
+    winnerFirstTo: number;
+    elimination: number;
+    signupStartDate?: string;
+    signupFinishDate?: string;
 }
 
 export type TournamentResponse = {
@@ -58,6 +67,10 @@ export type TournamentResponse = {
     info?: string;
     createdAt?: string;
     updatedAt?: string;
+    winner_first_to: number;
+    elimination: number;
+    signup_start_date?: string;
+    signup_finish_date?: string;
 }
 
 export function transformTournamentResponse(data: TournamentResponse): TournamentEntity {
@@ -75,6 +88,10 @@ export function transformTournamentResponse(data: TournamentResponse): Tournamen
         info: data.info,
         // teamTour: data.team_tour,
         // teamWinner: data.team_winner,
+        winnerFirstTo: data.winner_first_to,
+        elimination: data.elimination,
+        signupStartDate: data.signup_start_date,
+        signupFinishDate: data.signup_finish_date,
     }
 }
 

@@ -153,22 +153,22 @@ export type RoundByeResponse = {
 
 export type ContentDto = {
     pairing_id: string;
-    content: string;
+    url: string;
 }
 
 export interface ContentEntity {
     pairingId: string;
-    content: string;
+    url: string;
 }
 
 export type ContentResponse = {
     pairing_id: string;
-    content: string;
+    url: string;
 }
 
 export function transformContentResponse(content: ContentResponse, id: string = content.pairing_id): ContentEntity {
     return {
         pairingId: id,
-        content: content.content,
+        url: content.url,
     }
 }

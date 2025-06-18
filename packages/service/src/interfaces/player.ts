@@ -97,11 +97,11 @@ export type EntrantPlayerResponse = {
     Tournament: TournamentResponse;
 }
 
-export function transformEntrantPlayerResponse(data: EntrantPlayerResponse): EntrantPlayerEntity {
+export function transformEntrantPlayerResponse(data: EntrantPlayerResponse, tournament?: TournamentEntity, player?: PlayerEntity): EntrantPlayerEntity {
     return {
         id: data.id,
-        tournament: transformTournamentResponse(data.Tournament),
-        player: transformPlayerResponse(data.Player),
+        tournament: tournament ?? transformTournamentResponse(data.Tournament),
+        player: player ?? transformPlayerResponse(data.Player),
         // entrantTeam: data.EntrantTeam,
         active: data.active,
         maxRound: data.max_round,

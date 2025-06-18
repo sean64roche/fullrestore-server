@@ -44,7 +44,7 @@ export class PlayerImportService {
                     discord_id: record.discord_id,
             });
             players.add(playerResponse);
-            this.logger.info(`Player added as '${record.showdown_user}'`);
+            this.logger.debug(`Entrant Player added as '${record.showdown_user}'`);
         }
         return players;
     }

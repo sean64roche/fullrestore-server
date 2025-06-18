@@ -11,6 +11,7 @@ import entrantPlayerRoutes from '../routes/entrantPlayerRoutes';
 import replayRoutes from '../routes/replayRoutes';
 import { authenticateKey } from '../config/auth.js';
 import { initAssociations } from "../associations/initAssociations";
+import contentRoutes from "../routes/contentRoutes";
 
 const app = express();
 const PORT = +process.env.PORT || 3000;
@@ -41,7 +42,8 @@ app.use('/api/players', playerRoutes)
   .use('/api/rounds', roundRoutes)
   .use('/api/roundByes', roundByeRoutes)
   .use('/api/pairings', pairingRoutes)
-  .use('/api/replays', replayRoutes);
+  .use('/api/replays', replayRoutes)
+  .use('/api/content', contentRoutes);
 
 async function initDatabase() {
   try {
