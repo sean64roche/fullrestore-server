@@ -78,6 +78,8 @@ export {
     EntrantPlayerEntity,
     EntrantPlayerDto,
     EntrantPlayerResponse,
+    EntrantPlayerResultEntity,
+    EntrantPlayerResultResponse,
     transformEntrantPlayerResponse
 } from './interfaces/player.js';
 
