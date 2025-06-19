@@ -6,7 +6,7 @@ import {
     EntrantPlayerResponse,
     transformEntrantPlayerResponse,
     PlayerResponse,
-    transformPlayerResponse,
+    transformPlayerResponse, EntrantPlayerResultEntity, transformEntrantPlayerResultResponse,
 } from "../interfaces/player.js";
 import {TournamentEntity} from "../interfaces/tournament.js";
 import {ApiConfig} from "../config.js";
@@ -147,6 +147,21 @@ export default class PlayerRepository extends Repository {
         }
         catch (error) {
             this.logger.error(`FATAL on findEntrantPlayerById: ${JSON.stringify(error.response?.data) || error.message}`);
+            throw error;
+        }
+    }
+
+    async findEntrantWinsLosses(entrantPlayer: EntrantPlayerEntity, maxRound?: number): Promise<EntrantPlayerResultEntity> {
+        try {
+            let query = `${this.entrantPlayersUrl}/${entrantPlayer.id}/wins`;
+            if (maxRound) {
+                query += `?round=${maxRound}`;
+            }
+            const response: AxiosResponse = await axios.get(query);
+            return transformEntrantPlayerResultResponse(response.data);
+        }
+        catch (error) {
+            this.logger.error(`FATAL on findEntrantWinsLosses: ${JSON.stringify(error.response?.data) || error.message}`);
             throw error;
         }
     }

@@ -6,8 +6,7 @@ import Player from "../models/Player";
 import Tournament from "../models/Tournament";
 import PlayerAlias from "../models/PlayerAlias";
 import RoundEntrantWins from "../models/RoundEntrantWins";
-import {DataTypes, Op} from "sequelize";
-import sequelize from "../config/database";
+import {Op} from "sequelize";
 
 interface EntrantPlayerAttributes {
     player_id: string;
@@ -96,28 +95,13 @@ class EntrantPlayerService {
             }
         });
         const { wins, losses } = countWinsLosses(roundEntrantResults);
-        const entrantPlayerWins = sequelize.define('entrant_player_wins', {
-            entrant_player_id: {
-                type: DataTypes.UUID,
-                defaultValue: entrant_player_id,
-            },
-            max_round: {
-                type: DataTypes.INTEGER,
-                defaultValue: +round,
-            },
-            wins: {
-                type: DataTypes.INTEGER,
-                defaultValue: wins
-            },
-            losses: {
-                type: DataTypes.INTEGER,
-                defaultValue: losses
-            }
-        }, {
-            timestamps: false,
-        });
-        entrantPlayerWins.removeAttribute('id');
-        return entrantPlayerWins.build();
+        return {
+           entrant_player_id: entrant_player_id,
+           ps_user: roundEntrantResults[0].ps_user,
+           max_round: +round,
+           wins: wins,
+           losses: losses,
+        };
     }
 
     public async updateEntrantPlayer(id: string, attrs: Partial<EntrantPlayerAttributes>) {

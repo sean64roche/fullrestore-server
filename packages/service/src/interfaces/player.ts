@@ -1,4 +1,8 @@
-import { TournamentEntity, TournamentResponse, transformTournamentResponse } from "./tournament.js";
+import {
+    TournamentEntity,
+    TournamentResponse,
+    transformTournamentResponse
+} from "./tournament.js";
 
 export type SheetPlayer = {
     showdown_user: string;
@@ -97,6 +101,22 @@ export type EntrantPlayerResponse = {
     Tournament: TournamentResponse;
 }
 
+export interface EntrantPlayerResultEntity {
+    id: string;
+    psUser: string;
+    maxRound?: number;
+    wins: number;
+    losses: number;
+}
+
+export type EntrantPlayerResultResponse = {
+    entrant_player_id: string;
+    ps_user: string;
+    max_round?: number;
+    wins: number;
+    losses: number;
+}
+
 export function transformEntrantPlayerResponse(data: EntrantPlayerResponse, tournament?: TournamentEntity, player?: PlayerEntity): EntrantPlayerEntity {
     return {
         id: data.id,
@@ -106,5 +126,15 @@ export function transformEntrantPlayerResponse(data: EntrantPlayerResponse, tour
         active: data.active,
         maxRound: data.max_round,
         seed: data.seed,
+    }
+}
+
+export function transformEntrantPlayerResultResponse(data: EntrantPlayerResultResponse) {
+    return {
+        id: data.entrant_player_id,
+        psUser: data.ps_user,
+        maxRound: data.max_round,
+        wins: data.wins,
+        losses: data.losses,
     }
 }
