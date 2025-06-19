@@ -41,6 +41,22 @@ export async function getEntrantPlayerById(req: Request, res: Response) {
     }
 }
 
+export async function getEntrantPlayerWins(req: Request, res: Response) {
+    try {
+        const { round } = req.query;
+        const entrant = await entrantPlayerService.getEntrantPlayerWins(
+            req.params.id,
+            { round: round as unknown as number }
+        );
+        if (!entrant) {
+            return res.status(404).json({ error: 'Player entrant record not found' });
+        }
+        return res.json(entrant);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 export async function updateEntrantPlayer(req: Request, res: Response) {
     try {
         const updatedEntrant = await entrantPlayerService.updateEntrantPlayer(req.params.id, req.body);

@@ -5,6 +5,9 @@ import EntrantPlayer from '../models/EntrantPlayer';
 import Player from "../models/Player";
 import Tournament from "../models/Tournament";
 import PlayerAlias from "../models/PlayerAlias";
+import RoundEntrantWins from "../models/RoundEntrantWins";
+import {DataTypes, Op} from "sequelize";
+import sequelize from "../config/database";
 
 interface EntrantPlayerAttributes {
     player_id: string;
@@ -21,6 +24,10 @@ interface GetEntrantPlayerParams {
     player_id?: string;
     tournament_slug?: string;
     active?: boolean;
+}
+
+interface GetRoundEntrantWinsParams {
+    round?: number;
 }
 
 class EntrantPlayerService {
@@ -74,6 +81,45 @@ class EntrantPlayerService {
         });
     }
 
+    public async getEntrantPlayerWins(entrant_player_id: string, params: GetRoundEntrantWinsParams) {
+        let { round } = params;
+        const whereClause: any = {};
+        if (round) {
+            whereClause.round = {
+                [Op.lte]: round
+            };
+        }
+        const roundEntrantResults = await RoundEntrantWins.findAll({
+            where: {
+                entrant_player_id: entrant_player_id,
+                ...whereClause
+            }
+        });
+        const { wins, losses } = countWinsLosses(roundEntrantResults);
+        const entrantPlayerWins = sequelize.define('entrant_player_wins', {
+            entrant_player_id: {
+                type: DataTypes.UUID,
+                defaultValue: entrant_player_id,
+            },
+            max_round: {
+                type: DataTypes.INTEGER,
+                defaultValue: +round,
+            },
+            wins: {
+                type: DataTypes.INTEGER,
+                defaultValue: wins
+            },
+            losses: {
+                type: DataTypes.INTEGER,
+                defaultValue: losses
+            }
+        }, {
+            timestamps: false,
+        });
+        entrantPlayerWins.removeAttribute('id');
+        return entrantPlayerWins.build();
+    }
+
     public async updateEntrantPlayer(id: string, attrs: Partial<EntrantPlayerAttributes>) {
         const [updated] = await EntrantPlayer.update(
             attrs,
@@ -90,6 +136,15 @@ class EntrantPlayerService {
         return await EntrantPlayer.destroy({
             where: {id},
         });
+    }
+}
+
+function countWinsLosses(results: RoundEntrantWins[]) {
+    const wins = results.filter(result => result.win === true);
+    const losses = results.filter(result => result.win === false);
+    return {
+        wins: wins.length,
+        losses: losses.length,
     }
 }
 
