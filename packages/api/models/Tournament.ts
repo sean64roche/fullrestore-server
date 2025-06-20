@@ -15,6 +15,9 @@ class Tournament extends Model {
     declare info?: string;
     declare start_date: string;
     declare finish_date?: string;
+    declare elimination: number;
+    declare signup_start_date: string;
+    declare signup_finish_date: string;
 }
 
 function winnersAreOverloaded() {
@@ -91,6 +94,16 @@ Tournament.init({
     finish_date: {
         type: DataTypes.DATE
     },
+    elimination: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+    signup_start_date: {
+        type: DataTypes.DATE,
+    },
+    signup_finish_date: {
+        type: DataTypes.DATE,
+    }
 }, {
     sequelize,
     modelName: 'Tournament',

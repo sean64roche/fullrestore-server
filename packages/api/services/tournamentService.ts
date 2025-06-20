@@ -15,6 +15,9 @@ export interface TournamentAttributes {
     info?: string;
     start_date?: Date;
     end_date?: Date;
+    elimination: number;
+    signup_start_date?: Date;
+    signup_finish_date?: Date;
 }
 
 interface GetTournamentParams {
