@@ -258,9 +258,9 @@ export default class PairingRepository extends Repository {
         try {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}/pairings/playerSearch?player=${psUser}&page=${page}&limit=${limit}`);
             const pairings: PairingEntity[] = [];
-            response.data.forEach((pairing: PairingResponse) => {
-               pairings.push(transformPairingResponse(pairing));
-            });
+            for (const pairing of response.data) {
+                pairings.push(transformPairingResponse(pairing));
+            }
             return pairings;
         } catch (error) {
             this.logger.error(
