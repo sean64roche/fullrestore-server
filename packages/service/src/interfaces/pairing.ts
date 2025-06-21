@@ -45,19 +45,20 @@ export type PairingResponse = {
     Entrant1: EntrantPlayerResponse;
     Entrant2: EntrantPlayerResponse;
     Winner?: EntrantPlayerResponse;
-    Replays?: ReplayResponse[];
-    Content?: ContentResponse[];
+    Replays: ReplayResponse[];
+    Content: ContentResponse[];
 }
 
 export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
     const replays: ReplayEntity[] = [];
     const content: ContentEntity[] = [];
-    pairing.Replays?.forEach((replay: ReplayResponse) => {
+    for (const replay of pairing.Replays) {
         replays.push(transformReplayResponse(replay, pairing.id));
-    });
-    pairing.Content?.forEach((c: ContentResponse) => {
+    }
+    for (const c of pairing.Content) {
         content.push(transformContentResponse(c, pairing.id));
-    });
+
+    }
     return {
         id: pairing.id,
         round: transformRoundResponse(pairing.Round),
