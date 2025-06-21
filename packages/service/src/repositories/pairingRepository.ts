@@ -265,7 +265,7 @@ export default class PairingRepository extends Repository {
         } catch (error) {
             this.logger.error(
                 `FATAL on fetchPairingsByUsername: ${JSON.stringify(error.response?.data || error.message)} ` +
-                `| Request: ${this.pairingsUrl}?player=${psUser}&page=${page}&limit=${limit}`
+                `| Request: ${this.pairingsUrl}/playerSearch?player=${psUser}&page=${page}&limit=${limit}`
             );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }
