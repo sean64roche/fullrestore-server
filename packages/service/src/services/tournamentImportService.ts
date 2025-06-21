@@ -23,7 +23,10 @@ export class TournamentImportService {
             this.logger.error(`No uploading more than 1 tournament at a time. It's rude.`);
             throw new Error("UploadingMoreThanOneTournamentAtATimeError");
         }
-        const tournament: TournamentDto = tournamentData[0];
+        const tournament: TournamentDto = {
+            ...tournamentData[0],
+            winner_first_to: tournamentData[0].best_of,
+        }
         if (!!tournament.individual_winner) {
             const winner: PlayerEntity | null = await new PlayerRepository(this.config).findPlayerByAlias(tournament.individual_winner);
             tournament.individual_winner = winner?.id;
@@ -35,7 +38,7 @@ export class TournamentImportService {
         await formatRepository.create(tournament.format);
         makeEmptyFieldsNull(tournament);
         return await new TournamentRepository(this.config).create({
-            ...tournament
+            ...tournament,
         });
     }
 }
