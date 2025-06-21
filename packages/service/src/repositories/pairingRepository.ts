@@ -257,7 +257,11 @@ export default class PairingRepository extends Repository {
     async fetchPairingsByUsername(psUser: string, page: number = 1, limit: number = 10) {
         try {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}/pairings/playerSearch?player=${psUser}&page=${page}&limit=${limit}`);
-            return transformPairingResponse(response.data[0]);
+            const pairings: PairingEntity[] = [];
+            response.data.forEach((pairing: PairingResponse) => {
+               pairings.push(transformPairingResponse(pairing));
+            });
+            return pairings;
         } catch (error) {
             this.logger.error(
                 `FATAL on fetchPairingsByUsername: ${JSON.stringify(error.response?.data || error.message)} ` +
