@@ -28,7 +28,7 @@ export interface PairingEntity {
     scheduledAt?: Date | string;
     completedAt?: Date | string;
     replays?: ReplayEntity[];
-    content? :ContentEntity[];
+    content?: ContentEntity[];
 }
 
 export type PairingResponse = {
@@ -44,18 +44,18 @@ export type PairingResponse = {
     Round: RoundResponse;
     Entrant1: EntrantPlayerResponse;
     Entrant2: EntrantPlayerResponse;
-    Winner: EntrantPlayerResponse;
-    Replays: ReplayResponse[];
-    Content: ContentResponse[];
+    Winner?: EntrantPlayerResponse;
+    Replays?: ReplayResponse[];
+    Content?: ContentResponse[];
 }
 
 export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
     const replays: ReplayEntity[] = [];
     const content: ContentEntity[] = [];
-    pairing.Replays.forEach((replay: ReplayResponse) => {
+    pairing.Replays?.forEach((replay: ReplayResponse) => {
         replays.push(transformReplayResponse(replay, pairing.id));
     });
-    pairing.Content.forEach((c: ContentResponse) => {
+    pairing.Content?.forEach((c: ContentResponse) => {
         content.push(transformContentResponse(c, pairing.id));
     });
     return {
@@ -69,10 +69,10 @@ export function transformPairingResponse(pairing: PairingResponse): PairingEntit
             ...pairing.Entrant2,
             Tournament: pairing.Round.Tournament,
         }),
-        winner: transformEntrantPlayerResponse({
+        winner: pairing.Winner ? transformEntrantPlayerResponse({
             ...pairing.Winner,
             Tournament: pairing.Round.Tournament,
-        }),
+        }) : undefined,
         scheduledAt: pairing.time_scheduled,
         completedAt: pairing.time_completed,
         replays: replays,

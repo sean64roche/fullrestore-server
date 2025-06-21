@@ -28,6 +28,12 @@ interface GetPairingParams {
     winner?: string;
 }
 
+type GetPlayerPairingsParams = {
+    player: string;
+    page: number;
+    limit?: number;
+}
+
 class PairingService {
         public async createPairing(attrs: PairingAttributes) {
             try {
@@ -43,8 +49,8 @@ class PairingService {
     }
 
     public async getPairings(params: GetPairingParams) {
-            const { round_id, tournament, round, player, discord_user, winner } = params;
-            const whereClause: any = {};
+        const { round_id, tournament, round, player, discord_user, winner } = params;
+        const whereClause: any = {};
             if (round_id) {
                 whereClause.round_id = round_id;
             }
@@ -204,6 +210,48 @@ class PairingService {
                     attributes: ['url'],
                 }
             ],
+        });
+    }
+
+    public async getPlayerPairings(params: GetPlayerPairingsParams) {
+        const { player, page, limit } = params;
+        const offset = (page - 1) * limit;
+        const whereClause: any = {
+            [Op.or]: [{
+                '$Entrant1.Player.ps_user$': player
+            },{
+                '$Entrant2.Player.ps_user$': player
+            }]
+        };
+        return await Pairing.findAll({
+            subQuery: false,
+            limit: limit || null,
+            offset: offset || null,
+            include: [
+                {
+                    model: Round,
+                    include: [{
+                        model: Tournament,
+                    }]
+                },
+                {
+                    model: EntrantPlayer,
+                    as: 'Entrant1',
+                    include: [{
+                        model: Player,
+                    }]
+                },
+                {
+                    model: EntrantPlayer,
+                    as: 'Entrant2',
+                    include: [{
+                        model: Player,
+                    }],
+                }
+            ],
+            where: {
+                ...whereClause
+            }
         });
     }
 

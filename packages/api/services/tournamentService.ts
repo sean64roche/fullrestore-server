@@ -26,7 +26,7 @@ interface GetTournamentParams {
     format?: string;
     individual_winner?: string;
     slug: string;
-    page: number;
+    page?: number;
     limit?: number;
 }
 

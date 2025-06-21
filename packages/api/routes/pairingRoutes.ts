@@ -6,7 +6,7 @@ import {
   getPairings,
   getPairingById,
   updatePairing,
-  deletePairing,
+  deletePairing, getPlayerPairings,
 } from '../controllers/pairingController';
 import {validateQueryParams} from "./validateQueryParams";
 
@@ -15,6 +15,8 @@ const router = express.Router();
 router.post('/', createPairing);
 
 router.get('/', validateQueryParams(['round_id', 'tournament', 'round', 'player', 'discord_user', 'winner']), getPairings);
+
+router.get('/playerSearch', validateQueryParams(['player', 'page', 'limit']), getPlayerPairings);
 
 router.get('/:id', getPairingById);
 

@@ -245,10 +245,23 @@ export default class PairingRepository extends Repository {
         try {
             const response: AxiosResponse = await axios.get(`${this.pairingsUrl}?round_id=${roundId}&player=${playerPsUser}`);
             return transformPairingResponse(response.data[0]);
-        }  catch (error) {
+        } catch (error) {
             this.logger.error(
                 `FATAL on fetchPairing: ${JSON.stringify(error.response?.data || error.message)} ` +
                 `| Request: ${this.pairingsUrl}?round_id=${roundId}&player=${playerPsUser}`
+            );
+            throw new Error(JSON.stringify(error.response?.data) || error.message);
+        }
+    }
+
+    async fetchPairingsByUsername(psUser: string, page: number = 1, limit: number = 10) {
+        try {
+            const response: AxiosResponse = await axios.get(`${this.pairingsUrl}/pairings/playerSearch?player=${psUser}&page=${page}&limit=${limit}`);
+            return transformPairingResponse(response.data[0]);
+        } catch (error) {
+            this.logger.error(
+                `FATAL on fetchPairingsByUsername: ${JSON.stringify(error.response?.data || error.message)} ` +
+                `| Request: ${this.pairingsUrl}?player=${psUser}&page=${page}&limit=${limit}`
             );
             throw new Error(JSON.stringify(error.response?.data) || error.message);
         }

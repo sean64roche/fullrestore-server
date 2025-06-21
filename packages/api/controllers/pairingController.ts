@@ -44,6 +44,23 @@ export async function getPairingById(req: Request, res: Response) {
     }
 }
 
+export async function getPlayerPairings(req: Request, res: Response) {
+    try {
+        const { player, page, limit } = req.query;
+        const pairings = await pairingService.getPlayerPairings({
+            player: player as string,
+            page: page as unknown as number,
+            limit: limit as unknown as number,
+        });
+        if (!pairings) {
+            return res.status(404).json({ error: 'Pairings not found' });
+        }
+        return res.json(pairings);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 export async function updatePairing(req: Request, res: Response) {
     try {
         const updatedPairing = await pairingService.updatePairing(req.params.id, req.body);
