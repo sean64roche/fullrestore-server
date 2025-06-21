@@ -50,21 +50,14 @@ export type PairingResponse = {
 }
 
 export function transformPairingResponse(pairing: PairingResponse): PairingEntity {
-    let replays: ReplayEntity[] | undefined;
-    let content: ContentEntity[] | undefined;
-    if (!!pairing.Replays) {
-        replays = new Array(pairing.Replays.length);
-        for (const replay of pairing.Replays) {
-            replays.push(transformReplayResponse(replay, pairing.id));
-        }
-    }
-    if (!!pairing.Content) {
-        content = new Array(pairing.Content.length);
-        for (const c of pairing.Content) {
-            content.push(transformContentResponse(c, pairing.id));
-        }
-    }
-
+    const replays: ReplayEntity[] = [];
+    const content: ContentEntity[] = [];
+    pairing.Replays?.forEach((replay: ReplayResponse) => {
+        replays.push(transformReplayResponse(replay, pairing.id));
+    });
+    pairing.Content?.forEach((c: ContentResponse) => {
+        content.push(transformContentResponse(c, pairing.id));
+    });
     return {
         id: pairing.id,
         round: transformRoundResponse(pairing.Round),
