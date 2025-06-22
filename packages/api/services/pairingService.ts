@@ -223,7 +223,15 @@ class PairingService {
                 '$Entrant2.Player.ps_user$': player
             }]
         };
+
         return await Pairing.findAll({
+            order: [
+                ['time_completed', 'DESC'],
+                [Pairing.associations.Round, 'deadline', 'DESC'],
+                [Pairing.associations.Round, Round.associations.Tournament, 'finish_date', 'DESC'],
+                [Pairing.associations.Round, 'round', 'DESC'],
+                ['updatedAt', 'DESC'],
+            ],
             subQuery: false,
             limit: limit || null,
             offset: offset || null,
@@ -262,7 +270,8 @@ class PairingService {
                 }
             ],
             where: {
-                ...whereClause
+                ...whereClause,
+                winner_id: { [Op.not]: null }
             }
         });
     }
