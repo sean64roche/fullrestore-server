@@ -96,6 +96,13 @@ export {
     transformRoundResponse
 } from './interfaces/tournament.js';
 
+export {
+    cleanDiscordUsername,
+    cleanPsUsername,
+    makeEmptyFieldsNull,
+    validateDiscordUsername
+} from './utils/helpers.js';
+
 export const createConfig = (overrides?: Partial<ApiConfig>): ApiConfig => {
     return {
         ...DEFAULT_CONFIG,
