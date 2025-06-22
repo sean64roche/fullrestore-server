@@ -242,6 +242,8 @@ class PairingService {
                         include: [{
                             model: PlayerAlias,
                             as: 'Aliases',
+                            required: false,
+                            where: { primary: true }
                         }]
                     }]
                 },
@@ -253,6 +255,8 @@ class PairingService {
                         include: [{
                             model: PlayerAlias,
                             as: 'Aliases',
+                            required: false,
+                            where: { primary: true }
                         }]
                     }],
                 }
