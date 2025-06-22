@@ -239,6 +239,10 @@ class PairingService {
                     as: 'Entrant1',
                     include: [{
                         model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                        }]
                     }]
                 },
                 {
@@ -246,6 +250,10 @@ class PairingService {
                     as: 'Entrant2',
                     include: [{
                         model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                        }]
                     }],
                 }
             ],
