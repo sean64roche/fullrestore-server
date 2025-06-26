@@ -6,7 +6,7 @@ import {
   getPairings,
   getPairingById,
   updatePairing,
-  deletePairing, getPlayerPairings,
+  deletePairing, getRecentMatches,
 } from '../controllers/pairingController';
 import {validateQueryParams} from "./validateQueryParams";
 
@@ -16,7 +16,7 @@ router.post('/', createPairing);
 
 router.get('/', validateQueryParams(['round_id', 'tournament', 'round', 'player', 'discord_user', 'winner']), getPairings);
 
-router.get('/playerSearch', validateQueryParams(['player', 'page', 'limit']), getPlayerPairings);
+router.get('/recent', validateQueryParams(['player', 'page', 'limit']), getRecentMatches);
 
 router.get('/:id', getPairingById);
 

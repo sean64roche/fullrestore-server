@@ -44,10 +44,10 @@ export async function getPairingById(req: Request, res: Response) {
     }
 }
 
-export async function getPlayerPairings(req: Request, res: Response) {
+export async function getRecentMatches(req: Request, res: Response) {
     try {
         const { player, page, limit } = req.query;
-        const pairings = await pairingService.getPlayerPairings({
+        const pairings = await pairingService.getRecentMatches({
             player: player as string,
             page: page as unknown as number,
             limit: limit as unknown as number,

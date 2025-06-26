@@ -213,16 +213,19 @@ class PairingService {
         });
     }
 
-    public async getPlayerPairings(params: GetPlayerPairingsParams) {
+    public async getRecentMatches(params: GetPlayerPairingsParams) {
         const { player, page, limit } = params;
         const offset = (page - 1) * limit;
-        const whereClause: any = {
-            [Op.or]: [{
-                '$Entrant1.Player.ps_user$': player
-            },{
-                '$Entrant2.Player.ps_user$': player
-            }]
-        };
+        let whereClause: any = {};
+        if (!!player) {
+            whereClause = {
+                [Op.or]: [{
+                    '$Entrant1.Player.ps_user$': player
+                },{
+                    '$Entrant2.Player.ps_user$': player
+                }]
+            };
+        }
 
         return await Pairing.findAll({
             order: [
