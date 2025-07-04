@@ -92,7 +92,23 @@ class PlayerService {
     }
 
     public async searchPlayers(player: string) {
-        return await Player.findAll({
+        if (player.length < 3) return await Player.findAll({
+            include: {
+                model: PlayerAlias,
+                as: 'Aliases',
+                required: false,
+            },
+            where: {
+                id: {
+                    [Op.in]: literal(`(
+                        SELECT "player_id"
+                        FROM "player_alias"
+                        WHERE LOWER("alias") = '${toPSAlias(player)}'
+                    )`)
+                }
+            },
+        });
+        else return await Player.findAll({
             include: {
                 model: PlayerAlias,
                 as: 'Aliases',
