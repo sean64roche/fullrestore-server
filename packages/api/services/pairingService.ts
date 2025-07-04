@@ -270,6 +270,19 @@ class PairingService {
                             where: { primary: true }
                         }]
                     }],
+                },
+                {
+                    model: EntrantPlayer,
+                    as: 'Winner',
+                    include: [{
+                        model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                            required: false,
+                            where: { primary: true }
+                        }]
+                    }],
                 }
             ],
             where: {
