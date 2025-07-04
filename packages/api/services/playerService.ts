@@ -2,6 +2,7 @@ import {v7 as uuidv7} from 'uuid';
 import Player from '../models/Player';
 import EntrantPlayer from '../models/EntrantPlayer';
 import PlayerAlias from "../models/PlayerAlias";
+import {literal, Op} from "sequelize";
 
 interface PlayerAttributes {
     ps_user: string;
@@ -87,6 +88,26 @@ class PlayerService {
             where: {
                 player_id: id,
             },
+        });
+    }
+
+    public async searchPlayers(player: string) {
+        return await Player.findAll({
+            include: {
+                model: PlayerAlias,
+                as: 'Aliases',
+                required: false,
+            },
+            where: {
+                id: {
+                    [Op.in]: literal(`(
+                        SELECT "player_id"
+                        FROM "player_alias"
+                        WHERE LOWER("alias") LIKE '%${toPSAlias(player)}%'
+                    )`)
+                }
+            },
+            order: [[Player.associations.Aliases, 'primary', 'DESC']]
         });
     }
 
