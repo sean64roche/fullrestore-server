@@ -155,7 +155,7 @@ function toDiscordAlias(alias: string) {
     return alias?.toLowerCase().replace(/[^a-z0-9_.]/g, '')
 }
 
-export function toPSAlias(alias: string) {
+function toPSAlias(alias: string) {
     return alias.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 

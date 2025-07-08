@@ -9,7 +9,6 @@ import {
 import {TournamentEntity} from "../interfaces/tournament.js";
 import {Logger} from "../utils/logger.js";
 import {ApiConfig} from "../config.js";
-import {toPSAlias} from "fullrestore-api/services/playerService.js";
 
 export class PlayerImportService {
 
@@ -36,7 +35,7 @@ export class PlayerImportService {
                 }
                 players.add({
                     ...existingPlayer,
-                    username: toPSAlias(record.showdown_user),
+                    username: record.showdown_user.toLowerCase().replace(/[^a-z0-9]/g, ''),
                 });
                 continue;
             }
