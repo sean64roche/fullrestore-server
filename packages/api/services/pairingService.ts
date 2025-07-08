@@ -5,7 +5,7 @@ import Round from "../models/Round";
 import EntrantPlayer from "../models/EntrantPlayer";
 import Player from "../models/Player";
 import Tournament from "../models/Tournament";
-import { Op } from 'sequelize';
+import {literal, Op} from 'sequelize';
 import PlayerAlias from "../models/PlayerAlias";
 import Content from "../models/Content";
 import sequelize from "../config/database";
@@ -228,6 +228,16 @@ class PairingService {
         }
 
         return await Pairing.findAll({
+            where: {
+                ...whereClause,
+                winner_id: { [Op.not]: null },
+                [Op.and]: literal(`EXISTS (
+                    SELECT 1
+                    FROM "replay" AS "Replays"
+                    WHERE "Replays"."pairing_id" = "Pairing"."id"
+                    )`
+                )
+            },
             order: [
                 ['time_completed', 'DESC'],
                 [Pairing.associations.Round, 'deadline', 'DESC'],
@@ -285,10 +295,6 @@ class PairingService {
                     }],
                 }
             ],
-            where: {
-                ...whereClause,
-                winner_id: { [Op.not]: null }
-            }
         });
     }
 
