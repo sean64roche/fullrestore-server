@@ -9,6 +9,7 @@ class RoundEntrantWins extends Model {
     declare tournament_slug: string;
     declare tournament_name: string;
     declare win: boolean;
+    declare bye: boolean;
 }
 
 RoundEntrantWins.init({
@@ -65,6 +66,10 @@ RoundEntrantWins.init({
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
+    bye: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    }
 }, {
     sequelize,
     modelName: 'RoundEntrantWins',
