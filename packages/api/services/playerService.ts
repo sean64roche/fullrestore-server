@@ -22,7 +22,7 @@ class PlayerService {
         const newAttrs: PlayerAttributes = {
             ...attrs,
             ps_user: toPSAlias(attrs.ps_user),
-            discord_user: toDiscordAlias(attrs.discord_user),
+            discord_user: attrs.discord_user && toDiscordAlias(attrs.discord_user),
         }
         return await Player.create({
             id: uuidv7(),
@@ -129,7 +129,7 @@ class PlayerService {
 
     public async updatePlayer(id: string, attrs: PlayerAttributes) {
         const [updated] = await Player.update(
-            { ps_user: toPSAlias(attrs.ps_user), discord_user: toDiscordAlias(attrs.discord_user) },
+            { ps_user: toPSAlias(attrs.ps_user), discord_user: attrs.discord_user && toDiscordAlias(attrs.discord_user) },
             { where: { id } }
         );
 

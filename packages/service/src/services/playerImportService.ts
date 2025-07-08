@@ -9,6 +9,7 @@ import {
 import {TournamentEntity} from "../interfaces/tournament.js";
 import {Logger} from "../utils/logger.js";
 import {ApiConfig} from "../config.js";
+import {toPSAlias} from "fullrestore-api/services/playerService.js";
 
 export class PlayerImportService {
 
@@ -28,12 +29,15 @@ export class PlayerImportService {
             const existingPlayer: PlayerEntity | null =  await new PlayerRepository(this.config)
                 .findPlayerByAlias(record.showdown_user);
             if (!!existingPlayer) {
-                players.add(existingPlayer);
                 if (existingPlayer.psUser === record.showdown_user) {
                     this.logger.info(`Alias ${record.showdown_user} found in database, skipping`);
                 } else {
                     this.logger.warn(`Alias ${record.showdown_user} already exists as ${existingPlayer.psUser}, skipping`);
                 }
+                players.add({
+                    ...existingPlayer,
+                    username: toPSAlias(record.showdown_user),
+                });
                 continue;
             }
             makeEmptyFieldsNull(record);

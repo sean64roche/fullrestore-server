@@ -49,7 +49,7 @@ export default class PlayerRepository extends Repository {
             if (error instanceof AxiosError) {
                 switch (error.status) {
                     case 409:
-                        this.logger.error(`FATAL: Alias ${player.ps_user} already exists on another player`);
+                        this.logger.error(`FATAL: Alias ${player.ps_user} or Discord Username ${player.discord_user} already exists on another player`);
                         throw new AxiosError(error.message);
                     case 404:
                         const msg404: string = `Error 404: Not found on ${this.playersUrl}`;
@@ -100,7 +100,7 @@ export default class PlayerRepository extends Repository {
             if (error instanceof AxiosError) {
                 switch (error.response?.status) {
                     case 404:
-                        this.logger.info(`Entrant Player '${alias}' not found.`);
+                        this.logger.info(`Alias '${alias}' not found.`);
                         return null;
                     default:
                         this.logger.error(
