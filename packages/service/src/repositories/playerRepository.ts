@@ -6,7 +6,9 @@ import {
     EntrantPlayerResponse,
     transformEntrantPlayerResponse,
     PlayerResponse,
-    transformPlayerResponse, EntrantPlayerResultEntity, transformEntrantPlayerResultResponse,
+    transformPlayerResponse,
+    EntrantPlayerResultEntity,
+    transformEntrantPlayerResultResponse,
 } from "../interfaces/player.js";
 import {TournamentEntity} from "../interfaces/tournament.js";
 import {ApiConfig} from "../config.js";

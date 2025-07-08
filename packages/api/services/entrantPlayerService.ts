@@ -15,6 +15,7 @@ interface EntrantPlayerAttributes {
     active?: boolean;
     wins?: number;
     losses?: number;
+    byes?: number;
     max_round?: number;
     seed?: number;
 }
@@ -95,12 +96,14 @@ class EntrantPlayerService {
             }
         });
         const { wins, losses } = countWinsLosses(roundEntrantResults);
+        const { byes } = countByes(roundEntrantResults);
         return {
            entrant_player_id: entrant_player_id,
            ps_user: roundEntrantResults[0].ps_user,
            max_round: +round,
            wins: wins,
            losses: losses,
+           byes: byes,
         };
     }
 
@@ -130,6 +133,10 @@ function countWinsLosses(results: RoundEntrantWins[]) {
         wins: wins.length,
         losses: losses.length,
     }
+}
+
+function countByes(results: RoundEntrantWins[]) {
+    return { byes: results.filter(result => result.bye === true) };
 }
 
 export default new EntrantPlayerService();

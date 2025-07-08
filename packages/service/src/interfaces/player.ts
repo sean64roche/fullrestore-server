@@ -115,6 +115,7 @@ export type EntrantPlayerResultResponse = {
     max_round?: number;
     wins: number;
     losses: number;
+    byes: number;
 }
 
 export function transformEntrantPlayerResponse(data: EntrantPlayerResponse, tournament?: TournamentEntity, player?: PlayerEntity): EntrantPlayerEntity {
@@ -136,5 +137,6 @@ export function transformEntrantPlayerResultResponse(data: EntrantPlayerResultRe
         maxRound: data.max_round,
         wins: data.wins,
         losses: data.losses,
+        byes: data.byes,
     }
 }
