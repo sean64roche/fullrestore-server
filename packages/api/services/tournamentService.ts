@@ -1,6 +1,7 @@
 import Tournament from '../models/Tournament';
 import Round from '../models/Round';
 import EntrantPlayer from '../models/EntrantPlayer';
+import {Op} from "sequelize";
 
 export interface TournamentAttributes {
     name: string;
@@ -74,7 +75,7 @@ class TournamentService {
         });
     }
 
-    async getRoundsByTournamentSlug(slug: string) {
+    public async getRoundsByTournamentSlug(slug: string) {
         const tournament = await Tournament.findOne({
             where: {slug: slug},
         });
@@ -82,6 +83,21 @@ class TournamentService {
             where: {tournament_slug: tournament.slug},
             order: [['round', 'ASC']],
             include: Tournament,
+        });
+    }
+
+    public async searchTournaments(attrs: { name: string, page: number, limit: number }) {
+        const offset = (attrs.page - 1) * attrs.limit;
+        const slugName = toSlug(attrs.name, 1);
+        return await Tournament.findAll({
+            where: {
+                slug: {
+                    [Op.like]: `%${slugName}%`,
+                }
+            },
+            order: [['finish_date', 'DESC']],
+            offset: offset || null,
+            limit: attrs.limit || null,
         });
     }
 

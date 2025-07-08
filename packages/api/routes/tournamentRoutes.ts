@@ -6,7 +6,7 @@ import {
     getEntrantsByTournamentId,
     getTournamentById,
     updateTournament,
-    getRoundsByTournamentSlug,
+    getRoundsByTournamentSlug, searchTournaments,
 } from '../controllers/tournamentController';
 import {validateQueryParams} from "./validateQueryParams";
 
@@ -23,6 +23,8 @@ router.get('/', validateQueryParams([
     'page',
     'limit'
 ]), getTournaments);
+
+router.get('/search_tournament', validateQueryParams(['name', 'page', 'limit']), searchTournaments);
 
 router.get('/:id', getTournamentById);
 

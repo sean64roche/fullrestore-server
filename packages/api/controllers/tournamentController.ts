@@ -66,6 +66,23 @@ export async function getRoundsByTournamentSlug(req: Request, res: Response) {
     }
 }
 
+export async function searchTournaments(req: Request, res: Response) {
+    try {
+        const { name, page, limit } = req.query;
+        const tournaments = await tournamentService.searchTournaments({
+            name: name as string,
+            page: page as unknown as number,
+            limit: limit as unknown as number,
+        });
+        if (!tournaments) {
+            return res.status(404).json({ error: 'Tournaments not found' });
+        }
+        return res.json(tournaments);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 export async function updateTournament(req: Request, res: Response) {
     try {
         const { slug } = req.params;

@@ -78,11 +78,11 @@ export async function getPlayerCompetitions(req: Request, res: Response) {
 export async function searchPlayers(req: Request, res: Response) {
     try {
         const { player } = req.query;
-        const _player = await playerService.searchPlayers(player as string);
-        if (!player) {
-            return res.status(404).json({ error: 'Player not found' });
+        const players = await playerService.searchPlayers(player as string);
+        if (!players) {
+            return res.status(404).json({ error: 'Players not found' });
         }
-        return res.json(_player);
+        return res.json(players);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }
