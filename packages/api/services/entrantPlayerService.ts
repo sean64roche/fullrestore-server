@@ -136,7 +136,7 @@ function countWinsLosses(results: RoundEntrantWins[]) {
 }
 
 function countByes(results: RoundEntrantWins[]) {
-    return { byes: results.filter(result => result.bye === true) };
+    return { byes: (results.filter(result => result.bye === true)).length };
 }
 
 export default new EntrantPlayerService();

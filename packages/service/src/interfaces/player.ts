@@ -107,6 +107,7 @@ export interface EntrantPlayerResultEntity {
     maxRound?: number;
     wins: number;
     losses: number;
+    byes: number;
 }
 
 export type EntrantPlayerResultResponse = {
@@ -138,5 +139,5 @@ export function transformEntrantPlayerResultResponse(data: EntrantPlayerResultRe
         wins: data.wins,
         losses: data.losses,
         byes: data.byes,
-    }
+    } as EntrantPlayerResultEntity;
 }
