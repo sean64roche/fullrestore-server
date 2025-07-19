@@ -95,11 +95,17 @@ class EntrantPlayerService {
                 ...whereClause
             }
         });
+        let player: EntrantPlayer;
+        if (roundEntrantResults.length === 0) {
+            player = await this.getEntrantPlayerById(entrant_player_id);
+        }
+
         const { wins, losses } = countWinsLosses(roundEntrantResults);
         const { byes } = countByes(roundEntrantResults);
         return {
            entrant_player_id: entrant_player_id,
-           ps_user: roundEntrantResults[0].ps_user,
+           //@ts-ignore
+           ps_user: roundEntrantResults[0]?.ps_user ?? player.Player.ps_user,
            max_round: +round,
            wins: wins,
            losses: losses,
@@ -130,13 +136,13 @@ function countWinsLosses(results: RoundEntrantWins[]) {
     const wins = results.filter(result => result.win === true);
     const losses = results.filter(result => result.win === false);
     return {
-        wins: wins.length,
-        losses: losses.length,
+        wins: wins.length ?? 0,
+        losses: losses.length ?? 0,
     }
 }
 
 function countByes(results: RoundEntrantWins[]) {
-    return { byes: (results.filter(result => result.bye === true)).length };
+    return { byes: (results.filter(result => result.bye === true)).length ?? 0 };
 }
 
 export default new EntrantPlayerService();
