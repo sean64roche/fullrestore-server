@@ -66,6 +66,29 @@ export default class PlayerRepository extends Repository {
         }
     }
 
+    async createPlayerAlias(player: PlayerEntity, alias: string): Promise<void> {
+        try {
+            const cleanAlias = alias.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const response: AxiosResponse = await axios.post(this.playerAliasesUrl, {
+                player_id: player.id,
+                alias: alias,
+                primary: false,
+            });
+            this.logger.info(`New alias '${response.data.alias} created for player ${player.psUser}`);
+            if (cleanAlias !== alias) {
+                const response2: AxiosResponse = await axios.post(this.playerAliasesUrl, {
+                    player_id: player.id,
+                    alias: cleanAlias,
+                    primary: false,
+                });
+                this.logger.info(`New alias '${response2.data.alias} created for player ${player.psUser}`);
+            }
+        } catch (error) {
+            this.logger.error(`FATAL on creating Player Alias: ${error.message}`);
+            throw new Error(error.message);
+        }
+    }
+
     async createEntrantPlayer(player: PlayerEntity, tournament: TournamentEntity): Promise<EntrantPlayerEntity> {
         try {
             const response: AxiosResponse = await axios.post(this.entrantPlayersUrl, {
@@ -92,9 +115,9 @@ export default class PlayerRepository extends Repository {
         }
     }
 
-    async findPlayerByAlias(alias: string): Promise<PlayerEntity | null> {
+    async findPlayer(alias: string, query: string = 'player'): Promise<PlayerEntity | null> {
         try {
-            const response: AxiosResponse = await axios.get(`${this.playersUrl}?player=${alias}`);
+            const response: AxiosResponse = await axios.get(`${this.playersUrl}?${query}=${alias}`);
             return transformPlayerResponse(response.data);
         } catch (error) {
             if (error instanceof AxiosError) {

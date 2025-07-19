@@ -28,7 +28,7 @@ export class TournamentImportService {
             winner_first_to: tournamentData[0].best_of,
         }
         if (!!tournament.individual_winner) {
-            const winner: PlayerEntity | null = await new PlayerRepository(this.config).findPlayerByAlias(tournament.individual_winner);
+            const winner: PlayerEntity | null = await new PlayerRepository(this.config).findPlayer(tournament.individual_winner);
             tournament.individual_winner = winner?.id;
         } else {
             this.logger.warn(`WARNING: tournament winner not matched to a player ID`);

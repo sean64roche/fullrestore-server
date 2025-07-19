@@ -54,6 +54,12 @@ export function transformPlayerResponse(data: PlayerResponse): PlayerEntity {
     }
 }
 
+export interface PlayerAliasDto {
+    player_id: string;
+    alias: string;
+    primary: boolean;
+}
+
 export interface PlayerAlias {
     alias: string;
     primary: boolean;

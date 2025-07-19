@@ -71,6 +71,7 @@ export {
     SheetPlayer,
     PlayerDto,
     PlayerEntity,
+    PlayerAliasDto,
     PlayerAlias,
     PlayerResponse,
     transformPlayerResponse,

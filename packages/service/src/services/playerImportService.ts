@@ -22,11 +22,9 @@ export class PlayerImportService {
     async importPlayers(csvPath: string): Promise<Set<PlayerEntity>> {
         const players: Set<PlayerEntity> = new Set();
         const records: SheetPlayer[] = await new CsvLoader().load(csvPath, this.logger);
-
+        const pr = new PlayerRepository(this.config);
         for (const record of records) {
-            if (!!record.discord_user) validateDiscordUsername(record.discord_user, this.logger);
-            const existingPlayer: PlayerEntity | null =  await new PlayerRepository(this.config)
-                .findPlayerByAlias(record.showdown_user);
+            const existingPlayer: PlayerEntity | null =  await pr.findPlayer(record.showdown_user);
             if (!!existingPlayer) {
                 if (existingPlayer.psUser === record.showdown_user) {
                     this.logger.info(`Alias ${record.showdown_user} found in database, skipping`);
@@ -39,9 +37,25 @@ export class PlayerImportService {
                 });
                 continue;
             }
+            if (!!record.discord_user) {
+                validateDiscordUsername(record.discord_user, this.logger);
+                const existingDiscordUser = await pr.findPlayer(record.discord_user, 'discord_user');
+                if (!!existingDiscordUser) {
+                    this.logger.warn(`Discord user '${existingDiscordUser.discordUser}' found`);
+                    const username = record.showdown_user.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (!existingDiscordUser.Aliases.find(alias => alias.alias === username)) {
+                        this.logger.warn(`Adding new alias for Discord user: '${existingDiscordUser.discordUser}'`);
+                        await pr.createPlayerAlias(existingDiscordUser, record.showdown_user);
+                    }
+                    players.add({
+                        ...existingDiscordUser,
+                        username: username,
+                    });
+                    continue;
+                }
+            }
             makeEmptyFieldsNull(record);
-            const playerResponse: PlayerEntity = await new PlayerRepository(this.config)
-                .createPlayer({
+            const playerResponse: PlayerEntity = await pr.createPlayer({
                     ps_user: record.showdown_user,
                     discord_user: record.discord_user?.toLowerCase(),
                     discord_id: record.discord_id,

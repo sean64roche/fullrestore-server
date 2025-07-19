@@ -64,11 +64,11 @@ RoundEntrantWins.init({
     },
     win: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: true
     },
     bye: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: true
     }
 }, {
     sequelize,
