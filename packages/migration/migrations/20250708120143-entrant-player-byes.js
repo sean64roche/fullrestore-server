@@ -17,7 +17,6 @@ module.exports = {
       t.name AS tournament_name,
       CASE
         WHEN pr.winner_id = er.entrant_player_id THEN TRUE
-        WHEN pr.winner_id IS NULL THEN NULL::boolean
         ELSE FALSE
       END AS win,
       CASE
