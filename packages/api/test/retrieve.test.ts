@@ -79,7 +79,7 @@ test.describe('GET /api/tournaments', () => {
     });
     test('GET /api/tournaments?name&season returns tournament data', { timeout: 10000 }, async () => {
         const response = await request(app).get('/api/tournaments?name=Old Money Open&season=1');
-        const result = response.body.rows[0];
+        const result = response.body[0];
         assert.equal(response.status, 200);
         assert.equal(result.name, 'Old Money Open');
         assert.equal(result.season, '1');
@@ -88,12 +88,12 @@ test.describe('GET /api/tournaments', () => {
     });
     test('GET /api/tournaments?name&season on non-existing tournament has size zero response', { timeout: 10000 }, async () => {
         const response = await request(app).get('/api/tournaments?name=Not a Tournament&season=1');
-        assert.equal(response.body.rows.length, 0);
+        assert.equal(response.body.length, 0);
     });
     test('GET /api/tournament?page&limit has response', { timeout: 10000 }, async () => {
         const response = await request(app).get('/api/tournaments?page=1&limit=10');
         assert.equal(response.status, 200);
-        assert.notEqual(response.body.rows.length, 0);
+        assert.notEqual(response.body.length, 0);
     });
 });
 
