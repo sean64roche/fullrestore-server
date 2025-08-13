@@ -58,14 +58,17 @@ export default class TournamentRepository extends Repository {
             throw new Error(`FATAL on getExistingTournament: ${JSON.stringify(error.response?.data) || error.message}`);
         }
     }
-    async fetchTournaments(page: number = 1, limit: number = 10): Promise<TournamentEntity[]> {
+    async fetchTournaments(page: number = 1, limit: number = 10): Promise<{ count: number, rows: TournamentEntity[] }> {
         try {
             const response: AxiosResponse = await axios.get(`${this.tournamentsUrl}?page=${page}&limit=${limit}`);
             const tournaments: TournamentEntity[] = [];
-            response.data.forEach((tournament: TournamentResponse) => {
+            response.data.rows.forEach((tournament: TournamentResponse) => {
                 tournaments.push(transformTournamentResponse(tournament));
-            })
-            return tournaments;
+            });
+            return {
+                count: response.data.count,
+                rows: tournaments,
+            };
         } catch (error) {
             this.logger.error(
                 `FATAL on fetchTournaments: ${JSON.stringify(error.response?.data) || error.message} ` +
