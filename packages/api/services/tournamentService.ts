@@ -53,7 +53,7 @@ class TournamentService {
         if (format) whereClause.format = format;
         if (individual_winner) whereClause.individual_winner = individual_winner;
         if (slug) whereClause.slug = slug;
-        return await Tournament.findAll({
+        return await Tournament.findAndCountAll({
             limit: limit || null,
             offset: offset || null,
             where: {
@@ -89,7 +89,7 @@ class TournamentService {
     public async searchTournaments(attrs: { name: string, page: number, limit: number }) {
         const offset = (attrs.page - 1) * attrs.limit;
         const slugName = toSlug(attrs.name, 1);
-        return await Tournament.findAll({
+        return await Tournament.findAndCountAll({
             where: {
                 slug: {
                     [Op.like]: `%${slugName}%`,

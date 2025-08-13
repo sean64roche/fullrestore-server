@@ -227,7 +227,7 @@ class PairingService {
             };
         }
 
-        return await Pairing.findAll({
+        return await Pairing.findAndCountAll({
             where: {
                 ...whereClause,
                 winner_id: { [Op.not]: null },
