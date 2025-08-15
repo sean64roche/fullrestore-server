@@ -20,12 +20,12 @@ router.get('/', validateQueryParams([
     'format',
     'individual_winner',
     'slug',
-    'snowflake',
+    'admin_snowflake',
     'page',
     'limit'
 ]), getTournaments);
 
-router.get('/search_tournament', validateQueryParams(['name', 'snowflake', 'page', 'limit']), searchTournaments);
+router.get('/search_tournament', validateQueryParams(['name', 'admin_snowflake', 'page', 'limit']), searchTournaments);
 
 router.get('/:id', getTournamentById);
 

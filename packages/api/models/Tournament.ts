@@ -104,10 +104,18 @@ Tournament.init({
     signup_finish_date: {
         type: DataTypes.DATE,
     },
-    snowflake: {
+    admin_snowflake: {
         type: DataTypes.TEXT,
         unique: true,
-    }
+    },
+    signup_snowflake: {
+        type: DataTypes.TEXT,
+        unique: true,
+    },
+    result_snowflake: {
+        type: DataTypes.TEXT,
+        unique: true,
+    },
 }, {
     sequelize,
     modelName: 'Tournament',

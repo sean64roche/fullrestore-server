@@ -32,7 +32,9 @@ export type TournamentDto = {
     elimination?: number;
     signup_start_date?: string;
     signup_finish_date?: string;
-    snowflake?: string;
+    admin_snowflake?: string;
+    signup_snowflake?: string;
+    result_snowflake?: string;
 }
 
 export type TournamentEntity = {
@@ -50,7 +52,9 @@ export type TournamentEntity = {
     elimination: number;
     signupStartDate?: string;
     signupFinishDate?: string;
-    snowflake?: string;
+    adminSnowflake?: string;
+    signupSnowflake?: string;
+    resultSnowflake?: string;
 }
 
 export type TournamentResponse = {
@@ -73,7 +77,9 @@ export type TournamentResponse = {
     elimination: number;
     signup_start_date?: string;
     signup_finish_date?: string;
-    snowflake?: string;
+    admin_snowflake?: string;
+    signup_snowflake?: string;
+    result_snowflake?: string;
 }
 
 export function transformTournamentResponse(data: TournamentResponse): TournamentEntity {
@@ -95,7 +101,9 @@ export function transformTournamentResponse(data: TournamentResponse): Tournamen
         elimination: data.elimination,
         signupStartDate: data.signup_start_date,
         signupFinishDate: data.signup_finish_date,
-        snowflake: data.snowflake,
+        adminSnowflake: data.admin_snowflake,
+        signupSnowflake: data.signup_snowflake,
+        resultSnowflake: data.result_snowflake,
     }
 }
 

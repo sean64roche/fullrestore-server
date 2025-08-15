@@ -17,14 +17,27 @@ export async function createTournament(req: Request, res: Response) {
 
 export async function getTournaments(req: Request, res: Response) {
     try {
-        const { name, season, format, individual_winner, slug, snowflake, page, limit } = req.query;
+        const {
+            name,
+            season,
+            format,
+            individual_winner,
+            slug,
+            admin_snowflake,
+            signup_snowflake,
+            result_snowflake,
+            page,
+            limit
+        } = req.query;
         const tournaments = await tournamentService.getTournaments({
                 name: name as string,
                 season: season as unknown as number,
                 format: format as string,
                 individual_winner: individual_winner as string,
                 slug: slug as string,
-                snowflake: snowflake as string,
+                admin_snowflake: admin_snowflake as string,
+                signup_snowflake: signup_snowflake as string,
+                result_snowflake: result_snowflake as string,
                 page: page as unknown as number,
                 limit: limit as unknown as number,
         });
@@ -69,10 +82,12 @@ export async function getRoundsByTournamentSlug(req: Request, res: Response) {
 
 export async function searchTournaments(req: Request, res: Response) {
     try {
-        const { name, snowflake, page, limit } = req.query;
+        const { name, admin_snowflake, signup_snowflake, result_snowflake, page, limit } = req.query;
         const tournaments = await tournamentService.searchTournaments({
             name: name as string,
-            snowflake: snowflake as string,
+            admin_snowflake: admin_snowflake as string,
+            signup_snowflake: signup_snowflake as string,
+            result_snowflake: result_snowflake as string,
             page: page as unknown as number,
             limit: limit as unknown as number,
         });
