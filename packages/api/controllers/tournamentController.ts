@@ -17,13 +17,14 @@ export async function createTournament(req: Request, res: Response) {
 
 export async function getTournaments(req: Request, res: Response) {
     try {
-        const { name, season, format, individual_winner, slug, page, limit } = req.query;
+        const { name, season, format, individual_winner, slug, snowflake, page, limit } = req.query;
         const tournaments = await tournamentService.getTournaments({
                 name: name as string,
                 season: season as unknown as number,
                 format: format as string,
                 individual_winner: individual_winner as string,
                 slug: slug as string,
+                snowflake: snowflake as string,
                 page: page as unknown as number,
                 limit: limit as unknown as number,
         });
@@ -68,9 +69,10 @@ export async function getRoundsByTournamentSlug(req: Request, res: Response) {
 
 export async function searchTournaments(req: Request, res: Response) {
     try {
-        const { name, page, limit } = req.query;
+        const { name, snowflake, page, limit } = req.query;
         const tournaments = await tournamentService.searchTournaments({
             name: name as string,
+            snowflake: snowflake as string,
             page: page as unknown as number,
             limit: limit as unknown as number,
         });

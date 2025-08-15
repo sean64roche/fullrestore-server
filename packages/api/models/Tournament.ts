@@ -103,6 +103,10 @@ Tournament.init({
     },
     signup_finish_date: {
         type: DataTypes.DATE,
+    },
+    snowflake: {
+        type: DataTypes.TEXT,
+        unique: true,
     }
 }, {
     sequelize,

@@ -19,6 +19,7 @@ export interface TournamentAttributes {
     elimination: number;
     signup_start_date?: Date;
     signup_finish_date?: Date;
+    snowflake?: string;
 }
 
 interface GetTournamentParams {
@@ -27,6 +28,7 @@ interface GetTournamentParams {
     format?: string;
     individual_winner?: string;
     slug: string;
+    snowflake?: string;
     page?: number;
     limit?: number;
 }
@@ -45,7 +47,7 @@ class TournamentService {
     }
 
     public async getTournaments(params: GetTournamentParams) {
-        const { name, season, format, individual_winner, slug, page, limit } = params;
+        const { name, season, format, individual_winner, slug, snowflake, page, limit } = params;
         const offset = (page - 1) * limit;
         const whereClause: any = {};
         if (name) whereClause.name = name;
@@ -53,6 +55,7 @@ class TournamentService {
         if (format) whereClause.format = format;
         if (individual_winner) whereClause.individual_winner = individual_winner;
         if (slug) whereClause.slug = slug;
+        if (snowflake) whereClause.snowflake = snowflake;
         return await Tournament.findAll({
             limit: limit || null,
             offset: offset || null,
@@ -86,7 +89,7 @@ class TournamentService {
         });
     }
 
-    public async searchTournaments(attrs: { name: string, page: number, limit: number }) {
+    public async searchTournaments(attrs: { name: string, snowflake: string, page: number, limit: number }) {
         const offset = (attrs.page - 1) * attrs.limit;
         const whereClause: any = {};
         if (!!attrs.name) {
@@ -95,6 +98,9 @@ class TournamentService {
                 [Op.like]: `%${slugName}%`,
 
             }
+        }
+        if (attrs.snowflake) {
+            whereClause.snowflake = attrs.snowflake;
         }
         return await Tournament.findAndCountAll({
             where: whereClause,
