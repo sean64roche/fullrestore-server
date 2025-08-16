@@ -21,6 +21,8 @@ router.get('/', validateQueryParams([
     'individual_winner',
     'slug',
     'admin_snowflake',
+    'signup_snowflake',
+    'result_snowflake',
     'page',
     'limit'
 ]), getTournaments);

@@ -152,7 +152,7 @@ class PlayerService {
 }
 
 function toDiscordAlias(alias: string) {
-    return alias?.toLowerCase().replace(/[^a-z0-9_.]/g, '')
+    return alias.toLowerCase().replace(/[^a-z0-9_.]/g, '')
 }
 
 function toPSAlias(alias: string) {
