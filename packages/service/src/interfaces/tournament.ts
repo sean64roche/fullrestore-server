@@ -35,6 +35,7 @@ export type TournamentDto = {
     admin_snowflake?: string;
     signup_snowflake?: string;
     result_snowflake?: string;
+    role_snowflake?: string;
 }
 
 export type TournamentEntity = {
@@ -55,6 +56,7 @@ export type TournamentEntity = {
     adminSnowflake?: string;
     signupSnowflake?: string;
     resultSnowflake?: string;
+    roleSnowflake?: string;
 }
 
 export type TournamentResponse = {
@@ -80,6 +82,7 @@ export type TournamentResponse = {
     admin_snowflake?: string;
     signup_snowflake?: string;
     result_snowflake?: string;
+    role_snowflake?: string;
 }
 
 export function transformTournamentResponse(data: TournamentResponse): TournamentEntity {
@@ -104,6 +107,7 @@ export function transformTournamentResponse(data: TournamentResponse): Tournamen
         adminSnowflake: data.admin_snowflake,
         signupSnowflake: data.signup_snowflake,
         resultSnowflake: data.result_snowflake,
+        roleSnowflake: data.role_snowflake,
     }
 }
 
