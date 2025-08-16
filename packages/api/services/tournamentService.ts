@@ -22,6 +22,7 @@ export interface TournamentAttributes {
     admin_snowflake?: string;
     signup_snowflake?: string;
     result_snowflake?: string;
+    role_snowflake?: string;
 }
 
 interface GetTournamentParams {
@@ -33,6 +34,7 @@ interface GetTournamentParams {
     admin_snowflake?: string;
     signup_snowflake?: string;
     result_snowflake?: string;
+    role_snowflake?: string;
     page?: number;
     limit?: number;
 }
@@ -60,6 +62,7 @@ class TournamentService {
             admin_snowflake,
             signup_snowflake,
             result_snowflake,
+            role_snowflake,
             page,
             limit
         } = params;
@@ -73,6 +76,7 @@ class TournamentService {
         if (admin_snowflake) whereClause.admin_snowflake = admin_snowflake;
         if (signup_snowflake) whereClause.signup_snowflake = signup_snowflake;
         if (result_snowflake) whereClause.result_snowflake = result_snowflake;
+        if (role_snowflake) whereClause.role_snowflake = role_snowflake;
         return await Tournament.findAll({
             limit: limit || null,
             offset: offset || null,

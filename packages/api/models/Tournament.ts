@@ -18,6 +18,10 @@ class Tournament extends Model {
     declare elimination: number;
     declare signup_start_date: string;
     declare signup_finish_date: string;
+    declare admin_snowflake: string;
+    declare signup_snowflake: string;
+    declare result_snowflake: string;
+    declare role_snowflake: string;
 }
 
 function winnersAreOverloaded() {
@@ -116,6 +120,10 @@ Tournament.init({
         type: DataTypes.TEXT,
         unique: true,
     },
+    role_snowflake: {
+        type: DataTypes.TEXT,
+        unique: true,
+    }
 }, {
     sequelize,
     modelName: 'Tournament',
