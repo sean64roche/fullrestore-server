@@ -188,8 +188,8 @@ test.describe('API GET /api/pairings', () => {
             .use('/api/pairings', pairingRoutes);
     });
 
-    test('GET /api/pairings/?tournament&round&player returns single pairing data', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=4&player=jotaentrena');
+    test('GET /api/pairings/?tournament_slug&round&player returns single pairing data', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/pairings?tournament_slug=old-money-open&round=4&player=jotaentrena');
         const result = response.body[0];
         assert.equal(response.status, 200);
         assert.equal(response.body.length, 1);
@@ -199,8 +199,8 @@ test.describe('API GET /api/pairings', () => {
         assert.ok(result.Replays[0]);
     });
 
-    test('GET /api/pairings?tournament&round returns multiple pairing data', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=2');
+    test('GET /api/pairings?tournament_slug&round returns multiple pairing data', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/pairings?tournament_slug=old-money-open&round=2');
         assert.equal(response.status, 200);
         assert.equal(response.body.length, 32);
         assert.ok(response.body.every((
@@ -236,7 +236,7 @@ test.describe('API GET /api/pairings', () => {
     });
 
     test('GET /api/pairings?winner - dead game has size zero replays', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=1&player=adamc77777');
+        const response = await request(app).get('/api/pairings?tournament_slug=old-money-open&round=1&player=adamc77777');
         assert.equal(response.body[0].Replays.length, 0);
     });
 
@@ -245,18 +245,18 @@ test.describe('API GET /api/pairings', () => {
         assert.equal(response.body.length, 0);
     });
 
-    test('GET /api/pairings?tournament - non-existing tournament has size zero response', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/pairings?tournament=Not a Tournament');
+    test('GET /api/pairings?tournament_slug - non-existing tournament has size zero response', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/pairings?tournament_slug=not-a-tournament');
         assert.equal(response.body.length, 0);
     });
 
-    test('GET /api/pairings?tournament&round&player - non-existing matchup has size zero response body', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=2&player=jumpy23');
+    test('GET /api/pairings?tournament_slug&round&player - non-existing matchup has size zero response body', { timeout: 10000 }, async () => {
+        const response = await request(app).get('/api/pairings?tournament_slug=old-money-open&round=2&player=jumpy23');
         assert.equal(response.body.length, 0);
     });
 
     test('GET /api/pairings?winner - non-existing winner has zero response body', { timeout: 10000 }, async () => {
-        const response = await request(app).get('/api/pairings?tournament=Old Money Open&round=1&winner=jumpy23');
+        const response = await request(app).get('/api/pairings?tournament_slug=old-money-open&round=1&winner=jumpy23');
         assert.equal(response.body.length, 0);
     });
 });
