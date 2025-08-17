@@ -71,7 +71,18 @@ export async function updateEntrantPlayer(req: Request, res: Response) {
 
 export async function deleteEntrantPlayer(req: Request, res: Response) {
     try {
-        const deleted = await entrantPlayerService.deleteEntrantPlayer(req.params.id);
+        const { id, player_id, tournament_slug } = req.query;
+        if (!id && !player_id && !tournament_slug) {
+            return res.status(400).json({ error: 'No params provided' });
+        }
+        if (!id && (!player_id || !tournament_slug)) {
+            return res.status(400).json({ error: `Invalid params provided, requires 'id' OR ('player_id' AND 'tournament_slug')` });
+        }
+        const deleted = await entrantPlayerService.deleteEntrantPlayer({
+            id: id as string,
+            player_id: player_id as string,
+            tournament_slug: tournament_slug as string,
+        });
         if (deleted) {
             return res.sendStatus(204);
         }

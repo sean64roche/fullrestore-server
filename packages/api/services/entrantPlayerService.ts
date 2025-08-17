@@ -30,6 +30,12 @@ interface GetRoundEntrantWinsParams {
     round?: number;
 }
 
+interface DeleteEntrantPlayerParams {
+    id?: string;
+    player_id?: string;
+    tournament_slug?: string;
+}
+
 class EntrantPlayerService {
     public async createEntrantPlayer(attrs: EntrantPlayerAttributes) {
         try {
@@ -125,9 +131,18 @@ class EntrantPlayerService {
         return null;
     }
 
-    public async deleteEntrantPlayer(id: string) {
+    public async deleteEntrantPlayer(attrs: DeleteEntrantPlayerParams) {
+        const whereClause: any = {};
+        if (!!attrs.id) {
+            whereClause.id = attrs.id;
+        } else if (!!attrs.player_id && !!attrs.tournament_slug) {
+            whereClause.player_id = attrs.player_id;
+            whereClause.tournament_slug = attrs.tournament_slug;
+        }
         return await EntrantPlayer.destroy({
-            where: {id},
+            where: {
+                ...whereClause
+            }
         });
     }
 }

@@ -21,6 +21,6 @@ router.get('/:id/wins', validateQueryParams(['round']), getEntrantPlayerWins);
 
 router.put('/:id', updateEntrantPlayer);
 
-router.delete('/:id', deleteEntrantPlayer);
+router.delete('/', validateQueryParams(['id', 'player_id', 'tournament_slug']), deleteEntrantPlayer);
 
 export default router;
