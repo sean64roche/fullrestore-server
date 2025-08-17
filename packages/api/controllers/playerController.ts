@@ -90,10 +90,11 @@ export async function searchPlayers(req: Request, res: Response) {
 
 export async function updatePlayer(req: Request, res: Response) {
     try {
-        const { ps_user, discord_user } = req.body;
+        const { ps_user, discord_user, discord_id } = req.body;
         const updatedPlayer = await playerService.updatePlayer(req.params.id, {
             ps_user,
             discord_user,
+            discord_id,
         });
         if (!updatedPlayer) {
             return res.status(404).json({ error: 'Player not found' });

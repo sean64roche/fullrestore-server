@@ -40,7 +40,7 @@ class PlayerService {
     }
 
     public async getPlayer(params: GetPlayersParams) {
-        const { player, ps_user, discord_user } = params;
+        const { player, ps_user, discord_user, discord_id } = params;
         const queryOptions: any = {
             include: {
                 model: PlayerAlias,
@@ -73,6 +73,8 @@ class PlayerService {
             whereClause.ps_user = toPSAlias(ps_user);
         } else if (discord_user) {
             whereClause.discord_user = toDiscordAlias(discord_user);
+        } else if (discord_id) {
+            whereClause.discord_id = discord_id;
         }
         queryOptions.where = whereClause;
         return await Player.findOne(queryOptions);
@@ -128,8 +130,11 @@ class PlayerService {
     }
 
     public async updatePlayer(id: string, attrs: PlayerAttributes) {
-        const [updated] = await Player.update(
-            { ps_user: toPSAlias(attrs.ps_user), discord_user: attrs.discord_user && toDiscordAlias(attrs.discord_user) },
+        const [updated] = await Player.update({
+                ps_user: toPSAlias(attrs.ps_user),
+                discord_user: attrs.discord_user && toDiscordAlias(attrs.discord_user),
+                discord_id: attrs.discord_id,
+            },
             { where: { id } }
         );
 
