@@ -21,7 +21,7 @@ interface PairingAttributes {
 
 interface GetPairingParams {
     round_id?: string;
-    tournament?: string;
+    tournament_slug?: string;
     round?: number;
     player?: string;
     discord_user?: string;
@@ -49,7 +49,7 @@ class PairingService {
     }
 
     public async getPairings(params: GetPairingParams) {
-        const { round_id, tournament, round, player, discord_user, winner } = params;
+        const { round_id, tournament_slug, round, player, discord_user, winner } = params;
         const whereClause: any = {};
             if (round_id) {
                 whereClause.round_id = round_id;
@@ -57,8 +57,8 @@ class PairingService {
             if (round) {
                 whereClause['$Round.round$'] = round;
             }
-            if (tournament) {
-                whereClause['$Round.Tournament.name$'] = tournament;
+            if (tournament_slug) {
+                whereClause['$Round.Tournament.slug$'] = tournament_slug;
             }
             if (player) {
                 whereClause[Op.or] = [
