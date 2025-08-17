@@ -128,14 +128,14 @@ export default class PlayerRepository extends Repository {
                     default:
                         this.logger.error(
                             `FATAL on findPlayer: ${JSON.stringify(error.response?.data) || error.message} ` +
-                            `| Request: ${this.playersUrl}?player=${alias}`
+                            `| Request: ${this.playersUrl}?${query}=${alias}`
                         );
                         throw new Error(error.response?.data || error.message);
                 }
             } else {
                 this.logger.error(
                     `FATAL on findPlayer: ${JSON.stringify(error.response?.data) || error.message} ` +
-                    `| Request: ${this.playersUrl}?player=${alias}`
+                    `| Request: ${this.playersUrl}?${query}=${alias}`
                 );
                 throw new Error(error.response?.data || error.message);
             }
