@@ -62,10 +62,10 @@ export async function getTournamentById(req: Request, res: Response) {
     }
 }
 
-export async function getEntrantsByTournamentId(req: Request, res: Response) {
+export async function getEntrantsByTournamentSlug(req: Request, res: Response) {
     try {
         const { slug } = req.params;
-        const entrants = await tournamentService.getEntrantsByTournamentId(slug);
+        const entrants = await tournamentService.getEntrantsByTournamentSlug(slug);
         return res.json(entrants);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });

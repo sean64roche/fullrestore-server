@@ -2,6 +2,8 @@ import Tournament from '../models/Tournament';
 import Round from '../models/Round';
 import EntrantPlayer from '../models/EntrantPlayer';
 import {Op} from "sequelize";
+import Player from "../models/Player";
+import PlayerAlias from "../models/PlayerAlias";
 
 export interface TournamentAttributes {
     name: string;
@@ -92,10 +94,20 @@ class TournamentService {
         return await Tournament.findByPk(slug);
     }
 
-    public async getEntrantsByTournamentId(slug: string) {
+    public async getEntrantsByTournamentSlug(slug: string) {
         return await EntrantPlayer.findAll({
             where: {tournament_slug: slug},
             order: [['seed', 'ASC']],
+            include: [{
+                model: Player,
+                include: [{
+                    model: PlayerAlias,
+                    as: 'Aliases',
+                    required: false
+                }]
+            }, {
+                model: Tournament,
+            }]
         });
     }
 

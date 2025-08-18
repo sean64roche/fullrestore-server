@@ -3,7 +3,7 @@ import {
     createTournament,
     deleteTournament,
     getTournaments,
-    getEntrantsByTournamentId,
+    getEntrantsByTournamentSlug,
     getTournamentById,
     updateTournament,
     getRoundsByTournamentSlug, searchTournaments,
@@ -32,7 +32,7 @@ router.get('/search_tournament', validateQueryParams(['name', 'admin_snowflake',
 
 router.get('/:id', getTournamentById);
 
-router.get('/:id/entrants', getEntrantsByTournamentId);
+router.get('/:slug/entrants', getEntrantsByTournamentSlug);
 
 router.get('/:slug/rounds', getRoundsByTournamentSlug);
 
