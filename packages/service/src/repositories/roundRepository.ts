@@ -31,7 +31,7 @@ export default class RoundRepository extends Repository {
             this.logger.info(`Round ${round} created with UUID ${id}`);
             return {
                 id: id,
-                tournament: round.tournament,
+                tournament: reqTournament,
                 roundNumber: round,
                 name: name,
                 deadline: deadline,
