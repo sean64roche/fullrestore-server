@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post('/', createEntrantPlayer);
 
-router.get('/', validateQueryParams(['player_id', 'tournament_slug', 'active']), getEntrantPlayer);
+router.get('/', validateQueryParams(['player_id', 'tournament_slug', 'active', 'discord_id']), getEntrantPlayer);
 
 router.get('/:id', getEntrantPlayerById);
 

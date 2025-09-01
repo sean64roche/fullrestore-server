@@ -24,6 +24,7 @@ interface GetEntrantPlayerParams {
     player_id?: string;
     tournament_slug?: string;
     active?: boolean;
+    discord_id?: string;
 }
 
 interface GetRoundEntrantWinsParams {
@@ -49,7 +50,7 @@ class EntrantPlayerService {
     }
 
     async getEntrantPlayer(params: GetEntrantPlayerParams) {
-        const { player_id, tournament_slug, active } = params;
+        const { player_id, tournament_slug, active, discord_id } = params;
         const whereClause: any = {};
         if (player_id) {
             whereClause.player_id = player_id;
@@ -59,6 +60,9 @@ class EntrantPlayerService {
         }
         if (active) {
             whereClause.active = active;
+        }
+        if (discord_id) {
+            whereClause['$Player.discord_id$'] = discord_id;
         }
         return await EntrantPlayer.findAll({
             include: [{
