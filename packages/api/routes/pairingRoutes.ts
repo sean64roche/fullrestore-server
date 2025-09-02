@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post('/', createPairing);
 
-router.get('/', validateQueryParams(['round_id', 'tournament_slug', 'round', 'player', 'discord_user', 'winner']), getPairings);
+router.get('/', validateQueryParams(['round_id', 'tournament_slug', 'round', 'player', 'discord_user','discord_id', 'winner']), getPairings);
 
 router.get('/recent', validateQueryParams(['player', 'page', 'limit']), getRecentMatches);
 

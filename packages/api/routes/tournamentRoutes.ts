@@ -24,6 +24,7 @@ router.get('/', validateQueryParams([
     'signup_snowflake',
     'result_snowflake',
     'role_snowflake',
+    'category_snowflake',
     'page',
     'limit'
 ]), getTournaments);

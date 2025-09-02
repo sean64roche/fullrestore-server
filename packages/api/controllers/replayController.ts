@@ -39,7 +39,7 @@ export async function getReplays(req: Request, res: Response) {
 
 export async function deleteReplay(req: Request, res: Response) {
     try {
-        const deleted = await replayService.deleteReplay(req.params.url);
+        const deleted = await replayService.deleteReplay(req.params.pairing_id);
         if (deleted) {
             return res.sendStatus(204);
         }

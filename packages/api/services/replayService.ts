@@ -66,9 +66,9 @@ class ReplayService {
         });
     }
 
-    public async deleteReplay(url: string) {
+    public async deleteReplay(pairing_id: string) {
         return await Replay.destroy({
-            where: { url },
+            where: { pairing_id },
         });
     }
 }

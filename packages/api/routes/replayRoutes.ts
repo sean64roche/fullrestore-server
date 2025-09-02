@@ -12,6 +12,6 @@ router.post('/', createReplay);
 
 router.get('/', validateQueryParams(['url', 'pairing_id', 'match_number']), getReplays);
 
-router.delete('/:url', deleteReplay);
+router.delete('/:pairing_id', deleteReplay);
 
 export default router;

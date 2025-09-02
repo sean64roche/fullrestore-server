@@ -27,6 +27,7 @@ export async function getTournaments(req: Request, res: Response) {
             signup_snowflake,
             result_snowflake,
             role_snowflake,
+            category_snowflake,
             page,
             limit
         } = req.query;
@@ -40,6 +41,7 @@ export async function getTournaments(req: Request, res: Response) {
                 signup_snowflake: signup_snowflake as string,
                 result_snowflake: result_snowflake as string,
                 role_snowflake: role_snowflake as string,
+                category_snowflake: category_snowflake as string,
                 page: page as unknown as number,
                 limit: limit as unknown as number,
         });

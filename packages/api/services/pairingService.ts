@@ -25,6 +25,7 @@ interface GetPairingParams {
     round?: number;
     player?: string;
     discord_user?: string;
+    discord_id?: string;
     winner?: string;
 }
 
@@ -49,7 +50,7 @@ class PairingService {
     }
 
     public async getPairings(params: GetPairingParams) {
-        const { round_id, tournament_slug, round, player, discord_user, winner } = params;
+        const { round_id, tournament_slug, round, player, discord_user, discord_id, winner } = params;
         const whereClause: any = {};
             if (round_id) {
                 whereClause.round_id = round_id;
@@ -81,6 +82,12 @@ class PairingService {
                     { '$Entrant2.Player.discord_user$': discord_user }
                 ];
             }
+        if (discord_id) {
+            whereClause[Op.or] = [
+                { '$Entrant1.Player.discord_id$': discord_id },
+                { '$Entrant2.Player.discord_id$': discord_id }
+            ];
+        }
             if (winner) {
                 whereClause[Op.or] = [
                     { '$Winner.Player.ps_user$': winner },
@@ -300,10 +307,8 @@ class PairingService {
 
     public async updatePairing(id: string, attrs: Partial<PairingAttributes>) {
         const [updated] = await Pairing.update(
-            {
-                attrs,
-            },
-            { where: { id } },
+            attrs,
+            { where: { id: id } },
         );
 
         if (updated) {
