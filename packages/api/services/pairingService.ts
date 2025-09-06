@@ -42,7 +42,7 @@ class PairingService {
                     id: uuidv7(),
                     ...attrs
                 });
-                await sequelize.query(`REFRESH MATERIALIZED VIEW round_entrant_wins;`);
+                await refreshRoundEntrantWins();
                 return result;
         } catch (error: any) {
             throw error;
@@ -313,17 +313,25 @@ class PairingService {
 
         if (updated) {
             const result = await Pairing.findByPk(id);
-            await sequelize.query(`REFRESH MATERIALIZED VIEW round_entrant_wins;`);
+            await refreshRoundEntrantWins();
             return result;
         }
         return null;
     }
 
     public async deletePairing(id: string) {
-        return await Pairing.destroy({
+        const result = await Pairing.destroy({
             where: {id}
         });
+        if (result) {
+            await refreshRoundEntrantWins();
+            return result;
+        }
     }
+}
+
+async function refreshRoundEntrantWins() {
+    await sequelize.query(`REFRESH MATERIALIZED VIEW round_entrant_wins;`);
 }
 
 export default new PairingService();
