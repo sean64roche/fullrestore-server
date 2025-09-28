@@ -29,7 +29,7 @@ class RoundService {
         }
     }
 
-    async getRounds(params: GetRoundParams) {
+    public async getRounds(params: GetRoundParams) {
         const { tournament_slug, round, name } = params;
         const whereClause: any = {};
         if (tournament_slug) whereClause.tournament_slug = tournament_slug;

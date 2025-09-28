@@ -3,8 +3,16 @@ import {v7 as uuidv7} from 'uuid';
 import Round from "../models/Round";
 import EntrantPlayer from "../models/EntrantPlayer";
 import Player from "../models/Player";
+import Tournament from "../models/Tournament";
 
 export interface RoundByeAttributes {
+    round_id: string;
+    entrant_player_id: string;
+}
+
+export interface GetRoundByeParams {
+    tournament_slug: string;
+    round: number;
     round_id: string;
     entrant_player_id: string;
 }
@@ -19,6 +27,23 @@ class RoundByeService {
         } catch (error: any) {
             throw error;
         }
+    }
+
+    public async getRoundByes(params: GetRoundByeParams) {
+        const {tournament_slug, round, round_id, entrant_player_id} = params;
+        const whereClause: any = {};
+        if (tournament_slug) whereClause.tournament_slug = tournament_slug;
+        if (round) whereClause.round = round;
+        if (round_id) whereClause.round_id = round_id;
+        if (entrant_player_id) whereClause.entrant_player_id = entrant_player_id;
+        return await RoundBye.findAll({
+            include: [{
+                model: Tournament,
+            }],
+            where: {
+                ...whereClause,
+            }
+        });
     }
 
     public async getRoundByeById(id: string) {

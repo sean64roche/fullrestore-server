@@ -14,6 +14,21 @@ export async function createRoundBye(req: Request, res: Response) {
     }
 }
 
+export async function getRoundByes(req: Request, res: Response) {
+    try {
+        const {tournament_slug, round, round_id, entrant_player_id} = req.params;
+        const byes = await roundByeService.getRoundByes({
+            tournament_slug: tournament_slug as string,
+            round: round as unknown as number,
+            round_id: round_id as string,
+            entrant_player_id: entrant_player_id as string,
+        });
+        return res.json(byes);
+    } catch (error: any) {
+        return res.status(500).json({ error: error.message });
+    }
+}
+
 export async function getRoundByeById(req: Request, res: Response) {
     try {
         const round = await roundByeService.getRoundByeById(req.params.id);
