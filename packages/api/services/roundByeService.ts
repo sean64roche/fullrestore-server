@@ -4,6 +4,7 @@ import Round from "../models/Round";
 import EntrantPlayer from "../models/EntrantPlayer";
 import Player from "../models/Player";
 import Tournament from "../models/Tournament";
+import PlayerAlias from "../models/PlayerAlias";
 
 export interface RoundByeAttributes {
     round_id: string;
@@ -32,14 +33,36 @@ class RoundByeService {
     public async getRoundByes(params: GetRoundByeParams) {
         const {tournament_slug, round, round_id, entrant_player_id} = params;
         const whereClause: any = {};
-        if (tournament_slug) whereClause.tournament_slug = tournament_slug;
-        if (round) whereClause.round = round;
+        if (tournament_slug) {
+            whereClause['$Round.Tournament.slug$'] = tournament_slug;
+        }
+        if (round) {
+            whereClause['$Round.round$'] = round;
+        }
         if (round_id) whereClause.round_id = round_id;
         if (entrant_player_id) whereClause.entrant_player_id = entrant_player_id;
         return await RoundBye.findAll({
-            include: [{
-                model: Tournament,
-            }],
+            include: [
+                {
+                    model: Round,
+                    include: [{
+                        model: Tournament,
+                    }]
+                },
+                {
+                    model: EntrantPlayer,
+                    include: [{
+                        model: Player,
+                        include: [{
+                            model: PlayerAlias,
+                            as: 'Aliases',
+                            required: false
+                        }]
+                    }, {
+                        model: Tournament,
+                    }]
+                },
+            ],
             where: {
                 ...whereClause,
             }
