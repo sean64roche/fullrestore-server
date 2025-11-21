@@ -33,7 +33,7 @@ export default class TournamentRepository extends Repository {
                         return existingTournament;
                     }
                     case 404:
-                        this.logger.error(`Error 404: Not found on ${this.playersUrl}`);
+                        this.logger.error(`Error 404: Not found on ${this.tournamentsUrl}`);
                         throw error;
                     default:
                         this.logger.error(`FATAL on tournamentRepository: ${JSON.stringify(error.response?.data)}`);
