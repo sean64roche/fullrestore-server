@@ -1,12 +1,11 @@
-// src/routes/pairingRoutes.ts
-
 import express from 'express';
 import {
   createPairing,
   getPairings,
   getPairingById,
   updatePairing,
-  deletePairing, getRecentMatches,
+  deletePairing,
+  getRecentMatches,
 } from '../controllers/pairingController';
 import {validateQueryParams} from "./validateQueryParams";
 

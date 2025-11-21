@@ -82,12 +82,12 @@ class PairingService {
                     { '$Entrant2.Player.discord_user$': discord_user }
                 ];
             }
-        if (discord_id) {
-            whereClause[Op.or] = [
-                { '$Entrant1.Player.discord_id$': discord_id },
-                { '$Entrant2.Player.discord_id$': discord_id }
-            ];
-        }
+            if (discord_id) {
+                whereClause[Op.or] = [
+                    { '$Entrant1.Player.discord_id$': discord_id },
+                    { '$Entrant2.Player.discord_id$': discord_id }
+                ];
+            }
             if (winner) {
                 whereClause[Op.or] = [
                     { '$Winner.Player.ps_user$': winner },

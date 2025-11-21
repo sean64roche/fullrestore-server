@@ -31,7 +31,7 @@ class RoundByeService {
     }
 
     public async getRoundByes(params: GetRoundByeParams) {
-        const {tournament_slug, round, round_id, entrant_player_id} = params;
+        const { tournament_slug, round, round_id, entrant_player_id } = params;
         const whereClause: any = {};
         if (tournament_slug) {
             whereClause['$Round.Tournament.slug$'] = tournament_slug;

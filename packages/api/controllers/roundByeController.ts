@@ -16,7 +16,7 @@ export async function createRoundBye(req: Request, res: Response) {
 
 export async function getRoundByes(req: Request, res: Response) {
     try {
-        const {tournament_slug, round, round_id, entrant_player_id} = req.params;
+        const { tournament_slug, round, round_id, entrant_player_id } = req.params;
         const byes = await roundByeService.getRoundByes({
             tournament_slug: tournament_slug as string,
             round: round as unknown as number,
