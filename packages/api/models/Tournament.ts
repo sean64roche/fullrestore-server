@@ -119,7 +119,6 @@ Tournament.init({
     },
     result_snowflake: {
         type: DataTypes.TEXT,
-        unique: true,
     },
     role_snowflake: {
         type: DataTypes.TEXT,
